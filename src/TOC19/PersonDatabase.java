@@ -28,7 +28,7 @@ public class PersonDatabase
 	}
 	
 	
-	public int setDatabasePerson(int personNo, String name, double running, double week, int barCode) // take the persons data and pass it to the persons constructor
+	public int setDatabasePerson(int personNo, String name, double running, double week, long barCode) // take the persons data and pass it to the persons constructor
 	{
 		/**
 		Class PersonDatabase: Method setDatabase
@@ -187,7 +187,7 @@ public class PersonDatabase
 		else return 0;
 	
 	}
-	public int getBarCode(int personNo)
+	public long getBarCode(int personNo)
 	{
 		/** 
 		Class PersonDatabase: Method getPersonBarCode
@@ -216,7 +216,7 @@ public class PersonDatabase
 		}
 		return -1; // there are no empty persons. have a -1 so you know what happened.
 	}
-	public boolean personExists(String extPersonName, int extBarCode)
+	public boolean personExists(String extPersonName, long extBarCode)
 	{
 	    
 	    for(i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
@@ -227,7 +227,7 @@ public class PersonDatabase
 	    return false; // if you are running this, no person was found and therefore it is logical to conclude none exist.
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
-	public boolean personExists(int extBarCode)
+	public boolean personExists(long extBarCode)
 	{
 		if (extBarCode == 7000000) return true;
 		for(i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
@@ -471,7 +471,7 @@ public class PersonDatabase
 						break;
 		}
 	}
-	public int findPerson(int barCode) 
+	public int findPerson(long barCode) 
 	{
 		int i = 0;
 		if(7000000 == barCode) return -2;

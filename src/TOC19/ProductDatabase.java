@@ -28,7 +28,7 @@ public class ProductDatabase
 	}
 	
 	
-	public int setDatabaseProduct(int productNo, String name, double price, int barCode) // take the products data and pass it to the products constructor
+	public int setDatabaseProduct(int productNo, String name, double price, long barCode) // take the products data and pass it to the products constructor
 	{
 		/**
 		Class ProductDatabase: Method setDatabase
@@ -157,7 +157,7 @@ public class ProductDatabase
 		else return 0;
 	
 	}
-	public int getBarCode(int productNo)
+	public long getBarCode(int productNo)
 	{
 		/** 
 		Class ProductDatabase: Method getProductBarCode
@@ -392,7 +392,8 @@ public class ProductDatabase
 	{
 		String tempName;
 		double tempSize, tempProductPrice;
-		int tempBarCode, tempNumberOfProduct;
+		long tempBarCode;
+		int tempNumberOfProduct;
 		int count = 0;
 		int z = 0;
 		try {
@@ -429,7 +430,7 @@ public class ProductDatabase
 						break;
 		}
 	}
-	public int findProduct(int barCode)
+	public int findProduct(long barCode)
 	{
 		for(int i = 0; i < logicalSize; i++) 
 			if(allProducts[i].getBarCode() == barCode) return i;

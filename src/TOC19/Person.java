@@ -14,9 +14,9 @@ public class Person
 	private String name;
 	private String output;
 	private double totalCostRunning, totalCostWeek; // Running can be yearly, or can be perminant. Up to TOC. Weekly will be reset each stocktake
-	private int barCode; // PMKeys number off ID
+	private long barCode; // PMKeys number off ID
 
-	public Person(String extName, int extBarCode, double running, double week) // construtor which will give the person its values
+	public Person(String extName, long extBarCode, double running, double week) // construtor which will give the person its values
 	{
 		name = extName;
 		barCode = extBarCode;
@@ -80,7 +80,7 @@ public class Person
 
 		return name;
 	}
-	public int getBarCode() // return the barcode assoiated with the person
+	public long getBarCode() // return the barcode assoiated with the person
 	{
 		 /**
 		 Class Song: Method getBarCode

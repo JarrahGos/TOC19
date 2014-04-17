@@ -14,11 +14,11 @@ public class Product
 	private String name;
 	private String output;
 	private double productPrice;
-	private int barCode;
+	private long barCode;
 	private int numberOfItems;
 	private int quantity;
 
-	public Product(String extName, double extProductPrice, int extBarCode) // construtor which will give the product its values
+	public Product(String extName, double extProductPrice, long extBarCode) // construtor which will give the product its values
 	{
 		output = "";
 		name = extName;
@@ -26,7 +26,7 @@ public class Product
 		barCode = extBarCode;
 	}
 	// Begin methods
-	public void setData(String name, String artist, double productPrice, int barCode) // redundant method which has been left in case products are edited in some way which would require this to be used.
+	public void setData(String name, String artist, double productPrice, long barCode) // redundant method which has been left in case products are edited in some way which would require this to be used.
 	{
 		/**
 		Class Song: Method setData
@@ -101,7 +101,7 @@ public class Product
 
 		return name;
 	}
-	public int getBarCode() // return the barcode assoiated with the product
+	public long getBarCode() // return the barcode assoiated with the product
 	{
 		 /**
 		 Class Song: Method getBarCode

@@ -44,7 +44,8 @@ public class Interface
 		String tempName; // names of things which we will be entering and reusing	
 		double tempProductPrice; // the above but as a price
 		String tempInput; // what will be storing any input for testing and conversion
-		int tempBarCode, quantity; // the bar code and number of each item that we have. 
+		long tempBarCode; 
+		int quantity; // the bar code and number of each item that we have. 
 		int personNumber = -1; // the position of the person in the database
 		int productNumber; // as above but for products
 		int q1, q2; // test question integer for menus.
@@ -80,11 +81,11 @@ public class Interface
 					JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
 					continue; //start at the top of the while loop. 
 				}
-				else if(tempInput.equals("") || !isInteger(tempInput) || !personDatabase.personExists(Integer.parseInt(tempInput)) ) { // checks for valid numbers in the PMKeyS
+				else if(tempInput.equals("") || !isLong(tempInput) || !personDatabase.personExists(Integer.parseInt(tempInput)) ) { // checks for valid numbers in the PMKeyS
 					JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Errror", JOptionPane.ERROR_MESSAGE);
 					continue;
 				}
-				tempBarCode = Integer.parseInt(tempInput); // take string from JOptionPane, and make it an integer which is easer to work with
+				tempBarCode = Long.parseLong(tempInput); // take string from JOptionPane, and make it an integer which is easer to work with
 				personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
 				sameUser = true; // tells the program that a user is logged in. 
 				if(-2 == personNumber) { // checks whether that user is an admin
@@ -94,8 +95,9 @@ public class Interface
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
 				while(!admin) {
 					tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
-					if(tempInput != null && !tempInput.equals("") && isInteger(tempInput)) tempBarCode = Integer.parseInt(tempInput); // disallows the user from entering nothing or clicking cancel. 
-					else if(tempInput == null && !first) break; // if canceled and not on the first run of adding items. 
+					if(tempInput != null && !tempInput.equals("") && isLong(tempInput)) tempBarCode = Long.parseLong(tempInput); // disallows the user from entering nothing or clicking cancel. 
+					
+					else if((tempInput == null && !first) || ("".equals(tempInput) && !first)) break; // if canceled and not on the first run of adding items. 
 					else { // what do do if the user does the above on the first run.
 						sameUser = false;
 						break;
@@ -109,7 +111,7 @@ public class Interface
 					if(tempInput != null && !tempInput.equals("") && isInteger(tempInput)) { // check that a valid integer was entered
 						quantity = Integer.parseInt(tempInput);
 					}
-					else if(tempInput == null && !first) break;
+					else if((tempInput == null && !first)) break;
 					else if(tempInput == null) { // added in latest version. Lets see whether they like it. 
 						sameUser = false; 
 						break;
@@ -162,8 +164,8 @@ public class Interface
 							if(!isDouble(tempInput) ) continue; // Ensure that the string is a double
 							tempProductPrice = Double.parseDouble(tempInput);
 							tempInput = JOptionPane.showInputDialog("Please enter the bar code of " + tempName);
-							if(!isInteger(tempInput)) continue; // ensure that the string is an integer. 
-							tempBarCode = Integer.parseInt(tempInput);
+							if(!isLong(tempInput)) continue; // ensure that the string is an integer. 
+							tempBarCode = Long.parseLong(tempInput);
 							added = productDatabase.setDatabaseProduct(q2, tempName, tempProductPrice, tempBarCode); 
 							// send the values to productDatabase where they will be sent to the product constructor. tempBarCode is multiplied by 60 to get the time in seconds.
 							productDatabase.writeOutDatabase("productDatabase.txt"); // ensure that the database has been saved to file
@@ -180,8 +182,8 @@ public class Interface
 				else if(tempInput.equals("remove products")) {	
 					error = 1;
 					tempInput = JOptionPane.showInputDialog("Enter the bar code of the item you would like to delete");
-					if(!isInteger(tempInput)) continue; // check the input
-					tempBarCode = Integer.parseInt(tempInput);
+					if(!isLong(tempInput)) continue; // check the input
+					tempBarCode = Long.parseLong(tempInput);
 					q2 = productDatabase.findProduct(tempBarCode);	
 					if(q2 != -1) {
 						error = productDatabase.delProduct(q2); // recieve a one value on an error
@@ -210,8 +212,8 @@ public class Interface
 								break;
 							}
 							tempInput = JOptionPane.showInputDialog("Please enter the PMKeyS of " + tempName);
-							if(!isInteger(tempInput)) continue;
-							tempBarCode = Integer.parseInt(tempInput);
+							if(!isLong(tempInput)) continue;
+							tempBarCode = Long.parseLong(tempInput);
 							added = personDatabase.setDatabasePerson(q2, tempName, 0, 0, tempBarCode); 
 							// send the values to productDatabase where they will be sent to the product constructor. tempBarCode is multiplied by 60 to get the time in seconds.
 							personDatabase.writeOutDatabase("personDatabase.txt");
@@ -229,8 +231,8 @@ public class Interface
 				else if(tempInput.equals("remove people")) {
 					error = 1;
 					tempInput = JOptionPane.showInputDialog("Enter the PMKeyS of the person you would like to delete");
-					if(!isInteger(tempInput)) continue;
-					tempBarCode = Integer.parseInt(tempInput);
+					if(!isLong(tempInput)) continue;
+					tempBarCode = Long.parseLong(tempInput);
 						q2 = personDatabase.findPerson(tempBarCode);	
 					if(q2 != -1) {
 						error = personDatabase.delPerson(q2); // recieve a one value on an error
@@ -264,9 +266,9 @@ public class Interface
 						}
 					}		
 				else if(tempInput.equals("change product")) {
-					int tempNumber = 0;
+					int tempNumber = 0; // the number of the product in the database
 					tempInput = JOptionPane.showInputDialog("Enter the bar code of the product you would like to edit");
-					if(!isInteger(tempInput)) {
+					if(!isLong(tempInput)) {
 						continue;
 					}
 					productNumber = productDatabase.findProduct(Integer.parseInt(tempInput));  // find the position of the product in the database
@@ -282,8 +284,8 @@ public class Interface
 					if(!isDouble(tempInput)) continue;
 					tempProductPrice = Double.parseDouble(tempInput);
 					tempInput = JOptionPane.showInputDialog("Enter the new barCode of the product");
-					if(!isInteger(tempInput)) continue;
-					tempBarCode = Integer.parseInt(tempInput);
+					if(!isLong(tempInput)) continue;
+					tempBarCode = Long.parseLong(tempInput);
 					tempNumber = productDatabase.getNumber(productNumber); //returns the number of this product in stock. 
 					productDatabase.delProduct(productNumber);
 					added = productDatabase.setDatabaseProduct(productDatabase.emptyProduct(), tempName, tempProductPrice, tempBarCode);
@@ -338,8 +340,8 @@ public class Interface
 				else if(tempInput.equals("Enter stock count (individual)")) {
 					int tempNumber = 0;
 					tempInput = JOptionPane.showInputDialog("Enter the bar code of the product you would like to set");
-					if(!isInteger(tempInput)) continue;
-					tempBarCode = Integer.parseInt(tempInput);
+					if(!isLong(tempInput)) continue;
+					tempBarCode = Long.parseLong(tempInput);
 					productNumber = productDatabase.findProduct(tempBarCode); // corrilate the product number with that in the database
 					if(productNumber == -1) {
 						JOptionPane.showMessageDialog(null, "The product that you asked for does not exist");
@@ -409,6 +411,17 @@ public class Interface
 		 return false; 
 		}
 		// only got here if we didn't return false
+		return true;
+	}
+	public boolean isLong(String s)
+	{
+		try {
+			Long.parseLong(s); // try to parse the string, catching a failure. 
+		}
+		catch(NumberFormatException e)
+		{
+			return false;
+		}
 		return true;
 	}
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      
