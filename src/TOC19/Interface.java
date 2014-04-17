@@ -158,7 +158,11 @@ public class Interface
 						q2 = productDatabase.emptyProduct(); // find the next available product.
 						if(q2 != -1) {
 							tempInput = JOptionPane.showInputDialog("Please enter the name of the product that you would like to create: ");
-							if(tempInput == null || tempInput.length() < 1) continue; // testing that a string was entered
+							if(tempInput == null) break; // testing that a string was entered
+							else if(tempInput.length() < 1) {
+								JOptionPane.showMessageDialog(null, "Please enter a valid name", "error", JOptionPane.ERROR_MESSAGE);
+								continue;
+							}
 							tempName = tempInput;
 							tempInput = JOptionPane.showInputDialog("Please enter the price of the new product: (no dollar Sign, decimals are fine) ");
 							if(!isDouble(tempInput) ) continue; // Ensure that the string is a double
@@ -166,6 +170,10 @@ public class Interface
 							tempInput = JOptionPane.showInputDialog("Please enter the bar code of " + tempName);
 							if(!isLong(tempInput)) continue; // ensure that the string is an integer. 
 							tempBarCode = Long.parseLong(tempInput);
+							if(productDatabase.findProduct(tempBarCode) != -1) {
+								JOptionPane.showMessageDialog(null, "The barcode you entered has already been taken", "Error", JOptionPane.ERROR_MESSAGE);
+								continue;
+							}
 							added = productDatabase.setDatabaseProduct(q2, tempName, tempProductPrice, tempBarCode); 
 							// send the values to productDatabase where they will be sent to the product constructor. tempBarCode is multiplied by 60 to get the time in seconds.
 							productDatabase.writeOutDatabase("productDatabase.txt"); // ensure that the database has been saved to file
