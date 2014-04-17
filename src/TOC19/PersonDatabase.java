@@ -241,7 +241,8 @@ public class PersonDatabase
 	}
 	public void resizeDatabase(boolean action)
 	{
-		allPersons = resizeDatabase(action, allPersons); // when calling for a resise outside this class, one needs to be able to access the database array to send it. Thanks to this little trick of signatures, they now have it. 
+		allPersons = resizeDatabase(action, allPersons); // when calling for a resise outside this class, one needs to be able to access the database array to send it. 
+														// Thanks to this little trick of signatures, they now have it. 
 	}
 	
 	public Person[] resizeDatabase(Boolean action, Person[] resizing)

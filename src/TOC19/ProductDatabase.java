@@ -199,7 +199,8 @@ public class ProductDatabase
 	}
 	public void resizeDatabase(boolean action)
 	{
-		allProducts = resizeDatabase(action, allProducts); // when calling for a resise outside this class, one needs to be able to access the database array to send it. Thanks to this little trick of signatures, they now have it. 
+		allProducts = resizeDatabase(action, allProducts); // when calling for a resise outside this class, one needs to be able to access the database array to send it.
+															//Thanks to this little trick of signatures, they now have it. 
 	}
 	
 	public Product[] resizeDatabase(Boolean action, Product[] resizing)

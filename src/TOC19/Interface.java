@@ -37,7 +37,8 @@ public class Interface
 		/**
 		Class Interface: Method run
 		Preconditions: Interface constructor has been run
-		Postconditions: the program will have run and all user interactions will have been acted upon. If ended correctly, the program will write the productDatabase to productDatabase.txt. The program will end.
+		Postconditions: the program will have run and all user interactions will have been acted upon. 
+						If ended correctly, the program will write the productDatabase to productDatabase.txt. The program will end.
 		*/
 		
 		// create the variables that will be used throughout the program
@@ -145,7 +146,9 @@ public class Interface
 				}
 			}
 			while(admin) {
-				options = new String[]{"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", "print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", "leave admin mode", "close the program"}; // admin options
+				options = new String[]{"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
+					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", 
+					"leave admin mode", "close the program"}; // admin options
 
 				tempInput = (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Options:", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
 				if(tempInput == null || tempInput.length() < 1) {
@@ -338,7 +341,8 @@ public class Interface
 				else if(tempInput.equals("Enter stock counts (bulk)")) {
 					int tempNumber = 0;
 					for(i = 0; productDatabase.productExists(i); i++) { // for each product ask for the new number of items you have. 
-						tempInput = JOptionPane.showInputDialog("You have " + productDatabase.getNumber(i) + " " + productDatabase.getProductName(i) + " left from last stocktake\n Including these, how many do you have now?");
+						tempInput = JOptionPane.showInputDialog("You have " + productDatabase.getNumber(i) + " " + productDatabase.getProductName(i) + 
+								" left from last stocktake\n Including these, how many do you have now?");
 						if(!isInteger(tempInput)) continue;
 						tempNumber = Integer.parseInt(tempInput);
 						productDatabase.setNumber(i, tempNumber);
@@ -355,7 +359,8 @@ public class Interface
 						JOptionPane.showMessageDialog(null, "The product that you asked for does not exist");
 						continue;
 					}
-					tempInput = JOptionPane.showInputDialog("You had " + productDatabase.getNumber(productNumber) + " " + productDatabase.getProductName(productNumber) + " left from last stocktake\n Inclunding these, how many do you have now?"); // ask the user how many they had, and how many they now have
+					tempInput = JOptionPane.showInputDialog("You had " + productDatabase.getNumber(productNumber) + " " + productDatabase.getProductName(productNumber) + 
+							" left from last stocktake\n Inclunding these, how many do you have now?"); // ask the user how many they had, and how many they now have
 					if(!isInteger(tempInput)) continue;
 					tempNumber = Integer.parseInt(tempInput);
 					productDatabase.setNumber(productNumber, tempNumber); // enter all this into the database and write it out.

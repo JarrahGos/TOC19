@@ -26,8 +26,8 @@ public class Product
 		barCode = extBarCode;
 	}
 	// Begin methods
-	public void setData(String name, String artist, double productPrice, long barCode) // redundant method which has been left in case products are edited in some way which would require this to be used.
-	{
+	public void setData(String name, String artist, double productPrice, long barCode) 
+	{ // redundant method which has been left in case products are edited in some way which would require this to be used.
 		/**
 		Class Song: Method setData
 		Precondition: Augments String name, String artist, double productPrice, double time are input
