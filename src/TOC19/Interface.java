@@ -1,4 +1,19 @@
 package TOC19;
+//    TOC19 is a simple program to run TOC payments within a small group. 
+//    Copyright (C) 2014  Jarrah Gosbell
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* 
 * Author: Jarrah Gosbell 
@@ -148,7 +163,7 @@ public class Interface
 			while(admin) {
 				options = new String[]{"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
 					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", 
-					"leave admin mode", "close the program"}; // admin options
+					"close the program"}; // admin options
 
 				tempInput = (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Options:", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
 				if(tempInput == null || tempInput.length() < 1) {
