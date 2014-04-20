@@ -14,9 +14,11 @@ Method
 TOC19 uses both a user system and an admin system to achieve it's goal. 
 
 User
+
 	The user is able to enter their login details, create a cart with the items and quantities of items that they desire, review those items and have them enetered to their account. 
 	
 Admin
+
 	The manager, further refered to as admin is able to administer the program from a select user account. A new menu appears when this account is invoked, allowing admin options such as adding new members or products, retreving billing data, or reseting billing cycles. Every action required by the admin to run the store is encorporated into this menu. 
 	The admin is also the only user with the permissions to close the program for maintenance of the system. 
 	
