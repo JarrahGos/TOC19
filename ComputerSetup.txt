@@ -4,5 +4,5 @@
 
 ## touch screen reversal
 xinput list ## to get ID number
-xinput 
+xinput list-props 9 ## change 9 to ID
 xinput set-prop 9 270 1 0 ## alter first number for device ID, alter second for setting, third and fourth invert X/Y
