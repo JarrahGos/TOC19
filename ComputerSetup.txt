@@ -1,0 +1,8 @@
+## this file will contain all the notes needed to set up a linux machine (specifically arch linux) with the packages
+## and configuration to use this program with a touch screen and scanner. 
+
+
+## touch screen reversal
+xinput list ## to get ID number
+xinput 
+xinput set-prop 9 270 1 0 ## alter first number for device ID, alter second for setting, third and fourth invert X/Y
