@@ -1,4 +1,4 @@
 #/usr/bin/bash
 ## found in ~/.xinitrc
 
-TOC19
+/usr/bin/TOC19.sh
