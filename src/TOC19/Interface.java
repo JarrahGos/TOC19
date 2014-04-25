@@ -21,18 +21,25 @@ package TOC19;
 * Class: Interface
 * Description: This program will allow the user to interact with the program, creating, deleting and modifying products and checkOuts.
 */
-import java.util.Scanner;
+// GUI Inports
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import javax.swing.*;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+
+//Security imports
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 
 public class Interface
 {
 	// Create the necessary instance variables.
 	private ProductDatabase productDatabase;
 	private PersonDatabase personDatabase;
-	private Scanner console;
 	private CheckOut checkOuts;
 	private int logicalSize;
 		
@@ -41,7 +48,6 @@ public class Interface
 		//initalize the variables created above
 		productDatabase = new ProductDatabase();
 		personDatabase = new PersonDatabase();
-		console = new Scanner(System.in);
 		checkOuts = new CheckOut();
 		logicalSize = 0;
 	}	
@@ -105,14 +111,38 @@ public class Interface
 				personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
 				sameUser = true; // tells the program that a user is logged in. 
 				if(-2 == personNumber) { // checks whether that user is an admin
-					admin = true; // the above conversion will return -2 for all admins. This will enact that. 
-					sameUser = false; // skip the normal user interface for non admin personnel. 
+					JPasswordField pField = new JPasswordField(10);
+					GridBagLayout gridbag = new GridBagLayout();
+					GridBagConstraints c = new GridBagConstraints();
+					c.insets.top = 4;
+					c.insets.bottom = 4;
+					JPanel pPanel = new JPanel(gridbag);
+					pPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
+					c.anchor = GridBagConstraints.WEST;
+					pPanel.add(new JLabel("Please Enter Password: "),c);
+					c.gridy=1;
+					pPanel.add(pField,c);
+					String passWd = new String("");
+       
+					int result = JOptionPane.showConfirmDialog(null, pPanel);
+					if (result == JOptionPane.OK_OPTION) {
+						passWd = (String.valueOf(pField.getPassword()));
+						passWd = getSecurePassword(passWd);
+					}
+					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
+						admin = true; // the above conversion will return -2 for all admins. This will enact that. 
+						sameUser = false; // skip the normal user interface for non admin personnel. 
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
+						admin = false; 
+						sameUser = false;
+					}
 				}
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
 				while(!admin) {
 					tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
 					if(tempInput != null && !tempInput.equals("") && isLong(tempInput)) tempBarCode = Long.parseLong(tempInput); // disallows the user from entering nothing or clicking cancel. 
-					
 					else if((tempInput == null && !first) || ("".equals(tempInput) && !first)) break; // if canceled and not on the first run of adding items. 
 					else { // what do do if the user does the above on the first run.
 						sameUser = false;
@@ -162,7 +192,7 @@ public class Interface
 			}
 			while(admin) {
 				options = new String[]{"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
-					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", 
+					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", "change password", 
 					"close the program"}; // admin options
 
 				tempInput = (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Options:", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
@@ -381,6 +411,47 @@ public class Interface
 					productDatabase.setNumber(productNumber, tempNumber); // enter all this into the database and write it out.
 					productDatabase.writeOutDatabase("productDatabase.txt");
 				}
+				else if(tempInput.equals("change password")) {
+					JPasswordField pField = new JPasswordField(10);
+					GridBagLayout gridbag = new GridBagLayout();
+					GridBagConstraints c = new GridBagConstraints();
+					c.insets.top = 4;
+					c.insets.bottom = 4;
+					JPanel pPanel = new JPanel(gridbag);
+					pPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
+					c.anchor = GridBagConstraints.WEST;
+					pPanel.add(new JLabel("Please Enter Password: "),c);
+					c.gridy=1;
+					pPanel.add(pField,c);
+					String passWd = new String("");
+					String newPassWd = new String("");
+       
+					int result = JOptionPane.showConfirmDialog(null, pPanel);
+					if (result == JOptionPane.OK_OPTION) {
+						passWd = (String.valueOf(pField.getPassword()));
+						passWd = getSecurePassword(passWd);
+					}
+					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
+						result = JOptionPane.showConfirmDialog(null, pPanel);
+						if (result == JOptionPane.OK_OPTION) {
+							passWd = (String.valueOf(pField.getPassword()));
+						}
+						result = JOptionPane.showConfirmDialog(null, pPanel);
+						if (result == JOptionPane.OK_OPTION) {
+							newPassWd = (String.valueOf(pField.getPassword()));
+						}
+						if(passWd != null && newPassWd != null && !passWd.equals("") && !newPassWd.equals("") && passWd.equals(newPassWd)) {
+							passWd = getSecurePassword(passWd);
+							personDatabase.setAdminPassword(passWd);
+							personDatabase.writeOutDatabase("personDatabase.txt");
+							JOptionPane.showMessageDialog(null, "Success, Password changed", "Success", JOptionPane.INFORMATION_MESSAGE);
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
+						continue;
+					}
+				}
 				else if(tempInput.equals("close the program")) {
 					personDatabase.writeOutDatabase("personDatabase.txt"); // write any somehow missed changes out and then exit
 					productDatabase.writeOutDatabase("productDatabase.txt");
@@ -452,4 +523,23 @@ public class Interface
 		}
 		return true;
 	}
+	private static String getSecurePassword(String passwordToHash)
+    {
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] bytes = md.digest(passwordToHash.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++)
+            {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      

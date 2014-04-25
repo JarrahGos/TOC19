@@ -405,10 +405,11 @@ public class ProductDatabase
 	}
 	public int readDatabase(String path) 
 	{
-		String tempName;
+		String tempName, tempInput;
 		double tempSize, tempProductPrice;
 		long tempBarCode;
 		int tempNumberOfProduct;
+		boolean negative = false;
 		int count = 0;
 		int z = 0;
 		try {
@@ -419,8 +420,17 @@ public class ProductDatabase
 				readOutFile.nextLine(); // someone decided to put a redundant line in each product of the file, this throws it away.
 				tempName = readOutFile.nextLine();
 				tempProductPrice = Double.parseDouble(readOutFile.nextLine());
-				tempBarCode = Integer.parseInt(readOutFile.nextLine());
-				tempNumberOfProduct = Integer.parseInt(readOutFile.nextLine());
+				tempBarCode = Long.parseLong(readOutFile.nextLine());
+				tempInput = readOutFile.nextLine();
+				if('-' == tempInput.charAt(0)) {
+					tempInput = tempInput.substring(1);
+					negative = true;
+				}
+				tempNumberOfProduct = Integer.parseInt(tempInput);
+				if(negative) {
+					tempNumberOfProduct *= -1;
+					negative = false;
+				}
 				count += this.setDatabaseProduct(z, tempName, tempProductPrice, tempBarCode); // send the big pile of lines that we just read to the product constructor. 
 				allProducts[z].setNumber(tempNumberOfProduct);
 			}
