@@ -132,4 +132,8 @@ public class Person
 	{
 		totalCostWeek = 0;
 	}
+	public void setName(String extName)
+	{
+		name = extName;
+	}
 }
