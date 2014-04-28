@@ -132,11 +132,15 @@ public class Interface
 					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
 						admin = true; // the above conversion will return -2 for all admins. This will enact that. 
 						sameUser = false; // skip the normal user interface for non admin personnel. 
+						passWd = null;
+						pField = new JPasswordField(10);
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
 						admin = false; 
 						sameUser = false;
+						passWd = null;
+						pField = new JPasswordField(10);
 					}
 				}
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
@@ -430,25 +434,32 @@ public class Interface
 					if (result == JOptionPane.OK_OPTION) {
 						passWd = (String.valueOf(pField.getPassword()));
 						passWd = getSecurePassword(passWd);
+						pField.setText("");
 					}
 					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
+						pField.setText("");
+						passWd = newPassWd = null;
 						result = JOptionPane.showConfirmDialog(null, pPanel);
 						if (result == JOptionPane.OK_OPTION) {
 							passWd = (String.valueOf(pField.getPassword()));
+							pField.setText("");
 						}
 						result = JOptionPane.showConfirmDialog(null, pPanel);
 						if (result == JOptionPane.OK_OPTION) {
 							newPassWd = (String.valueOf(pField.getPassword()));
+							pField.setText("");
 						}
 						if(passWd != null && newPassWd != null && !passWd.equals("") && !newPassWd.equals("") && passWd.equals(newPassWd)) {
 							passWd = getSecurePassword(passWd);
 							personDatabase.setAdminPassword(passWd);
 							personDatabase.writeOutDatabase("personDatabase.txt");
 							JOptionPane.showMessageDialog(null, "Success, Password changed", "Success", JOptionPane.INFORMATION_MESSAGE);
+							pField.setText("");
 						}
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
+						passWd = newPassWd = null;
 						continue;
 					}
 				}
