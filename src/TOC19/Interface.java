@@ -140,7 +140,7 @@ public class Interface
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
 						admin = false; 
 						sameUser = false;
-				passWd = null;
+						passWd = null;
 						passwordField.setText("");
 					}
 				}
