@@ -486,10 +486,6 @@ public class Interface
 			return (Arrays.copyOf(resizing, resizing.length + 1));
 		}
 		else {
-			CheckOut[] resized = new CheckOut[resizing.length - 1]; // shorten the checkOut by one.
-			for(int i = 0; i < logicalSize-1; i++) {
-				resized[i] = resizing[i]; // copy old to new.
-			}
 			return (Arrays.copyOf(resizing, resizing.length - 1));
 		}
 		

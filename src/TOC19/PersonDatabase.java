@@ -258,10 +258,6 @@ public class PersonDatabase {
 			return (Arrays.copyOf(resizing, resizing.length/2));
 		} 
 		else { // if all eles fails, there must be less than 4 persons and the array must be short, make it 4 places long
-			Person[] resized = new Person[4];
-			for (int z = 0; z < logicalSize; z++) {
-				resized[z] = resizing[z];
-			}
 			return (Arrays.copyOf(resizing, 4));
 		}
 	}
