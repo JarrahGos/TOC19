@@ -26,13 +26,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import javax.swing.*;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
+//import java.awt.GridBagLayout;
+//import java.awt.GridBagConstraints;
 
 //Security imports
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+//import java.security.SecureRandom;
 
 
 public class Interface
@@ -139,7 +139,7 @@ public class Interface
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
 						admin = false; 
 						sameUser = false;
-						passWd = null;
+				passWd = null;
 						passwordField.setText("");
 					}
 				}
@@ -368,7 +368,7 @@ public class Interface
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Bills have not been reset.");
-						continue;
+//						continue;
 					}
 				}
 				else if(tempInput.equals("print the person database to the screen")) {
@@ -436,7 +436,7 @@ public class Interface
 						passwordField.setText("");
 					}
 					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
-						passWd = newPassWd = null;
+//						passWd = newPassWd = null;
 						pane.createDialog(null, "Enter New Password").setVisible(true);
 						passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
 						if (passWd != null) {
@@ -457,7 +457,7 @@ public class Interface
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
-						continue;
+//						continue;
 					}
 				}
 				else if(tempInput.equals("close the program")) {

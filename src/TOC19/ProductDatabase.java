@@ -21,6 +21,7 @@
 * Description: This program will allow for the input and retreval of the product database and will set the limits of the database.
 */
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -364,7 +365,7 @@ public class ProductDatabase
 			file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
 		}
-		catch(Exception e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
+		catch(FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
 			outfile.close();
 			return 1;
 		}
@@ -387,7 +388,7 @@ public class ProductDatabase
 			file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
 		}
-		catch(Exception e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
+		catch(FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
 			outfile.close();
 			return 1;
 		}
@@ -437,7 +438,7 @@ public class ProductDatabase
 			readOutFile.close(); // clean up by closing the file
 			return z - count; // tell the program how many products we just got. If it's more than a thousand, I hope the sort doesn't take too long. 
 		}
-		catch(Exception e) {
+		catch(FileNotFoundException e) {
 			readOutFile.close(); // Well, if something goes wrong, someone should find out. 
 			return -1; // this is what we use to tell them that something we didn't expect happened. Like the user assuring me that the file exists.
 		}
