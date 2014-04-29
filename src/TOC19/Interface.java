@@ -99,7 +99,7 @@ public class Interface
 		{
 			boolean first = true; // first item to be added to the cart
 			tempInput = ""; // initialise tempInput
-				tempInput = JOptionPane.showInputDialog("Enter your PMKeyS");
+				tempInput = JOptionPane.showInputDialog(null, "Enter your PMKeyS", "title", JOptionPane.QUESTION_MESSAGE);
 				if(tempInput == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
 					JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
 					continue; //start at the top of the while loop. 
