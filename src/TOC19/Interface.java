@@ -77,6 +77,7 @@ public class Interface
 		boolean sameUser = true; // How the program knows that it is serving the same user. 
 		int another = 0; // whether another item will be added
 		String[] options = new String[12]; // admin options are stored here. 
+		final JPasswordField passwordField = new JPasswordField(10); // box to take passwords from the user
 		
 		// Import the productDatabase
 		q2 = 0;
@@ -111,36 +112,54 @@ public class Interface
 				personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
 				sameUser = true; // tells the program that a user is logged in. 
 				if(-2 == personNumber) { // checks whether that user is an admin
-					JPasswordField pField = new JPasswordField(10);
-					GridBagLayout gridbag = new GridBagLayout();
-					GridBagConstraints c = new GridBagConstraints();
-					c.insets.top = 4;
-					c.insets.bottom = 4;
-					JPanel pPanel = new JPanel(gridbag);
-					pPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
-					c.anchor = GridBagConstraints.WEST;
-					pPanel.add(new JLabel("Please Enter Password: "),c);
-					c.gridy=1;
-					pPanel.add(pField,c);
 					String passWd = new String("");
+					JPanel panel = new JPanel();
+					panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+					panel.add(new JLabel("Enter Password\n\n"));
+					panel.add(passwordField);
+					JOptionPane pane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
+						@Override
+						public void selectInitialValue() {
+							passwordField.requestFocusInWindow();
+						}
+					};
+					pane.createDialog(null, "Enter Password").setVisible(true);
+					passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
+//					JPasswordField pField = new JPasswordField(10);
+					//GridBagLayout gridbag = new GridBagLayout();
+					//GridBagConstraints c = new GridBagConstraints();
+					//c.insets.top = 4;
+					//c.insets.bottom = 4;
+//					JPanel pPanel = new JPanel(gridbag);
+//					pPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
+//					c.anchor = GridBagConstraints.WEST;
+//					pPanel.add(new JLabel("Please Enter Password: "),c);
+//					c.gridy=1;
+//					pPanel.add(pField,c);
+//					pField.requestFocusInWindow();
+					
        
-					int result = JOptionPane.showConfirmDialog(null, pPanel);
-					if (result == JOptionPane.OK_OPTION) {
-						passWd = (String.valueOf(pField.getPassword()));
+				//	int result = JOptionPane.showConfirmDialog(null, pField, "enter password", JOptionPane.OK_CANCEL_OPTION);
+//					pField.requestFocusInWindow();
+					if (passWd != null) {
+//						passWd = (String.valueOf(pField.getPassword()));
 						passWd = getSecurePassword(passWd);
+						passwordField.setText("");
 					}
 					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
 						admin = true; // the above conversion will return -2 for all admins. This will enact that. 
 						sameUser = false; // skip the normal user interface for non admin personnel. 
 						passWd = null;
-						pField = new JPasswordField(10);
+//						pField = new JPasswordField(10);
+						passwordField.setText("");
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
 						admin = false; 
 						sameUser = false;
 						passWd = null;
-						pField = new JPasswordField(10);
+//						pField = new JPasswordField(10);
+						passwordField.setText("");
 					}
 				}
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
@@ -416,50 +435,66 @@ public class Interface
 					productDatabase.writeOutDatabase("productDatabase.txt");
 				}
 				else if(tempInput.equals("change password")) {
-					JPasswordField pField = new JPasswordField(10);
-					GridBagLayout gridbag = new GridBagLayout();
-					GridBagConstraints c = new GridBagConstraints();
-					c.insets.top = 4;
-					c.insets.bottom = 4;
-					JPanel pPanel = new JPanel(gridbag);
-					pPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
-					c.anchor = GridBagConstraints.WEST;
-					pPanel.add(new JLabel("Please Enter Password: "),c);
-					c.gridy=1;
-					pPanel.add(pField,c);
+//					JPasswordField pField = new JPasswordField(10);
+//					GridBagLayout gridbag = new GridBagLayout();
+//					GridBagConstraints c = new GridBagConstraints();
+//					c.insets.top = 4;
+//					c.insets.bottom = 4;
+//					JPanel pPanel = new JPanel(gridbag);
+//					pPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
+//					c.anchor = GridBagConstraints.WEST;
+//					pPanel.add(new JLabel("Please Enter Password: "),c);
+//					c.gridy=1;
+//					pPanel.add(pField,c);
+					
 					String passWd = new String("");
+					JPanel panel = new JPanel();
+					panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+					panel.add(new JLabel("Enter Password\n\n"));
+					panel.add(passwordField);
+					JOptionPane pane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
+						@Override
+						public void selectInitialValue() {
+							passwordField.requestFocusInWindow();
+						}
+					};
+					pane.createDialog(null, "Enter Password").setVisible(true);
+					passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
 					String newPassWd = new String("");
-       
-					int result = JOptionPane.showConfirmDialog(null, pPanel);
-					if (result == JOptionPane.OK_OPTION) {
-						passWd = (String.valueOf(pField.getPassword()));
+					passwordField.setText("");
+					if (passWd != null) {
+//						passWd = (String.valueOf(pField.getPassword()));
 						passWd = getSecurePassword(passWd);
-						pField.setText("");
+						passwordField.setText("");
 					}
 					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
-						pField.setText("");
+//						passwordField.setText("");
 						passWd = newPassWd = null;
-						result = JOptionPane.showConfirmDialog(null, pPanel);
-						if (result == JOptionPane.OK_OPTION) {
-							passWd = (String.valueOf(pField.getPassword()));
-							pField.setText("");
+						pane.createDialog(null, "Enter New Password").setVisible(true);
+						passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
+//						result = JOptionPane.showConfirmDialog(null, pPanel);
+						if (passWd != null) {
+//							passWd = (String.valueOf(pField.getPassword()));
+							passwordField.setText("");
 						}
-						result = JOptionPane.showConfirmDialog(null, pPanel);
-						if (result == JOptionPane.OK_OPTION) {
-							newPassWd = (String.valueOf(pField.getPassword()));
-							pField.setText("");
+						pane.createDialog(null, "Re-enter New Password").setVisible(true);
+						newPassWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
+//						result = JOptionPane.showConfirmDialog(null, pPanel);
+						if (newPassWd != null) {
+//							newPassWd = (String.valueOf(pField.getPassword()));
+						passwordField.setText("");
 						}
 						if(passWd != null && newPassWd != null && !passWd.equals("") && !newPassWd.equals("") && passWd.equals(newPassWd)) {
 							passWd = getSecurePassword(passWd);
 							personDatabase.setAdminPassword(passWd);
 							personDatabase.writeOutDatabase("personDatabase.txt");
 							JOptionPane.showMessageDialog(null, "Success, Password changed", "Success", JOptionPane.INFORMATION_MESSAGE);
-							pField.setText("");
+						passwordField.setText("");
 						}
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
-						passWd = newPassWd = null;
+//						passWd = newPassWd = null;
 						continue;
 					}
 				}
