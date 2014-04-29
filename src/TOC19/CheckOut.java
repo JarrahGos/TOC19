@@ -1,3 +1,6 @@
+
+import java.util.Arrays;
+
 //package TOC19;
 //    TOC19 is a simple program to run TOC payments within a small group. 
 //    Copyright (C) 2014  Jarrah Gosbell
@@ -144,51 +147,27 @@ public class CheckOut
 	public Product[] resizeCheckOut(Boolean action, Product[] resizing)
 	{
 		if(action) { //Make the checkOut bigger
-			resized = new Product[resizing.length + 4];
-			for(int i = 0; i < logicalSize; i++) {
-				resized[i] = resizing[i];
-			}
-			return resized;
+			return (Arrays.copyOf(resizing, resizing.length + 4));
 		}
 		
 		else if(resizing.length/2 > 4) { // make the checkOut smaller if it will not become lower than 4 places long
-			Product[] resized = new Product[resizing.length/2];
-			for(int i = 0; i < logicalSize; i++) {
-				resized[i] = resizing[i];
-			}
-			return resized;
+			return (Arrays.copyOf(resizing, resizing.length/2));
 		}
 		else { // finally, make the database 4 places long if it cannot be halved without going lower than 4 places.
-			Product[] resized = new Product[4];
-			for(int i = 0; i < logicalSize; i++) {
-				resized[i] = resizing[i];
-			}
-			return resized;
+			return (Arrays.copyOf(resizing, 4));
 		}
 		
 	}
 	public int[] resizeQuantities(Boolean action, int[] resize)
 	{
 		if(action) {
-			int[] intArray = new int[logicalSize + 4];
-			for(int i = 0; i < logicalSize; i++) {
-				intArray[i] = resize[i];
-			}
-			return intArray;
+			return (Arrays.copyOf(resize, resize.length + 4));
 		}
 		else if(resize.length / 2 > 4) {
-			int[] intArray = new int[resize.length/2];
-			for(int i = 0; i < logicalSize; i++) {
-				intArray[i] = resize[i];
-			}
-			return intArray;
+			return (Arrays.copyOf(resize, resize.length/2));
 		}
 		else {
-			int[] intArray = new int[4];
-			for(int i = 0; i < logicalSize; i++) {
-				intArray[i] = resize[i];
-			}
-			return intArray;
+			return (Arrays.copyOf(resize, 4));
 		}
 
 	}

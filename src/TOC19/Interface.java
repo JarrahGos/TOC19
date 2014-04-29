@@ -26,13 +26,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import javax.swing.*;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
+//import java.awt.GridBagLayout;
+//import java.awt.GridBagConstraints;
 
 //Security imports
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.util.Arrays;
+//import java.security.SecureRandom;
 
 
 public class Interface
@@ -112,7 +113,7 @@ public class Interface
 				personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
 				sameUser = true; // tells the program that a user is logged in. 
 				if(-2 == personNumber) { // checks whether that user is an admin
-					String passWd = new String("");
+					String passWd = "";
 					JPanel panel = new JPanel();
 					panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 					panel.add(new JLabel("Enter Password\n\n"));
@@ -139,7 +140,7 @@ public class Interface
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
 						admin = false; 
 						sameUser = false;
-						passWd = null;
+				passWd = null;
 						passwordField.setText("");
 					}
 				}
@@ -368,7 +369,7 @@ public class Interface
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Bills have not been reset.");
-						continue;
+//						continue;
 					}
 				}
 				else if(tempInput.equals("print the person database to the screen")) {
@@ -416,7 +417,7 @@ public class Interface
 					productDatabase.writeOutDatabase("productDatabase.txt");
 				}
 				else if(tempInput.equals("change password")) {
-					String passWd = new String("");
+					String passWd = "";
 					JPanel panel = new JPanel();
 					panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 					panel.add(new JLabel("Enter Password\n\n"));
@@ -429,14 +430,14 @@ public class Interface
 					};
 					pane.createDialog(null, "Enter Password").setVisible(true);
 					passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
-					String newPassWd = new String("");
+					String newPassWd = "";
 					passwordField.setText("");
 					if (passWd != null) {
 						passWd = getSecurePassword(passWd);
 						passwordField.setText("");
 					}
 					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
-						passWd = newPassWd = null;
+//						passWd = newPassWd = null;
 						pane.createDialog(null, "Enter New Password").setVisible(true);
 						passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
 						if (passWd != null) {
@@ -457,7 +458,7 @@ public class Interface
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
-						continue;
+//						continue;
 					}
 				}
 				else if(tempInput.equals("close the program")) {
@@ -483,18 +484,14 @@ public class Interface
 	public CheckOut[] resizeCheckOut(Boolean action, CheckOut[] resizing)
 	{
 		if(action) {
-			CheckOut[] resized = new CheckOut[resizing.length + 1]; // extend the checkOut length by one
-			for(int i = 0; i < logicalSize; i++) {
-				resized[i] = resizing[i]; // copy old to new
-			}
-			return resized;
+			return (Arrays.copyOf(resizing, resizing.length + 1));
 		}
 		else {
 			CheckOut[] resized = new CheckOut[resizing.length - 1]; // shorten the checkOut by one.
 			for(int i = 0; i < logicalSize-1; i++) {
 				resized[i] = resizing[i]; // copy old to new.
 			}
-			return resized;
+			return (Arrays.copyOf(resizing, resizing.length - 1));
 		}
 		
 	}
