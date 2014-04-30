@@ -442,6 +442,16 @@ public class Interface
 						if (passWd != null) {
 							passwordField.setText("");
 						}
+						panel = new JPanel();
+						panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+						panel.add(new JLabel("Re-enter Password\n\n"));
+						panel.add(passwordField);
+						pane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
+						@Override
+						public void selectInitialValue() {
+							passwordField.requestFocusInWindow();
+						}
+						};
 						pane.createDialog(null, "Re-enter New Password").setVisible(true);
 						newPassWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
 						if (newPassWd != null) {
@@ -454,11 +464,12 @@ public class Interface
 							JOptionPane.showMessageDialog(null, "Success, Password changed", "Success", JOptionPane.INFORMATION_MESSAGE);
 						passwordField.setText("");
 						}
-					}
-					else {
+						else {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
 //						continue;
+						}
 					}
+					
 				}
 				else if(tempInput.equals("close the program")) {
 					personDatabase.writeOutDatabase("personDatabase.txt"); // write any somehow missed changes out and then exit
