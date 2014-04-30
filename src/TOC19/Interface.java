@@ -206,7 +206,7 @@ public class Interface
 				}
 				else if(tempInput.equals("add products")) {
 					int done = 0;
-						while(done != 1) {
+						while(done != 1) { // Not sure that this while loop has a reason for existance. 
 						q2 = productDatabase.emptyProduct(); // find the next available product.
 						if(q2 != -1) {
 							tempInput = JOptionPane.showInputDialog("Please enter the name of the product that you would like to create: ");
@@ -217,10 +217,16 @@ public class Interface
 							}
 							tempName = tempInput;
 							tempInput = JOptionPane.showInputDialog("Please enter the price of the new product: (no dollar Sign, decimals are fine) ");
-							if(!isDouble(tempInput) ) continue; // Ensure that the string is a double
+							if(!isDouble(tempInput)) {
+								done = 1;
+								continue; // Ensure that the string is a double
+							}
 							tempProductPrice = Double.parseDouble(tempInput);
 							tempInput = JOptionPane.showInputDialog("Please enter the bar code of " + tempName);
-							if(!isLong(tempInput)) continue; // ensure that the string is an integer. 
+							if(!isLong(tempInput)) {
+								done = 1;
+								continue; // ensure that the string is an integer. 
+							}
 							tempBarCode = Long.parseLong(tempInput);
 							if(productDatabase.findProduct(tempBarCode) != -1) {
 								JOptionPane.showMessageDialog(null, "The barcode you entered has already been taken", "Error", JOptionPane.ERROR_MESSAGE);
@@ -368,7 +374,7 @@ public class Interface
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Bills have not been reset.");
-//						continue;
+
 					}
 				}
 				else if(tempInput.equals("print the person database to the screen")) {
@@ -436,7 +442,6 @@ public class Interface
 						passwordField.setText("");
 					}
 					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
-//						passWd = newPassWd = null;
 						pane.createDialog(null, "Enter New Password").setVisible(true);
 						passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
 						if (passWd != null) {
@@ -466,7 +471,6 @@ public class Interface
 						}
 						else {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "error", JOptionPane.ERROR_MESSAGE);
-//						continue;
 						}
 					}
 					
@@ -503,17 +507,19 @@ public class Interface
 	}
 	public boolean isInteger(String s) 
 	{
+		if(s == null) return false;
 		try { 
 			Integer.parseInt(s); // try to parse the string, catching a failure
 		} 
 		catch(NumberFormatException e) { 
-		 return false; 
+			return false; 
 		}
 		// only got here if we didn't return false
 		return true;
 	}
 	public boolean isDouble(String s) 
 	{
+		if(s == null) return false;
 		try { 
 			Double.parseDouble(s);  // try to parse the string, catching a failure
 		} 
@@ -525,6 +531,7 @@ public class Interface
 	}
 	public boolean isLong(String s)
 	{
+		if(s == null) return false;
 		try {
 			Long.parseLong(s); // try to parse the string, catching a failure. 
 		}
