@@ -217,14 +217,22 @@ public class Interface
 							}
 							tempName = tempInput;
 							tempInput = JOptionPane.showInputDialog("Please enter the price of the new product: (no dollar Sign, decimals are fine) ");
-							if(!isDouble(tempInput)) {
-								done = 1;
+							if (tempInput == null) {
+								done = 1; // exit the loop
+								continue;
+							}
+							else if(!isDouble(tempInput)) {
+								JOptionPane.showMessageDialog(null, "You did not enter a valid price.\n Maybe you added the dollar sign, don't next time.", "Error", JOptionPane.ERROR_MESSAGE);
 								continue; // Ensure that the string is a double
 							}
 							tempProductPrice = Double.parseDouble(tempInput);
 							tempInput = JOptionPane.showInputDialog("Please enter the bar code of " + tempName);
-							if(!isLong(tempInput)) {
-								done = 1;
+							if(tempInput == null) {
+								done = 1; // exit the loop
+								continue;
+							}
+							else if(!isLong(tempInput)) {
+								JOptionPane.showMessageDialog(null, "You did not enter a valid barcode", "Error", JOptionPane.ERROR_MESSAGE);
 								continue; // ensure that the string is an integer. 
 							}
 							tempBarCode = Long.parseLong(tempInput);
