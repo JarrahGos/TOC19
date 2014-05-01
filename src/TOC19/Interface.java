@@ -293,11 +293,11 @@ public class Interface
 							personDatabase.writeOutDatabase("personDatabase.txt");
 						}
 						if(added == 0) { // output on success
-						JOptionPane.showMessageDialog(null, "Success", tempName + " is now in your person database", JOptionPane.INFORMATION_MESSAGE); // q2 +1 due to the off by one error
+						JOptionPane.showMessageDialog(null, tempName + " is now in your person database", "Success", JOptionPane.INFORMATION_MESSAGE); // q2 +1 due to the off by one error
 						}
 						else if(added == 2) continue;
 						else { // output on error
-							JOptionPane.showMessageDialog(null,"Error",  tempName + " is already in your person database", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, tempName + " is already in your person database", "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						done = 1; // close the loop
 					}
