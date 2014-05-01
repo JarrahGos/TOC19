@@ -158,7 +158,7 @@ public class Interface
 						continue;
 					}
 					tempInput = JOptionPane.showInputDialog(null, "Enter the quantity of " + productDatabase.getProductName(productNumber) +" you are purchasing",
-																"Qunatity", JOPtionPane.QUESTION_MESSAGE);
+																"Qunatity", JOptionPane.QUESTION_MESSAGE);
 					if(tempInput != null && !tempInput.equals("") && isInteger(tempInput)) { // check that a valid integer was entered
 						quantity = Integer.parseInt(tempInput);
 					}
@@ -256,7 +256,7 @@ public class Interface
 				}
 				else if(tempInput.equals("remove products")) {	
 					error = 1;
-					tempInput = JOptionPane.showInputDialog(nell, "Enter the bar code of the item you would like to delete", "Barcode", JOptionPane.QUESTION_MESSAGE);
+					tempInput = JOptionPane.showInputDialog(null, "Enter the bar code of the item you would like to delete", "Barcode", JOptionPane.QUESTION_MESSAGE);
 					if(!isLong(tempInput)) continue; // check the input
 					tempBarCode = Long.parseLong(tempInput);
 					q2 = productDatabase.findProduct(tempBarCode);	
@@ -390,6 +390,7 @@ public class Interface
 				}
 				else if(tempInput.equals("print the person database to the screen")) {
 					JTextArea textArea = new JTextArea(personDatabase.getDatabase(1)); // create the text to be displayed
+					textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
 					JScrollPane scrollPane = new JScrollPane(textArea); // create the scrolling window for the text
 					textArea.setLineWrap(true); // force line wrap, this should not be needed, but is enabled anyway. 
 					textArea.setWrapStyleWord(true); // make wrap work on a perword basis rather than percharacter
@@ -398,6 +399,7 @@ public class Interface
 				}
 				else if(tempInput.equals("print the product database to the screen")) { // see above
 					JTextArea textArea = new JTextArea(productDatabase.getDatabase(1));
+					textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
 					JScrollPane scrollPane = new JScrollPane(textArea);
 					textArea.setLineWrap(true);
 					textArea.setWrapStyleWord(true);
