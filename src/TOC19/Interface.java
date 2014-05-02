@@ -138,17 +138,7 @@ public class Interface
 						JOptionPane.showMessageDialog(null, "That product does not exist, please try again.", "Error", JOptionPane.ERROR_MESSAGE);
 						continue;
 					}
-//					tempInput = JOptionPane.showInputDialog(null, "Enter the quantity of " + productDatabase.getProductName(productNumber) +" you are purchasing",
-//																"Qunatity", JOptionPane.QUESTION_MESSAGE);
-//					if(tempInput != null && !tempInput.equals("") && isInteger(tempInput)) { // check that a valid integer was entered
-//						quantity = Integer.parseInt(tempInput);
-//					}
-//					else if((tempInput == null && !first)) break;
-//					else if(tempInput == null) { // added in latest version. Lets see whether they like it. 
-//						sameUser = false; 
-//						break;
-//					}
-//					else quantity = 1; // defult to adding one of the product
+
 					int checkProduct; // create this for use below
 					tempInput = productDatabase.getProduct(productNumber);
 					checkProduct = checkOuts.productEqualTo(tempInput); // check that the product was not entered into the database before. If it was, just add the quantity to the one in the database
