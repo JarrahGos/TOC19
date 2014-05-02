@@ -76,8 +76,7 @@ public class Interface
 		boolean admin = false; // how the program knows that it is in admin mode
 		boolean sameUser = true; // How the program knows that it is serving the same user. 
                 boolean first = true;
-		int another = 0; // whether another item will be added
-		String[] options = new String[12]; // admin options are stored here. 
+		int another = 0; // whether another item will be added 
 		final JPasswordField passwordField = new JPasswordField(10); // box to take passwords from the user
 		
 		// Import the productDatabase
@@ -105,7 +104,7 @@ public class Interface
                                 first = true;
 				if(-2 == personNumber) { // checks whether that user is an admin
 					String passWd = "";
-					passWd = getPassWd();
+					passWd = getPassWd(true);
 					if (passWd != null) {
 						passWd = getSecurePassword(passWd);
 					}
@@ -160,12 +159,8 @@ public class Interface
 				if(!admin && sameUser) {
 					another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nAre you happy with this?", "Cart", JOptionPane.YES_NO_OPTION);
 					if(another == 0) { // purchise and clean up the system.
-						personDatabase.addCost(personNumber, checkOuts.getPrice());// add the bill to the persons account
-						checkOuts.productBought(); // clear the quantities and checkout
-						productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
-						personDatabase.writeOutDatabase("personDatabase.txt");
-						checkOuts = new CheckOut(); // ensure checkout clear
-						sameUser = false; // reset to enter PMKeyS
+                                            buyProducts(personNumber, checkOuts.getPrice());
+					sameUser = false; // reset to enter PMKeyS
 					}
 					if(another == 1) { // reset the cart for the user. 
 						JOptionPane.showMessageDialog(null, "Your cart has been reset", "Reset", JOptionPane.INFORMATION_MESSAGE);
@@ -174,11 +169,7 @@ public class Interface
 				}
 			}
 			while(admin) {
-				options = new String[] {"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
-					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", "change password", 
-					"close the program"}; // admin options
-
-				tempInput = (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
+				tempInput = showAdminMenu();
 				if(tempInput == null || tempInput.length() < 1) {
 					admin = false;
 					break;
@@ -414,13 +405,13 @@ public class Interface
 				}
 				else if(tempInput.equals("change password")) {
 					String passWd = "";
-					passwd = getPassWd(true);
+					passWd = getPassWd(true);
 					String newPassWd = "";
 					if (passWd != null) {
 						passWd = getSecurePassword(passWd);
 					}
 					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
-						passWd = getPasswd(true);
+						passWd = getPassWd(true);
 						newPassWd = getPassWd(false);
 						if(passWd != null && newPassWd != null && !passWd.equals("") && !newPassWd.equals("") && passWd.equals(newPassWd)) {
 							passWd = getSecurePassword(passWd);
@@ -585,4 +576,19 @@ public class Interface
 		}
 		
 	}
+        private void buyProducts(int personNumber, double price)
+        {
+            personDatabase.addCost(personNumber, price);// add the bill to the persons account
+            checkOuts.productBought(); // clear the quantities and checkout
+            productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
+            personDatabase.writeOutDatabase("personDatabase.txt");
+            checkOuts = new CheckOut(); // ensure checkout clear
+        }
+        private String showAdminMenu()
+        {
+            String[] options = new String[] {"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
+					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", "change password", 
+					"close the program"}; // admin options
+            return (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
+        }
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      
