@@ -448,7 +448,7 @@ public class Interface
                 JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
                 continue;
             }
-            else if(tempInput.equals("") || !isLong(tempInput) || !personDatabase.personExists(Integer.parseInt(tempInput)) ) { // checks for valid numbers in the PMKeyS
+            else if(tempInput.equals("") || !isLong(tempInput) || tempInput.length() != 7 || !personDatabase.personExists(Integer.parseInt(tempInput))) { // checks for valid numbers in the PMKeyS
                 JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Errror", JOptionPane.ERROR_MESSAGE);
                 continue;
             }
