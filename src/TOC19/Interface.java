@@ -244,7 +244,7 @@ public class Interface
 					if(!isLong(tempInput)) {
 						continue;
 					}
-					productNumber = productDatabase.findProduct(Integer.parseInt(tempInput));  // find the position of the product in the database
+					productNumber = productDatabase.findProduct(Long.parseLong(tempInput));  // find the position of the product in the database
 					if(productNumber == -1) {
 						JOptionPane.showMessageDialog(null, "The product that you asked for does not exist", "Error", JOptionPane.ERROR_MESSAGE);
 						continue;
