@@ -205,7 +205,7 @@ public class Interface
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
 						q2 = personDatabase.findPerson(tempBarCode);	
-					if(q2 != -1) {
+					if(q2 != -1 && tempBarCode != 7000000) {
 						error = personDatabase.delPerson(q2); // recieve a one value on an error
 						q2++; // confirmation output error
 						personDatabase.writeOutDatabase("personDatabase.txt");
