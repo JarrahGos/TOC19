@@ -152,15 +152,21 @@ public class Interface
 						checkOuts.addQuantity(checkProduct, 1);
 					}
 					else checkOuts.addProduct(checkOuts.emptyProduct(), productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
-					another = JOptionPane.showConfirmDialog(null, "Would you like to add another item?", "Continue", JOptionPane.YES_NO_OPTION);
-					if(another != 0) break; // let the user buy already. 
+					//another = JOptionPane.showConfirmDialog(null, "Would you like to add another item?", "Continue", JOptionPane.YES_NO_OPTION);
+					another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nWould you like to add more items?" + "\nHitting no will buy this cart", "Cart", JOptionPane.YES_NO_CANCEL_OPTION);
+					if(another == 1) break; // let the user buy already. 
+					else if(another == 2) {
+						sameUser = false;
+						break;
+					}
 					else first = false; // make the add another product. 
 				}
 				if(!admin && sameUser) {
-					another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nAre you happy with this?", "Cart", JOptionPane.YES_NO_OPTION);
+				//	another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nAre you happy with this?", "Cart", JOptionPane.YES_NO_OPTION);
+					another = 0;
 					if(another == 0) { // purchise and clean up the system.
-                                            buyProducts(personNumber, checkOuts.getPrice());
-					sameUser = false; // reset to enter PMKeyS
+                        buyProducts(personNumber, checkOuts.getPrice());
+						sameUser = false; // reset to enter PMKeyS
 					}
 					if(another == 1) { // reset the cart for the user. 
 						JOptionPane.showMessageDialog(null, "Your cart has been reset", "Reset", JOptionPane.INFORMATION_MESSAGE);
