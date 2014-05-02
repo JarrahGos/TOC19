@@ -528,7 +528,7 @@ public class Interface
 			int q2 = 0;
 			double tempProductPrice = 0;
 			
-			boolean person = (type.equals("product"));
+			boolean person = !(type.equals("product"));
 			while(done != 1) { // Not sure that this while loop has a reason for existance. 
 				if(!person) {
 					q2 = productDatabase.emptyProduct(); // find the next available product.
