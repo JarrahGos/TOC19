@@ -75,6 +75,7 @@ public class Interface
 		error = 0; // setting up error
 		boolean admin = false; // how the program knows that it is in admin mode
 		boolean sameUser = true; // How the program knows that it is serving the same user. 
+                boolean first = true;
 		int another = 0; // whether another item will be added
 		String[] options = new String[12]; // admin options are stored here. 
 		final JPasswordField passwordField = new JPasswordField(10); // box to take passwords from the user
@@ -97,20 +98,22 @@ public class Interface
 		}
 		while(true) // perminantly loop through this code. 
 		{
-			boolean first = true; // first item to be added to the cart
-			tempInput = ""; // initialise tempInput
-				tempInput = JOptionPane.showInputDialog(null, "Enter your PMKeyS", "PMKeyS", JOptionPane.QUESTION_MESSAGE);
-				if(tempInput == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
-					JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
-					continue; //start at the top of the while loop. 
-				}
-				else if(tempInput.equals("") || !isLong(tempInput) || !personDatabase.personExists(Integer.parseInt(tempInput)) ) { // checks for valid numbers in the PMKeyS
-					JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Errror", JOptionPane.ERROR_MESSAGE);
-					continue;
-				}
-				tempBarCode = Long.parseLong(tempInput); // take string from JOptionPane, and make it an integer which is easer to work with
-				personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
+//			boolean first = true; // first item to be added to the cart
+//			tempInput = ""; // initialise tempInput
+//				tempInput = JOptionPane.showInputDialog(null, "Enter your PMKeyS", "PMKeyS", JOptionPane.QUESTION_MESSAGE);
+//				if(tempInput == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
+//					JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
+//					continue; //start at the top of the while loop. 
+//				}
+//				else if(tempInput.equals("") || !isLong(tempInput) || !personDatabase.personExists(Integer.parseInt(tempInput)) ) { // checks for valid numbers in the PMKeyS
+//					JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Errror", JOptionPane.ERROR_MESSAGE);
+//					continue;
+//				}
+//				tempBarCode = Long.parseLong(tempInput); // take string from JOptionPane, and make it an integer which is easer to work with
+                        tempBarCode = getPMKeyS();
+                        personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
 				sameUser = true; // tells the program that a user is logged in. 
+                                first = true;
 				if(-2 == personNumber) { // checks whether that user is an admin
 					String passWd = "";
 					JPanel panel = new JPanel();
@@ -572,5 +575,23 @@ public class Interface
             e.printStackTrace();
         }
         return generatedPassword;
+    }
+    private long getPMKeyS() // take this recursion and make it iteration. 
+    {
+        boolean correct = false;
+        String tempInput = "error";
+        while (!correct) {   
+            tempInput = JOptionPane.showInputDialog(null, "Enter your PMKeyS", "PMKeyS", JOptionPane.QUESTION_MESSAGE);
+            if(tempInput == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
+                JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
+                continue;
+            }
+            else if(tempInput.equals("") || !isLong(tempInput) || !personDatabase.personExists(Integer.parseInt(tempInput)) ) { // checks for valid numbers in the PMKeyS
+                JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Errror", JOptionPane.ERROR_MESSAGE);
+                continue;
+            }
+            correct = true;
+        }
+        return Long.parseLong(tempInput);
     }
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      
