@@ -113,11 +113,15 @@ public class Interface
 						sameUser = false; // skip the normal user interface for non admin personnel. 
 						passWd = null;
 					}
-					else {
+					else if(passWd != null) {
 						JOptionPane.showMessageDialog(null, "Password incorrect", "Error", JOptionPane.ERROR_MESSAGE);
 						admin = false; 
 						sameUser = false;
 						passWd = null;
+					}
+					else {
+						admin = false; 
+						sameUser = false;
 					}
 				}
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
