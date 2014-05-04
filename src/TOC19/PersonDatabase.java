@@ -120,7 +120,7 @@ public class PersonDatabase {
 
 	}
 
-	public String getPersonUser(int personNo) {
+	public String getPersonUser(int personNo, boolean html) {
 		/**
 		 * Class PersonDatabase: Method getPerson Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4 Postconditions: the user will see the details of their 
 		 *							chosen
@@ -128,7 +128,7 @@ public class PersonDatabase {
 		 */
 
 		if (personNo < logicalSize) { // check that the person exists
-			return allPersons[personNo].getDataUser(); // now that we know that it does, send it to the interface
+			return allPersons[personNo].getDataUser(html); // now that we know that it does, send it to the interface
 		} else {
 			return "the person that you have identified does not exist"; // We cannot find the person that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
 			//PEBKAC: It is possible to commit no errors and still lose. That is not a weakness. That is life. --CAPTAIN PICARD

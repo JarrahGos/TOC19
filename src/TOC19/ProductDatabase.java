@@ -132,7 +132,7 @@ public class ProductDatabase
 		Class ProductDatabase: Method delProduct
 		Preconditions: setDatabase has been run, productNo is an integer paremeter
 		Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
-		*/
+		*/ 
 		if(productNo < logicalSize) { //check that the product the user doesn't want anymore actually exists in the first place.
 			for (int i = productNo; i < logicalSize; i++) { // move all products back one place. The first move will overwrite the now unwanted product
 				allProducts[i] = allProducts[i+1]; // I really hope that they didn't have any desire to see this one agian. It's already in the bin. 

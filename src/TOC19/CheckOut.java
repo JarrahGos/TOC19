@@ -312,5 +312,6 @@ public class CheckOut
 	public void addQuantity(int productNo, int add)
 	{
 		products[productNo].setQuantity(products[productNo].getQuantity() + add);
+		totalPrice += products[productNo].productPrice();
 	}
 }

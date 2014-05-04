@@ -69,21 +69,29 @@ public class Person
 
 		return output; //return a string with all of the person's data in it
 	}
-		public String getDataUser() // output the person data as a string
+		public String getDataUser(Boolean html) // output the person data as a string
 	{
 		/**
 		Class Song: Method getData
 		Procondition: setData has been run for invoking person or the person constructor outlined above has been run
 		Postcondition: The data that has been entered for the invoking person will be returned. 
 		*/
-		
-		output = "";
-		output += name;
-		output += "\n	Running Cost: $";
-		output += totalCostRunning;
-		output += "\n	Current Bill Total: $";
-		output += totalCostWeek;
-
+		if (html) {
+			output = "";
+			output += name;
+			output += "<br>	Running Cost: $";
+			output += totalCostRunning;
+			output += "<br>	Current Bill Total: $";
+			output += totalCostWeek;
+		}
+		else {
+			output = "";
+			output += name;
+			output += "\n	Running Cost: $";
+			output += totalCostRunning;
+			output += "\n	Current Bill Total: $";
+			output += totalCostWeek;
+		}
 		return output; //return a string with all of the person's data in it
 	}
 	public String getName() // return the name of the person
