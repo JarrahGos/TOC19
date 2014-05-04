@@ -714,7 +714,6 @@ public class Interface
 					while (now - start < 90000)
 					{
 						now = Calendar.getInstance().getTimeInMillis();
-						System.out.println(now-start);
 					}
 					dialog.dispose();
 					pane.setValue(JOptionPane.CANCEL_OPTION);
