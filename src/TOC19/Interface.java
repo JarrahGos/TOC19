@@ -248,6 +248,7 @@ public class Interface
 						}
 				}	
 					else if(tempInput.equals("save product database")) {
+						error = 0;
 						error = productDatabase.writeOutDatabase("adminProductDatabase.txt");
 						if(error == 0) { // Inform the user of the write out.
 						JOptionPane.showMessageDialog(null, "Your Database has been written to adminProductDatabase.txt", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -258,6 +259,7 @@ public class Interface
 						}
 					}	
 					else if(tempInput.equals("save person database")) {
+						error = 0;
 						error = personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
 						if(error == 0) { // Inform the user of the write out.
 						JOptionPane.showMessageDialog(null, "Your Database has been written to adminPersonDatabase.txt", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -331,6 +333,21 @@ public class Interface
 					textArea.setWrapStyleWord(true);
 					scrollPane.setPreferredSize(new Dimension(500,500));
 					JOptionPane.showMessageDialog(null, scrollPane, "Product Database", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else if(tempInput.equals("save databases to USB")) { 
+					error = 0;
+					error = personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
+					error = productDatabase.writeOutDatabase("adminProductDatabase.txt");
+					if(error != 0) JOptionPane.showMessageDialog(null, "Could not copy the database", "Error", JOptionPane.ERROR_MESSAGE);
+					try {
+						ProcessBuilder pb = new ProcessBuilder("copy.sh");
+						Process p = pb.start();
+						if (error == 0) JOptionPane.showMessageDialog(null, "Database copied", "Success", JOptionPane.INFORMATION_MESSAGE);
+					}
+					catch (java.io.IOException e) {
+						JOptionPane.showMessageDialog(null, "Could not copy the database", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					
 				}
 				else if(tempInput.equals("Enter stock counts (bulk)")) {
 					int tempNumber = 0;
@@ -544,8 +561,8 @@ public class Interface
         private String showAdminMenu()
         {
             String[] options = new String[] {"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
-					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", "change password", 
-					"close the program"}; // admin options
+					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", 
+					"change password", "save databases to USB", "close the program"}; // admin options
 			return showInputDialog("Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, options, true);
            // return (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
         }
