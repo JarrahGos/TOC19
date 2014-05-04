@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
 import javax.swing.*;
+import java.awt.Font;
 
 //Security imports
 import java.security.MessageDigest;
@@ -61,7 +62,7 @@ public class Interface
 		Postconditions: the program will have run and all user interactions will have been acted upon. 
 						If ended correctly, the program will write the productDatabase to productDatabase.txt. The program will end.
 		*/
-		
+		setUIFont (new javax.swing.plaf.FontUIResource("Serif",Font.PLAIN,25));
 		// create the variables that will be used throughout the program
 		String tempName; // names of things which we will be entering and reusing	
 		double tempProductPrice; // the above but as a price
@@ -615,6 +616,15 @@ public class Interface
 					}
 					done = 1; // close the loop
 				}
+			}
+		}
+		public static void setUIFont (javax.swing.plaf.FontUIResource f){
+			java.util.Enumeration keys = UIManager.getDefaults().keys();
+			while (keys.hasMoreElements()) {
+				Object key = keys.nextElement();
+				Object value = UIManager.get (key);
+				if (value != null && value instanceof javax.swing.plaf.FontUIResource)
+					UIManager.put (key, f);
 			}
 		}
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      
