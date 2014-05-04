@@ -27,13 +27,28 @@
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import java.awt.Dimension;
-import javax.swing.*;
+//import javax.swing.*;
+import javax.swing.UIManager;
+import javax.swing.JScrollPane;
+import javax.swing.JPasswordField;
+import javax.swing.JLabel;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JDialog;
+import javax.swing.JComboBox;
+import javax.swing.Timer;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 //Security imports
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+
+// Other imports
+import java.util.Calendar;
 
 
 public class Interface
@@ -43,6 +58,7 @@ public class Interface
 	private PersonDatabase personDatabase;
 	private CheckOut checkOuts;
 	private int logicalSize;
+//	Timer timeOut = new Timer(60000000, new actionListener());
 		
 	public Interface() 
 	{
@@ -102,7 +118,7 @@ public class Interface
 				tempBarCode = getPMKeyS();
 				personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
 				sameUser = true; // tells the program that a user is logged in. 
-                                first = true;
+                first = true;
 				if(-2 == personNumber) { // checks whether that user is an admin
 					String passWd = "";
 					passWd = getPassWd(true);
@@ -127,11 +143,19 @@ public class Interface
 				}
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
 				while(!admin) {
-					tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
-					if(tempInput != null && !tempInput.equals("") && isLong(tempInput)) tempBarCode = Long.parseLong(tempInput); // disallows the user from entering nothing or clicking cancel. 
-					else if((tempInput == null && !first) || ("".equals(tempInput) && !first)) break; // if canceled and not on the first run of adding items. 
+				//	tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
+					tempInput = showInputDialog("<html>Hello " + personDatabase.getPersonUser(personNumber, true) + "<br>Enter the bar code of the product you would like</html>", "what would you like",
+												JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
+					if(tempInput != null && !tempInput.equals("") && isLong(tempInput)) {
+						tempBarCode = Long.parseLong(tempInput); // disallows the user from entering nothing or clicking cancel. 
+					}
+					else if((tempInput == null && !first) || ("".equals(tempInput) && !first)) {
+						break; // if canceled and not on the first run of adding items. 
+					}
 					else { // what do do if the user does the above on the first run.
 						sameUser = false;
+						another = 1;
+						//checkOuts = new CheckOut();
 						break;
 					}
 					productNumber = productDatabase.findProduct(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
@@ -149,8 +173,9 @@ public class Interface
 					else checkOuts.addProduct(checkOuts.emptyProduct(), productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
 					//another = JOptionPane.showConfirmDialog(null, "Would you like to add another item?", "Continue", JOptionPane.YES_NO_OPTION);
 					another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nWould you like to add more items?" + "\nHitting no will buy this cart", "Cart", JOptionPane.YES_NO_CANCEL_OPTION);
-					if(another == 1) break; // let the user buy already. 
-					else if(another == 2) {
+					if(another == JOptionPane.NO_OPTION) break; // let the user buy already. 
+					else if(another == JOptionPane.CANCEL_OPTION) {
+						checkOuts = new CheckOut();
 						sameUser = false;
 						break;
 					}
@@ -158,15 +183,16 @@ public class Interface
 				}
 				if(!admin && sameUser) {
 				//	another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nAre you happy with this?", "Cart", JOptionPane.YES_NO_OPTION);
-					another = 0;
-					if(another == 0) { // purchise and clean up the system.
+//					another = 0;
+//					if(another == 0) { // purchise and clean up the system.
                         buyProducts(personNumber, checkOuts.getPrice());
 						sameUser = false; // reset to enter PMKeyS
-					}
-					if(another == 1) { // reset the cart for the user. 
-						JOptionPane.showMessageDialog(null, "Your cart has been reset", "Reset", JOptionPane.INFORMATION_MESSAGE);
-						checkOuts = new CheckOut();
-					}
+						JOptionPane.showMessageDialog(null, "Thank You for coming to TOC", "Thanks", JOptionPane.INFORMATION_MESSAGE);
+//					}
+//					if(another == 1) { // reset the cart for the user. 
+//						JOptionPane.showMessageDialog(null, "Your cart has been reset", "Reset", JOptionPane.INFORMATION_MESSAGE);
+//						checkOuts = new CheckOut();
+//					}
 				}
 			}
 			while(admin) {
@@ -181,7 +207,8 @@ public class Interface
 				}
 				else if(tempInput.equals("remove products")) {	
 					error = 1;
-					tempInput = JOptionPane.showInputDialog(null, "Enter the bar code of the item you would like to delete", "Barcode", JOptionPane.QUESTION_MESSAGE);
+					tempInput = showInputDialog("Enter the bar code of the item you would like to delete", "Barcode", JOptionPane.QUESTION_MESSAGE,
+							JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) continue; // check the input
 					tempBarCode = Long.parseLong(tempInput);
 					q2 = productDatabase.findProduct(tempBarCode);	
@@ -202,7 +229,8 @@ public class Interface
 				}
 				else if(tempInput.equals("remove people")) {
 					error = 1;
-					tempInput = JOptionPane.showInputDialog(null, "Enter the PMKeyS of the person you would like to delete", "PMKeyS", JOptionPane.QUESTION_MESSAGE);
+					tempInput = showInputDialog("Enter the PMKeyS of the person you would like to delete", "PMKeyS", JOptionPane.QUESTION_MESSAGE,
+							JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
 						q2 = personDatabase.findPerson(tempBarCode);	
@@ -241,7 +269,8 @@ public class Interface
 					}		
 				else if(tempInput.equals("change product")) {
 					int tempNumber = 0; // the number of the product in the database
-					tempInput = JOptionPane.showInputDialog(null, "Enter the bar code of the product you would like to edit", "Barcode", JOptionPane.INFORMATION_MESSAGE);
+					tempInput = showInputDialog("Enter the bar code of the product you would like to edit", "Barcode", JOptionPane.INFORMATION_MESSAGE,
+							JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) {
 						continue;
 					}
@@ -251,13 +280,13 @@ public class Interface
 						continue;
 					}
 				     // get the new detials of the product.
-					tempInput = JOptionPane.showInputDialog(null, "Enter the new name for this product", "Name", JOptionPane.QUESTION_MESSAGE);
+					tempInput = showInputDialog("Enter the new name for this product", "Name", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(tempInput == null || tempInput.length() < 1) continue;
 					tempName = tempInput;
-					tempInput = JOptionPane.showInputDialog(null, "Enter the new item Price witout the dollar sign", "Price", JOptionPane.QUESTION_MESSAGE);
+					tempInput = showInputDialog("Enter the new item Price witout the dollar sign", "Price", JOptionPane.QUESTION_MESSAGE,  JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isDouble(tempInput)) continue;
 					tempProductPrice = Double.parseDouble(tempInput);
-					tempInput = JOptionPane.showInputDialog(null, "Enter the new barCode of the product", "Barcode", JOptionPane.QUESTION_MESSAGE);
+					tempInput = showInputDialog("Enter the new barCode of the product", "Barcode", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
 					tempNumber = productDatabase.getNumber(productNumber); //returns the number of this product in stock. 
@@ -306,8 +335,8 @@ public class Interface
 				else if(tempInput.equals("Enter stock counts (bulk)")) {
 					int tempNumber = 0;
 					for(i = 0; productDatabase.productExists(i); i++) { // for each product ask for the new number of items you have. 
-						tempInput = JOptionPane.showInputDialog(null, "You have " + productDatabase.getNumber(i) + " " + productDatabase.getProductName(i) + 
-								" left from last stocktake\n Including these, how many do you have now?", "Stock Count", JOptionPane.QUESTION_MESSAGE);
+						tempInput = showInputDialog("You have " + productDatabase.getNumber(i) + " " + productDatabase.getProductName(i) + 
+								" left from last stocktake\n Including these, how many do you have now?", "Stock Count", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
 						if(!isInteger(tempInput)) continue;
 						tempNumber = Integer.parseInt(tempInput);
 						productDatabase.setNumber(i, tempNumber);
@@ -316,7 +345,7 @@ public class Interface
 				}
 				else if(tempInput.equals("Enter stock count (individual)")) {
 					int tempNumber = 0;
-					tempInput = JOptionPane.showInputDialog(null, "Enter the bar code of the product you would like to set", "Barcode", JOptionPane.QUESTION_MESSAGE);
+					tempInput = showInputDialog("Enter the bar code of the product you would like to set", "Barcode", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
 					productNumber = productDatabase.findProduct(tempBarCode); // corrilate the product number with that in the database
@@ -324,8 +353,8 @@ public class Interface
 						JOptionPane.showMessageDialog(null, "The product that you asked for does not exist", "Error", JOptionPane.ERROR_MESSAGE);
 						continue;
 					}
-					tempInput = JOptionPane.showInputDialog(null, "You had " + productDatabase.getNumber(productNumber) + " " + productDatabase.getProductName(productNumber) + 
-							" left from last stocktake\n Inclunding these, how many do you have now?", "Stock Counts", JOptionPane.QUESTION_MESSAGE); // ask the user how many they had, and how many they now have
+					tempInput = showInputDialog("You had " + productDatabase.getNumber(productNumber) + " " + productDatabase.getProductName(productNumber) + 
+							" left from last stocktake\n Inclunding these, how many do you have now?", "Stock Counts", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false); // ask the user how many they had, and how many they now have
 					if(!isInteger(tempInput)) continue;
 					tempNumber = Integer.parseInt(tempInput);
 					productDatabase.setNumber(productNumber, tempNumber); // enter all this into the database and write it out.
@@ -517,7 +546,8 @@ public class Interface
             String[] options = new String[] {"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
 					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", "change password", 
 					"close the program"}; // admin options
-            return (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
+			return showInputDialog("Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, options, true);
+           // return (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
         }
 		private void addToDatabase(String type)
 		{
@@ -626,5 +656,64 @@ public class Interface
 				if (value != null && value instanceof javax.swing.plaf.FontUIResource)
 					UIManager.put (key, f);
 			}
+		}
+		public String showInputDialog(String message, String title, int messageType, int optionType, final String[] text, boolean combo)
+		{
+			String input = "";
+			JPanel panel = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+			panel.add(new JLabel(message));
+			final JTextField textField = new JTextField(15);
+			final JComboBox comboBox = new JComboBox(text);
+			
+			if(combo) {
+		
+				panel.add(comboBox);
+			}
+			else {
+				
+				panel.add(textField);
+			}
+			final JOptionPane pane = new JOptionPane(panel, messageType, optionType) {
+				@Override
+				public void selectInitialValue() {
+					if (!text.equals("")) {
+						comboBox.requestFocusInWindow();
+					}
+					else {
+						textField.requestFocusInWindow();
+					}
+				}
+			};
+			final JDialog dialog = pane.createDialog(null, title); // .setVisible(true);
+			new Thread(new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					long start = Calendar.getInstance().getTimeInMillis();
+					long now = Calendar.getInstance().getTimeInMillis();
+					while (now - start < 60000)
+					{
+						now = Calendar.getInstance().getTimeInMillis();
+						System.out.println(now-start);
+					}
+					dialog.dispose();
+					pane.setValue(JOptionPane.CANCEL_OPTION);
+				}
+			}).start();
+			dialog.setVisible(true);
+			Object cancel = pane.getValue();
+			if(cancel == null) return null;
+			if(cancel instanceof Integer && (int)cancel == JOptionPane.CANCEL_OPTION) {
+				return null;
+			}
+			
+			if (combo) {
+				input = (String)comboBox.getSelectedItem();
+			}
+			else input = textField.getText().length() == 0 ? null : new String(textField.getText());
+			return input;
 		}
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      
