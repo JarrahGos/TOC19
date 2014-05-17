@@ -79,8 +79,6 @@ public class Person
 		if (html) {
 			output = "";
 			output += name;
-			output += "<br>	Running Cost: $";
-			output += totalCostRunning;
 			output += "<br>	Current Bill Total: $";
 			output += totalCostWeek;
 		}
