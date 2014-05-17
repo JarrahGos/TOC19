@@ -152,11 +152,16 @@ public class Interface
 					else if((tempInput == null && !first) || ("".equals(tempInput) && !first)) {
 						break; // if canceled and not on the first run of adding items. 
 					}
-					else { // what do do if the user does the above on the first run.
+					else { // what to do if the user does the above on the first run.
 						sameUser = false;
 						another = 1;
 						//checkOuts = new CheckOut();
 						break;
+					}
+					if (tempBarCode == personDatabase.getBarCode(personNumber)) {
+						JOptionPane.showMessageDialog(null, "Little early in your career to start selling yourself isn't it?\n"
+														+ "This incident has been reported", "Attempted prostitution", JOptionPane.ERROR_MESSAGE);
+						continue;
 					}
 					productNumber = productDatabase.findProduct(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
 					if(productNumber == -1) { // -1 is output by the above on error
