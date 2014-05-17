@@ -33,7 +33,7 @@ public class CheckOut
 	private int[] quantities;
 	private String output;
 	private int logicalSize;
-	private double totalPrice;
+	private long totalPrice;
 
 	public CheckOut()
 	{
@@ -60,7 +60,7 @@ public class CheckOut
 		++logicalSize;
 		return 0;
 	}
-	public int addProduct(int productNo, String name, double price, int barCode)
+	public int addProduct(int productNo, String name, long price, int barCode)
 	{
 		/** 
 		Class CheckOut: Method addProduct
@@ -91,10 +91,10 @@ public class CheckOut
 		}
 		// Output the summary data of the checkOut
 		output += "\nThe total price is: $";
-		output +=  totalPrice; 
+		output +=  (double)totalPrice/100; 
 		return output;
 	}
-	public double getPrice()
+	public long getPrice()
 	{
 		return totalPrice;
 	}

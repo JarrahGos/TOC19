@@ -46,7 +46,7 @@ public class ProductDatabase
 	}
 	
 	
-	public int setDatabaseProduct(int productNo, String name, double price, long barCode) // take the products data and pass it to the products constructor
+	public int setDatabaseProduct(int productNo, String name, long price, long barCode) // take the products data and pass it to the products constructor
 	{
 		/**
 		Class ProductDatabase: Method setDatabase
@@ -86,7 +86,7 @@ public class ProductDatabase
 		return output; // send the calling program one large string containing the ingredients of all the products in the database
 	}
 	
-	public String productsUnder(double price, int sort)
+	public String productsUnder(long price, int sort)
 	{
 		/**
 		Class ProductDatabase: Method productsUnder
@@ -398,7 +398,7 @@ public class ProductDatabase
 	public int readDatabase(String path) 
 	{
 		String tempName, tempInput;
-		double tempSize, tempProductPrice;
+		long tempProductPrice;
 		long tempBarCode;
 		int tempNumberOfProduct;
 		boolean negative = false;
@@ -411,7 +411,7 @@ public class ProductDatabase
 			for(z = 0; readOutFile.hasNext(); z++) { // until all of the lines have been read, I want to read the lines.
 				readOutFile.nextLine(); // someone decided to put a redundant line in each product of the file, this throws it away.
 				tempName = readOutFile.nextLine();
-				tempProductPrice = Double.parseDouble(readOutFile.nextLine());
+				tempProductPrice = Long.parseLong(readOutFile.nextLine());
 				tempBarCode = Long.parseLong(readOutFile.nextLine());
 				tempInput = readOutFile.nextLine();
 				if('-' == tempInput.charAt(0)) {

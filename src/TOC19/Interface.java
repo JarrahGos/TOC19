@@ -81,7 +81,7 @@ public class Interface
 		setUIFont (new javax.swing.plaf.FontUIResource("Serif",Font.PLAIN,25));
 		// create the variables that will be used throughout the program
 		String tempName; // names of things which we will be entering and reusing	
-		double tempProductPrice; // the above but as a price
+		long tempProductPrice; // the above but as a price
 		String tempInput; // what will be storing any input for testing and conversion
 		long tempBarCode; 
 		int quantity; // the bar code and number of each item that we have. 
@@ -276,6 +276,7 @@ public class Interface
 					}		
 				else if(tempInput.equals("change product")) {
 					int tempNumber = 0; // the number of the product in the database
+					double tempPriceDouble = 0;
 					tempInput = showInputDialog("Enter the bar code of the product you would like to edit", "Barcode", JOptionPane.INFORMATION_MESSAGE,
 							JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) {
@@ -292,7 +293,9 @@ public class Interface
 					tempName = tempInput;
 					tempInput = showInputDialog("Enter the new item Price witout the dollar sign", "Price", JOptionPane.QUESTION_MESSAGE,  JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isDouble(tempInput)) continue;
-					tempProductPrice = Double.parseDouble(tempInput);
+					tempPriceDouble = Double.parseDouble(tempInput);
+					tempPriceDouble *= 100;
+					tempProductPrice = (long)tempPriceDouble;
 					tempInput = showInputDialog("Enter the new barCode of the product", "Barcode", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
@@ -555,7 +558,7 @@ public class Interface
 		}
 		
 	}
-        private void buyProducts(int personNumber, double price)
+        private void buyProducts(int personNumber, long price)
         {
             personDatabase.addCost(personNumber, price);// add the bill to the persons account
             checkOuts.productBought(); // clear the quantities and checkout
@@ -579,7 +582,8 @@ public class Interface
 			int added = 1;
 			long tempBarCode;
 			int q2 = 0;
-			double tempProductPrice = 0;
+			long tempProductPrice = 0;
+			double tempPriceDouble = 0;
 			
 			boolean person = !(type.equals("product"));
 			while(done != 1) { // Not sure that this while loop has a reason for existance. 
@@ -612,7 +616,9 @@ public class Interface
 							JOptionPane.showMessageDialog(null, "You did not enter a valid price.\n Maybe you added the dollar sign, don't next time.", "Error", JOptionPane.ERROR_MESSAGE);
 							continue; // Ensure that the string is a double
 						}
-						tempProductPrice = Double.parseDouble(tempInput);
+						tempPriceDouble = Double.parseDouble(tempInput);
+						tempPriceDouble *= 100;
+						tempProductPrice = (long)tempPriceDouble;
 					}
 					if(!person) {
 						tempInput = JOptionPane.showInputDialog(null, "Please enter the bar code of " + tempName, "Barcode", JOptionPane.QUESTION_MESSAGE);
