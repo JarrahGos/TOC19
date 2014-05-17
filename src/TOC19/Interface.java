@@ -230,7 +230,7 @@ public class Interface
 				else if(tempInput.equals("remove people")) {
 					error = 1;
 					tempInput = showInputDialog("Enter the PMKeyS of the person you would like to delete", "PMKeyS", JOptionPane.QUESTION_MESSAGE,
-							JOptionPane.OK_CANCEL_OPTION, null, false);
+							JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
 						q2 = personDatabase.findPerson(tempBarCode);	
