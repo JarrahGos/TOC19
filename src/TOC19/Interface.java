@@ -329,7 +329,7 @@ public class Interface
 					error = productDatabase.adminWriteOutDatabase("adminProductDatabase.txt");
 					if(error != 0) JOptionPane.showMessageDialog(null, "Could not copy the database", "Error", JOptionPane.ERROR_MESSAGE);
 					try {
-						ProcessBuilder pb = new ProcessBuilder("copy.sh");
+						ProcessBuilder pb = new ProcessBuilder("Copy.sh");
 						Process p = pb.start();
 						if (error == 0) JOptionPane.showMessageDialog(null, "Database copied", "Success", JOptionPane.INFORMATION_MESSAGE);
 					}
