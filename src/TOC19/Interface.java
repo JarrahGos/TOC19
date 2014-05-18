@@ -49,6 +49,7 @@ import java.util.Arrays;
 
 // Other imports
 import java.util.Calendar;
+import java.util.Enumeration;
 
 
 public class Interface
@@ -81,7 +82,7 @@ public class Interface
 		setUIFont (new javax.swing.plaf.FontUIResource("Serif",Font.PLAIN,25));
 		// create the variables that will be used throughout the program
 		String tempName; // names of things which we will be entering and reusing	
-		double tempProductPrice; // the above but as a price
+		long tempProductPrice; // the above but as a price
 		String tempInput; // what will be storing any input for testing and conversion
 		long tempBarCode; 
 		int quantity; // the bar code and number of each item that we have. 
@@ -276,6 +277,7 @@ public class Interface
 					}		
 				else if(tempInput.equals("change product")) {
 					int tempNumber = 0; // the number of the product in the database
+					double tempPriceDouble = 0;
 					tempInput = showInputDialog("Enter the bar code of the product you would like to edit", "Barcode", JOptionPane.INFORMATION_MESSAGE,
 							JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) {
@@ -292,7 +294,9 @@ public class Interface
 					tempName = tempInput;
 					tempInput = showInputDialog("Enter the new item Price witout the dollar sign", "Price", JOptionPane.QUESTION_MESSAGE,  JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isDouble(tempInput)) continue;
-					tempProductPrice = Double.parseDouble(tempInput);
+					tempPriceDouble = Double.parseDouble(tempInput);
+					tempPriceDouble *= 100;
+					tempProductPrice = (long)tempPriceDouble;
 					tempInput = showInputDialog("Enter the new barCode of the product", "Barcode", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
@@ -519,6 +523,7 @@ public class Interface
 		final JPasswordField passwordField = new JPasswordField(10); // box to take passwords from the user
 		panel.add(passwordField);
 		JOptionPane pane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
+			private static final long serialVersionUID = 1L;
 			@Override
 			public void selectInitialValue() {
 				passwordField.requestFocusInWindow();
@@ -555,7 +560,7 @@ public class Interface
 		}
 		
 	}
-        private void buyProducts(int personNumber, double price)
+        private void buyProducts(int personNumber, long price)
         {
             personDatabase.addCost(personNumber, price);// add the bill to the persons account
             checkOuts.productBought(); // clear the quantities and checkout
@@ -579,7 +584,8 @@ public class Interface
 			int added = 1;
 			long tempBarCode;
 			int q2 = 0;
-			double tempProductPrice = 0;
+			long tempProductPrice = 0;
+			double tempPriceDouble = 0;
 			
 			boolean person = !(type.equals("product"));
 			while(done != 1) { // Not sure that this while loop has a reason for existance. 
@@ -612,7 +618,9 @@ public class Interface
 							JOptionPane.showMessageDialog(null, "You did not enter a valid price.\n Maybe you added the dollar sign, don't next time.", "Error", JOptionPane.ERROR_MESSAGE);
 							continue; // Ensure that the string is a double
 						}
-						tempProductPrice = Double.parseDouble(tempInput);
+						tempPriceDouble = Double.parseDouble(tempInput);
+						tempPriceDouble *= 100;
+						tempProductPrice = (long)tempPriceDouble;
 					}
 					if(!person) {
 						tempInput = JOptionPane.showInputDialog(null, "Please enter the bar code of " + tempName, "Barcode", JOptionPane.QUESTION_MESSAGE);
@@ -670,8 +678,9 @@ public class Interface
 				}
 			}
 		}
-		public static void setUIFont (javax.swing.plaf.FontUIResource f){
-			java.util.Enumeration keys = UIManager.getDefaults().keys();
+		public static void setUIFont (javax.swing.plaf.FontUIResource f)
+		{
+			java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
 			while (keys.hasMoreElements()) {
 				Object key = keys.nextElement();
 				Object value = UIManager.get (key);
@@ -686,7 +695,7 @@ public class Interface
 			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 			panel.add(new JLabel(message));
 			final JTextField textField = new JTextField(15);
-			final JComboBox comboBox = new JComboBox(text);
+			final JComboBox<String> comboBox = new JComboBox<>(text);
 			
 			if(combo) {
 		
@@ -696,17 +705,19 @@ public class Interface
 				
 				panel.add(textField);
 			}
-			final JOptionPane pane = new JOptionPane(panel, messageType, optionType) {
-				@Override
-				public void selectInitialValue() {
-					if (!text.equals("")) {
-						comboBox.requestFocusInWindow();
-					}
-					else {
-						textField.requestFocusInWindow();
-					}
+			final JOptionPane pane;
+			pane = new JOptionPane(panel, messageType, optionType) {
+				private static final long serialVersionUID = 1L;
+			@Override
+			public void selectInitialValue() {
+				if (!text.equals(new String [0])) {
+					comboBox.requestFocusInWindow();
 				}
-			};
+				else {
+					textField.requestFocusInWindow();
+				}
+			}
+		};
 			final JDialog dialog = pane.createDialog(null, title); // .setVisible(true);
 			new Thread(new Runnable()
 			{
@@ -734,7 +745,7 @@ public class Interface
 			if (combo) {
 				input = (String)comboBox.getSelectedItem();
 			}
-			else input = textField.getText().length() == 0 ? null : new String(textField.getText());
+			else input = textField.getText().length() == 0 ? null : textField.getText();
 			return input;
 		}
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      

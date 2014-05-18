@@ -46,7 +46,7 @@ public class PersonDatabase {
 		output = "";
 	}
 
-	public int setDatabasePerson(int personNo, String name, double running, double week, long barCode) // take the persons data and pass it to the persons constructor
+	public int setDatabasePerson(int personNo, String name, long running, long week, long barCode) // take the persons data and pass it to the persons constructor
 	{
 		/**
 		 * Class PersonDatabase: Method setDatabase Precondition: augments int personNo, String name, String artist, double size, double duration are input Postcondition: Data for the currant working
@@ -84,7 +84,7 @@ public class PersonDatabase {
 		return output; // send the calling program one large string containing the ingredients of all the persons in the database
 	}
 
-	public String personsUnder(double price, int sort) {
+	public String personsUnder(int price, int sort) {
 		/**
 		 * Class PersonDatabase: Method personsUnder Precondition: setDatabase has been run, paremeters time and sort type have been passed as double and int respectively Postcondition: the user will
 		 * be given a list of all of the persons under the specified time in the order requested.
@@ -415,7 +415,8 @@ public class PersonDatabase {
 
 	public int readDatabase(String path) {
 		String tempName, tempInput;
-		double tempSize, tempTotalCostRunning, tempTotalCostWeek;
+		long tempTotalCostRunning, tempTotalCostWeek;
+		double doubleCosts;
 		int tempBarCode;
 		int count = 0;
 		int z = 0;
@@ -433,8 +434,10 @@ public class PersonDatabase {
 				tempInput = readOutFile.nextLine();
 				tempBarCode = Integer.parseInt(tempInput);
 				tempName = readOutFile.nextLine();
-				tempTotalCostRunning = Double.parseDouble(readOutFile.nextLine());
-				tempTotalCostWeek = Double.parseDouble(readOutFile.nextLine());
+				doubleCosts = Double.parseDouble(readOutFile.nextLine());
+				tempTotalCostRunning = (long)(doubleCosts*100);
+				doubleCosts = Double.parseDouble(readOutFile.nextLine());
+				tempTotalCostWeek = (long)(doubleCosts*100);
 				count += this.setDatabasePerson(z, tempName, tempTotalCostRunning, tempTotalCostWeek, tempBarCode); // send the big pile of lines that we just read to the person constructor. 
 			}
 			readOutFile.close(); // clean up by closing the file
@@ -475,7 +478,7 @@ public class PersonDatabase {
 		return -1;
 	}
 
-	public void addCost(int personNo, double cost) {
+	public void addCost(int personNo, long cost) {
 		allPersons[personNo].addPrice(cost);
 	}
 

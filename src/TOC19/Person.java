@@ -29,10 +29,10 @@ public class Person
 	// create the variables that are needed in order of use
 	private String name;
 	private String output;
-	private double totalCostRunning, totalCostWeek; // Running can be yearly, or can be perminant. Up to TOC. Weekly will be reset each stocktake
+	private long totalCostRunning, totalCostWeek; // Running can be yearly, or can be perminant. Up to TOC. Weekly will be reset each stocktake
 	private long barCode; // PMKeys number off ID
 
-	public Person(String extName, long extBarCode, double running, double week) // construtor which will give the person its values
+	public Person(String extName, long extBarCode, long running, long week) // construtor which will give the person its values
 	{
 		name = extName;
 		barCode = extBarCode;
@@ -63,9 +63,9 @@ public class Person
 		output += "\n	Name: ";
 		output += name;
 		output += "\n	Running Cost: $";
-		output += totalCostRunning;
+		output += (double)totalCostRunning/100;
 		output += "\n	Weekly Cost: $";
-		output += totalCostWeek;
+		output += (double)totalCostWeek/100;
 
 		return output; //return a string with all of the person's data in it
 	}
@@ -80,15 +80,15 @@ public class Person
 			output = "";
 			output += name;
 			output += "<br>	Current Bill Total: $";
-			output += totalCostWeek;
+			output += (double)totalCostWeek/100;
 		}
 		else {
 			output = "";
 			output += name;
 			output += "\n	Running Cost: $";
-			output += totalCostRunning;
+			output += (double)totalCostRunning/100;
 			output += "\n	Current Bill Total: $";
-			output += totalCostWeek;
+			output += (double)totalCostWeek/100;
 		}
 		return output; //return a string with all of the person's data in it
 	}
@@ -119,7 +119,7 @@ public class Person
 		Postcondition: this method will return the price of the invoking person.
 		*/
 		
-		return totalCostRunning;
+		return (double)totalCostRunning/100;
 	}
 	public double totalCostWeek() // retung the size of the person. 
 	{
@@ -129,9 +129,9 @@ public class Person
 		Postcondition: this method will return the price of the invoking person.
 		*/
 		
-		return totalCostWeek;
+		return (double)totalCostWeek/100;
 	}
-	public void addPrice(double cost)
+	public void addPrice(long cost)
 	{
 		totalCostRunning += cost;
 		totalCostWeek += cost;
