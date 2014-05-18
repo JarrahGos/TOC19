@@ -1,4 +1,5 @@
 #/usr/bin/bash
 ## found in ~/.xinitrc
+## runs the TOC program
 
-/usr/bin/TOC19.sh
+java -jar TOC19.jar
