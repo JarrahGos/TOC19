@@ -84,7 +84,7 @@ public class PersonDatabase {
 		return output; // send the calling program one large string containing the ingredients of all the persons in the database
 	}
 
-	public String personsUnder(int price, int sort) {
+	public String personsUnder(long price, int sort) {
 		/**
 		 * Class PersonDatabase: Method personsUnder Precondition: setDatabase has been run, paremeters time and sort type have been passed as double and int respectively Postcondition: the user will
 		 * be given a list of all of the persons under the specified time in the order requested.
