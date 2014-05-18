@@ -188,17 +188,9 @@ public class Interface
 					else first = false; // make the add another product. 
 				}
 				if(!admin && sameUser) {
-				//	another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nAre you happy with this?", "Cart", JOptionPane.YES_NO_OPTION);
-//					another = 0;
-//					if(another == 0) { // purchise and clean up the system.
-                        buyProducts(personNumber, checkOuts.getPrice());
-						sameUser = false; // reset to enter PMKeyS
-						JOptionPane.showMessageDialog(null, "Thank You for coming to TOC", "Thanks", JOptionPane.INFORMATION_MESSAGE);
-//					}
-//					if(another == 1) { // reset the cart for the user. 
-//						JOptionPane.showMessageDialog(null, "Your cart has been reset", "Reset", JOptionPane.INFORMATION_MESSAGE);
-//						checkOuts = new CheckOut();
-//					}
+					buyProducts(personNumber, checkOuts.getPrice());
+					sameUser = false; // reset to enter PMKeyS
+					JOptionPane.showMessageDialog(null, "Thank You for coming to TOC", "Thanks", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 			while(admin) {
@@ -327,23 +319,9 @@ public class Interface
 				}
 				else if(tempInput.equals("print the person database to the screen")) {
 					printDatabase("Person");
-//					JTextArea textArea = new JTextArea(personDatabase.getDatabase(1)); // create the text to be displayed
-//					textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
-//					JScrollPane scrollPane = new JScrollPane(textArea); // create the scrolling window for the text
-//					textArea.setLineWrap(true); // force line wrap, this should not be needed, but is enabled anyway. 
-//					textArea.setWrapStyleWord(true); // make wrap work on a perword basis rather than percharacter
-//					scrollPane.setPreferredSize(new Dimension(500,500)); //set the size of the scrollpane
-//					JOptionPane.showMessageDialog(null, scrollPane, "Person Database", JOptionPane.INFORMATION_MESSAGE); // output the scrollpane. 
 				}
 				else if(tempInput.equals("print the product database to the screen")) { // see above
 					printDatabase("Product");
-//					JTextArea textArea = new JTextArea(productDatabase.getDatabase(1));
-//					textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
-//					JScrollPane scrollPane = new JScrollPane(textArea);
-//					textArea.setLineWrap(true);
-//					textArea.setWrapStyleWord(true);
-//					scrollPane.setPreferredSize(new Dimension(500,500));
-//					JOptionPane.showMessageDialog(null, scrollPane, "Product Database", JOptionPane.INFORMATION_MESSAGE);
 				}
 				else if(tempInput.equals("save databases to USB")) { 
 					error = 0;
