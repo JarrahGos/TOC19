@@ -695,7 +695,7 @@ public final class Interface
 			}
 		};
 			final JDialog dialog = pane.createDialog(null, title); // .setVisible(true);
-			new Thread(new Runnable()
+			Thread thread = new Thread(new Runnable()
 			{
 
 				@Override
@@ -710,8 +710,12 @@ public final class Interface
 					dialog.dispose();
 					pane.setValue(JOptionPane.CANCEL_OPTION);
 				}
-			}).start();
+			});
+			thread.setDaemon(true);
+			thread.setPriority(Thread.MIN_PRIORITY);
+			thread.start();
 			dialog.setVisible(true);
+			thread.interrupt();
 			Object cancel = pane.getValue();
 			if(cancel == null) return null;
 			if(cancel instanceof Integer && (int)cancel == JOptionPane.CANCEL_OPTION) {
