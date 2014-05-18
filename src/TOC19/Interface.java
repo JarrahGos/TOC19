@@ -37,19 +37,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JDialog;
 import javax.swing.JComboBox;
-import javax.swing.Timer;
 import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 //Security imports
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-
-// Other imports
-import java.util.Calendar;
-import java.util.Enumeration;
 
 
 public final class Interface
