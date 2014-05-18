@@ -4,7 +4,7 @@
 #should be run on Save database
 
 # mount the drive
-mount /dev/sda1 /mnt
+mount /dev/sd* /mnt
 
 # copy the databases
 cp /root/adminPersonDatabase.txt /mnt/adminPersonDatabase.txt
