@@ -214,7 +214,7 @@ public class Interface
 				else if(tempInput.equals("remove products")) {	
 					error = 1;
 					tempInput = showInputDialog("Enter the bar code of the item you would like to delete", "Barcode", JOptionPane.QUESTION_MESSAGE,
-							JOptionPane.OK_CANCEL_OPTION, null, false);
+							JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 					if(!isLong(tempInput)) continue; // check the input
 					tempBarCode = Long.parseLong(tempInput);
 					q2 = productDatabase.findProduct(tempBarCode);	
@@ -255,7 +255,7 @@ public class Interface
 				}	
 					else if(tempInput.equals("save product database")) {
 						error = 0;
-						error = productDatabase.writeOutDatabase("adminProductDatabase.txt");
+						error = productDatabase.adminWriteOutDatabase("adminProductDatabase.txt");
 						if(error == 0) { // Inform the user of the write out.
 						JOptionPane.showMessageDialog(null, "Your Database has been written to adminProductDatabase.txt", "Success", JOptionPane.INFORMATION_MESSAGE);
 						}
@@ -279,7 +279,7 @@ public class Interface
 					int tempNumber = 0; // the number of the product in the database
 					double tempPriceDouble = 0;
 					tempInput = showInputDialog("Enter the bar code of the product you would like to edit", "Barcode", JOptionPane.INFORMATION_MESSAGE,
-							JOptionPane.OK_CANCEL_OPTION, null, false);
+							JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 					if(!isLong(tempInput)) {
 						continue;
 					}
@@ -289,28 +289,28 @@ public class Interface
 						continue;
 					}
 				     // get the new detials of the product.
-					tempInput = showInputDialog("Enter the new name for this product", "Name", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
+					tempInput = showInputDialog("Enter the new name for this product", "Name", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 					if(tempInput == null || tempInput.length() < 1) continue;
 					tempName = tempInput;
-					tempInput = showInputDialog("Enter the new item Price witout the dollar sign", "Price", JOptionPane.QUESTION_MESSAGE,  JOptionPane.OK_CANCEL_OPTION, null, false);
+					tempInput = showInputDialog("Enter the new item Price witout the dollar sign", "Price", JOptionPane.QUESTION_MESSAGE,  JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 					if(!isDouble(tempInput)) continue;
 					tempPriceDouble = Double.parseDouble(tempInput);
 					tempPriceDouble *= 100;
 					tempProductPrice = (long)tempPriceDouble;
-					tempInput = showInputDialog("Enter the new barCode of the product", "Barcode", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
+					tempInput = showInputDialog("Enter the new barCode of the product", "Barcode", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
 					tempNumber = productDatabase.getNumber(productNumber); //returns the number of this product in stock. 
 					productDatabase.delProduct(productNumber);
 					added = productDatabase.setDatabaseProduct(productDatabase.emptyProduct(), tempName, tempProductPrice, tempBarCode);
-					productDatabase.setNumber(productDatabase.findProduct(tempBarCode), tempNumber);
-					productDatabase.writeOutDatabase("productDatabase.txt");
 					if(added == 0) {
 						JOptionPane.showMessageDialog(null, "Your product has been changed in the database", "Success", JOptionPane.INFORMATION_MESSAGE);
+						productDatabase.setNumber(productDatabase.findProduct(tempBarCode), tempNumber);
 					}
 					else { // output when the user tries to edit the product to one that already exists.
 						JOptionPane.showMessageDialog(null, "The new data that you tried to use for this product is already in use in the productDatabase", "Error", JOptionPane.ERROR_MESSAGE);
 					}
+					productDatabase.writeOutDatabase("productDatabase.txt");
 				}
 				else if(tempInput.equals("reset bills")) {
 					another = 1;
@@ -326,27 +326,29 @@ public class Interface
 					}
 				}
 				else if(tempInput.equals("print the person database to the screen")) {
-					JTextArea textArea = new JTextArea(personDatabase.getDatabase(1)); // create the text to be displayed
-					textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
-					JScrollPane scrollPane = new JScrollPane(textArea); // create the scrolling window for the text
-					textArea.setLineWrap(true); // force line wrap, this should not be needed, but is enabled anyway. 
-					textArea.setWrapStyleWord(true); // make wrap work on a perword basis rather than percharacter
-					scrollPane.setPreferredSize(new Dimension(500,500)); //set the size of the scrollpane
-					JOptionPane.showMessageDialog(null, scrollPane, "Person Database", JOptionPane.INFORMATION_MESSAGE); // output the scrollpane. 
+					printDatabase("Person");
+//					JTextArea textArea = new JTextArea(personDatabase.getDatabase(1)); // create the text to be displayed
+//					textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
+//					JScrollPane scrollPane = new JScrollPane(textArea); // create the scrolling window for the text
+//					textArea.setLineWrap(true); // force line wrap, this should not be needed, but is enabled anyway. 
+//					textArea.setWrapStyleWord(true); // make wrap work on a perword basis rather than percharacter
+//					scrollPane.setPreferredSize(new Dimension(500,500)); //set the size of the scrollpane
+//					JOptionPane.showMessageDialog(null, scrollPane, "Person Database", JOptionPane.INFORMATION_MESSAGE); // output the scrollpane. 
 				}
 				else if(tempInput.equals("print the product database to the screen")) { // see above
-					JTextArea textArea = new JTextArea(productDatabase.getDatabase(1));
-					textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
-					JScrollPane scrollPane = new JScrollPane(textArea);
-					textArea.setLineWrap(true);
-					textArea.setWrapStyleWord(true);
-					scrollPane.setPreferredSize(new Dimension(500,500));
-					JOptionPane.showMessageDialog(null, scrollPane, "Product Database", JOptionPane.INFORMATION_MESSAGE);
+					printDatabase("Product");
+//					JTextArea textArea = new JTextArea(productDatabase.getDatabase(1));
+//					textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
+//					JScrollPane scrollPane = new JScrollPane(textArea);
+//					textArea.setLineWrap(true);
+//					textArea.setWrapStyleWord(true);
+//					scrollPane.setPreferredSize(new Dimension(500,500));
+//					JOptionPane.showMessageDialog(null, scrollPane, "Product Database", JOptionPane.INFORMATION_MESSAGE);
 				}
 				else if(tempInput.equals("save databases to USB")) { 
 					error = 0;
 					error = personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
-					error = productDatabase.writeOutDatabase("adminProductDatabase.txt");
+					error = productDatabase.adminWriteOutDatabase("adminProductDatabase.txt");
 					if(error != 0) JOptionPane.showMessageDialog(null, "Could not copy the database", "Error", JOptionPane.ERROR_MESSAGE);
 					try {
 						ProcessBuilder pb = new ProcessBuilder("copy.sh");
@@ -362,7 +364,7 @@ public class Interface
 					int tempNumber = 0;
 					for(i = 0; productDatabase.productExists(i); i++) { // for each product ask for the new number of items you have. 
 						tempInput = showInputDialog("You have " + productDatabase.getNumber(i) + " " + productDatabase.getProductName(i) + 
-								" left from last stocktake\n Including these, how many do you have now?", "Stock Count", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
+								" left from last stocktake\n Including these, how many do you have now?", "Stock Count", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 						if(!isInteger(tempInput)) continue;
 						tempNumber = Integer.parseInt(tempInput);
 						productDatabase.setNumber(i, tempNumber);
@@ -371,7 +373,7 @@ public class Interface
 				}
 				else if(tempInput.equals("Enter stock count (individual)")) {
 					int tempNumber = 0;
-					tempInput = showInputDialog("Enter the bar code of the product you would like to set", "Barcode", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false);
+					tempInput = showInputDialog("Enter the bar code of the product you would like to set", "Barcode", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 					if(!isLong(tempInput)) continue;
 					tempBarCode = Long.parseLong(tempInput);
 					productNumber = productDatabase.findProduct(tempBarCode); // corrilate the product number with that in the database
@@ -380,7 +382,7 @@ public class Interface
 						continue;
 					}
 					tempInput = showInputDialog("You had " + productDatabase.getNumber(productNumber) + " " + productDatabase.getProductName(productNumber) + 
-							" left from last stocktake\n Inclunding these, how many do you have now?", "Stock Counts", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, false); // ask the user how many they had, and how many they now have
+							" left from last stocktake\n Inclunding these, how many do you have now?", "Stock Counts", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false); // ask the user how many they had, and how many they now have
 					if(!isInteger(tempInput)) continue;
 					tempNumber = Integer.parseInt(tempInput);
 					productDatabase.setNumber(productNumber, tempNumber); // enter all this into the database and write it out.
@@ -538,9 +540,9 @@ public class Interface
 	{
 		JTextArea textArea;
 		switch(name) {
-			case("product"):textArea = new JTextArea(productDatabase.getDatabase(1));
+			case("Product"):textArea = new JTextArea(productDatabase.getDatabase(1));
 							break;
-			case("person"):textArea = new JTextArea(personDatabase.getDatabase(1));
+			case("Person"):textArea = new JTextArea(personDatabase.getDatabase(1));
 							break;
 			default:textArea = new JTextArea(personDatabase.getDatabase(1));
 							break;
@@ -549,15 +551,8 @@ public class Interface
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
-		scrollPane.setPreferredSize(new Dimension(500,500));
-		switch(name) {
-			case("product"):JOptionPane.showMessageDialog(null, scrollPane, "Product Database", JOptionPane.INFORMATION_MESSAGE);
-							break;
-			case("person"):JOptionPane.showMessageDialog(null, scrollPane, "Person Database", JOptionPane.INFORMATION_MESSAGE);
-							break;
-			default:JOptionPane.showMessageDialog(null, scrollPane, "Person Database", JOptionPane.INFORMATION_MESSAGE);
-							break;
-		}
+		scrollPane.setPreferredSize(new Dimension(800,600));
+		JOptionPane.showMessageDialog(null, scrollPane, name + "Database", JOptionPane.INFORMATION_MESSAGE);
 		
 	}
         private void buyProducts(int personNumber, long price)
