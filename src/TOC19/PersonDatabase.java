@@ -78,7 +78,6 @@ public final class PersonDatabase {
 		for (i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
 			if (allPersons[i] != null) {
 				output += String.format("\nPerson %d:\n", 1 + i);
-//				output += String.format("<html><br></html>");
 				output += allPersons[i].getData();
 			}
 		}
