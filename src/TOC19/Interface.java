@@ -145,13 +145,23 @@ public class Interface
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
 				while(!admin) {
 				//	tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
-					tempInput = showInputDialog("<html>Hello " + personDatabase.getPersonUser(personNumber, true) + "<br>Enter the bar code of the product you would like</html>", "what would you like",
+					tempInput = showInputDialog("<html>Hello " + personDatabase.getPersonUser(personNumber, true) + "<br>Enter the bar code of the product you would like</html>", 
+													"what would you like",
 												JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 					if(tempInput != null && !tempInput.equals("") && isLong(tempInput)) {
 						tempBarCode = Long.parseLong(tempInput); // disallows the user from entering nothing or clicking cancel. 
 					}
 					else if((tempInput == null && !first) || ("".equals(tempInput) && !first)) {
-						break; // if canceled and not on the first run of adding items. 
+						// if canceled and not on the first run of adding items. 
+						another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nWould you like to add more items?" + "\nHitting no will buy this cart",
+																"Cart", JOptionPane.YES_NO_CANCEL_OPTION);
+						if(another == JOptionPane.NO_OPTION) break; // let the user buy already. 
+						else if(another == JOptionPane.CANCEL_OPTION) {
+							checkOuts = new CheckOut();
+							sameUser = false;
+							break;
+						}
+						else if(another == JOptionPane.YES_OPTION) continue;
 					}
 					else { // what to do if the user does the above on the first run.
 						sameUser = false;
