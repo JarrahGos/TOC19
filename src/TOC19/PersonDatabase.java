@@ -78,6 +78,7 @@ public final class PersonDatabase {
 		for (i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
 			if (allPersons[i] != null) {
 				output += String.format("\nPerson %d:\n", 1 + i);
+//				output += String.format("<html><br></html>");
 				output += allPersons[i].getData();
 			}
 		}
@@ -470,7 +471,7 @@ public final class PersonDatabase {
 		if (7000000 == barCode) {
 			return -2;
 		}
-		for (i = 0; i < logicalSize; i++) {
+		for (i = logicalSize -1; i > 0; i--) {
 			if (allPersons[i].getBarCode() == barCode) {
 				return i;
 			}
@@ -483,7 +484,7 @@ public final class PersonDatabase {
 	}
 
 	public final void resetBills() {
-		for (int i = 0; i < logicalSize; i++) {
+		for (int i = logicalSize -1; i > 0; i--) {
 			allPersons[i].resetWeekCost();
 		}
 	}

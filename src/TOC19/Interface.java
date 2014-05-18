@@ -169,7 +169,11 @@ public final class Interface
 					}
 					productNumber = productDatabase.findProduct(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
 					if(productNumber == -1) { // -1 is output by the above on error
-						JOptionPane.showMessageDialog(null, "That product does not exist, please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+						if (tempBarCode == personDatabase.getBarCode(personNumber)) {
+							JOptionPane.showMessageDialog(null, "Little early in your career to start selling yourself isn't it?\n"
+														+ "This incident has been reported", "Attempted prostitution", JOptionPane.ERROR_MESSAGE);
+						}
+						else JOptionPane.showMessageDialog(null, "That product does not exist, please try again.", "Error", JOptionPane.ERROR_MESSAGE);
 						continue;
 					}
 

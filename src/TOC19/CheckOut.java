@@ -137,7 +137,7 @@ public final class CheckOut
 		PostConditions: the integer number of the product that is equal to extProduct will be returned. On the error that no products match 0 will be returned
 		*/
 		
-		for(int i = 0; i < logicalSize; i++) { //Loop untill the product that matches the one given as a paremeter is found
+		for(int i = logicalSize -1; i > 0; i--) { //Loop untill the product that matches the one given as a paremeter is found
 			if(products[i] != null && products[i].getData().equals(extProduct)) {
 				return i; // return the matching product.
 			}
@@ -303,7 +303,7 @@ public final class CheckOut
 	}
 	public final void productBought()
 	{
-		for(int i = 0; i < logicalSize; i++) {
+		for(int i = logicalSize -1; i > 0; i--) {
 			for (int z = 0; z < quantities[i]; z++) {
 				products[i].decrementNumber();
 			}
