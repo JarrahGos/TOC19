@@ -470,7 +470,7 @@ public final class PersonDatabase {
 		if (7000000 == barCode) {
 			return -2;
 		}
-		for (i = 0; i < logicalSize; i++) {
+		for (i = logicalSize; i > 0; i--) {
 			if (allPersons[i].getBarCode() == barCode) {
 				return i;
 			}
@@ -483,7 +483,7 @@ public final class PersonDatabase {
 	}
 
 	public final void resetBills() {
-		for (int i = 0; i < logicalSize; i++) {
+		for (int i = logicalSize; i > 0; i--) {
 			allPersons[i].resetWeekCost();
 		}
 	}
