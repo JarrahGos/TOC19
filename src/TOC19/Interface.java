@@ -708,11 +708,11 @@ public class Interface
 				@Override
 				public void run()
 				{
-					long start = Calendar.getInstance().getTimeInMillis();
-					long now = Calendar.getInstance().getTimeInMillis();
-					while (now - start < 90000)
-					{
-						now = Calendar.getInstance().getTimeInMillis();
+					try {
+						Thread.sleep(90000);
+					}
+					catch (InterruptedException e) {
+						dialog.dispose();
 					}
 					dialog.dispose();
 					pane.setValue(JOptionPane.CANCEL_OPTION);
