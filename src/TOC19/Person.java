@@ -23,7 +23,7 @@
 * Description: This program will allow for the input and retreval of persons in the person database.
 */
 
-public class Person
+public final class Person
 {
 
 	// create the variables that are needed in order of use
@@ -40,7 +40,7 @@ public class Person
 		totalCostWeek = week;
 	}
 	// Begin methods
-	public void setData(String name, int barCode) // redundant method which has been left in case persons are edited in some way which would require this to be used.
+	public final void setData(String name, int barCode) // redundant method which has been left in case persons are edited in some way which would require this to be used.
 	{
 		/**
 		Class Song: Method setData
@@ -51,7 +51,7 @@ public class Person
 		this.barCode = barCode;
 	}
 
-	public String getData() // output the person data as a string
+	public final String getData() // output the person data as a string
 	{
 		/**
 		Class Song: Method getData
@@ -69,7 +69,7 @@ public class Person
 
 		return output; //return a string with all of the person's data in it
 	}
-		public String getDataUser(Boolean html) // output the person data as a string
+		public final String getDataUser(Boolean html) // output the person data as a string
 	{
 		/**
 		Class Song: Method getData
@@ -92,7 +92,7 @@ public class Person
 		}
 		return output; //return a string with all of the person's data in it
 	}
-	public String getName() // return the name of the person
+	public final String getName() // return the name of the person
 	{
 		/**
 		Class Song: Method getData
@@ -102,7 +102,7 @@ public class Person
 
 		return name;
 	}
-	public long getBarCode() // return the barcode assoiated with the person
+	public final long getBarCode() // return the barcode assoiated with the person
 	{
 		 /**
 		 Class Song: Method getBarCode
@@ -111,7 +111,7 @@ public class Person
 		 */
 		return barCode;
 	}
-	public double totalCostRunning() // retung the size of the person. 
+	public final double totalCostRunning() // retung the size of the person. 
 	{
 		/**
 		Class Song: Method totalCostRunning
@@ -121,7 +121,7 @@ public class Person
 		
 		return (double)totalCostRunning/100;
 	}
-	public double totalCostWeek() // retung the size of the person. 
+	public final double totalCostWeek() // retung the size of the person. 
 	{
 		/**
 		Class Song: Method totalCostRunning
@@ -131,16 +131,16 @@ public class Person
 		
 		return (double)totalCostWeek/100;
 	}
-	public void addPrice(long cost)
+	public final void addPrice(long cost)
 	{
 		totalCostRunning += cost;
 		totalCostWeek += cost;
 	}
-	public void resetWeekCost()
+	public final void resetWeekCost()
 	{
 		totalCostWeek = 0;
 	}
-	public void setName(String extName)
+	public final void setName(String extName)
 	{
 		name = extName;
 	}

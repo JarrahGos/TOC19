@@ -52,7 +52,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 
 
-public class Interface
+public final class Interface
 {
 	// Create the necessary instance variables.
 	private ProductDatabase productDatabase;
@@ -419,7 +419,7 @@ public class Interface
 		intFace.run(); // Engage
 
 	}
-	public CheckOut[] resizeCheckOut(Boolean action, CheckOut[] resizing)
+	private final CheckOut[] resizeCheckOut(Boolean action, CheckOut[] resizing)
 	{
 		if(action) {
 			return (Arrays.copyOf(resizing, resizing.length + 1));
@@ -429,7 +429,7 @@ public class Interface
 		}
 		
 	}
-	public boolean isInteger(String s) 
+	private final boolean isInteger(String s) 
 	{
 		if(s == null) return false;
 		try { 
@@ -441,7 +441,7 @@ public class Interface
 		// only got here if we didn't return false
 		return true;
 	}
-	public boolean isDouble(String s) 
+	private final boolean isDouble(String s) 
 	{
 		if(s == null) return false;
 		try { 
@@ -453,7 +453,7 @@ public class Interface
 		// only got here if we didn't return false
 		return true;
 	}
-	public boolean isLong(String s)
+	private final boolean isLong(String s)
 	{
 		if(s == null) return false;
 		try {
@@ -661,7 +661,7 @@ public class Interface
 				}
 			}
 		}
-		public static void setUIFont (javax.swing.plaf.FontUIResource f)
+		private final static void setUIFont (javax.swing.plaf.FontUIResource f)
 		{
 			java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
 			while (keys.hasMoreElements()) {
@@ -671,7 +671,7 @@ public class Interface
 					UIManager.put (key, f);
 			}
 		}
-		public String showInputDialog(String message, String title, int messageType, int optionType, final String[] text, boolean combo)
+		private final String showInputDialog(String message, String title, int messageType, int optionType, final String[] text, boolean combo)
 		{
 			String input = "";
 			JPanel panel = new JPanel();

@@ -28,7 +28,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ProductDatabase
+public final class ProductDatabase
 {
 	private Product[] allProducts;
 	private int logicalSize;
@@ -46,7 +46,7 @@ public class ProductDatabase
 	}
 	
 	
-	public int setDatabaseProduct(int productNo, String name, long price, long barCode) // take the products data and pass it to the products constructor
+	public final int setDatabaseProduct(int productNo, String name, long price, long barCode) // take the products data and pass it to the products constructor
 	{
 		/**
 		Class ProductDatabase: Method setDatabase
@@ -67,7 +67,7 @@ public class ProductDatabase
 		}
 		else return 1; // Something went wrong, probably that user trying to add two products with the same name and artist. Now I have to tell them off.
 	}
-	public String getDatabase(int sort) 
+	public final String getDatabase(int sort) 
 	{
 		/**
 		Class ProductDatabase: Method getDatabase
@@ -86,7 +86,7 @@ public class ProductDatabase
 		return output; // send the calling program one large string containing the ingredients of all the products in the database
 	}
 	
-	public String productsUnder(long price, int sort)
+	public final String productsUnder(long price, int sort)
 	{
 		/**
 		Class ProductDatabase: Method productsUnder
@@ -109,7 +109,7 @@ public class ProductDatabase
 		return output; // pass the results back to the interface
 	}
 
-	public String getProduct(int productNo) 
+	public final String getProduct(int productNo) 
 	{
 		/**
 		Class ProductDatabase: Method getProduct
@@ -126,7 +126,7 @@ public class ProductDatabase
 		}
 
 	}
-	public int delProduct(int productNo)
+	public final int delProduct(int productNo)
 	{
 		/**
 		Class ProductDatabase: Method delProduct
@@ -146,7 +146,7 @@ public class ProductDatabase
 		else return 1; // Telling the user yet again that their product doesn't exist. At least thay don't need to delete it now.
 
 	}
-	public String getProductName(int productNo) 
+	public final String getProductName(int productNo) 
 	{
 		/**
 		Class ProductDatabase: Method getProductName
@@ -162,7 +162,7 @@ public class ProductDatabase
 
 	}
 
-	public double getProductPrice(int productNo)
+	public final double getProductPrice(int productNo)
 	{
 		/** 
 		Class ProductDatabase: Method getProductSize
@@ -175,7 +175,7 @@ public class ProductDatabase
 		else return 0;
 	
 	}
-	public long getBarCode(int productNo)
+	public final long getBarCode(int productNo)
 	{
 		/** 
 		Class ProductDatabase: Method getProductBarCode
@@ -190,7 +190,7 @@ public class ProductDatabase
 		}
 	
 	}
-	public int emptyProduct()
+	public final int emptyProduct()
 	{
 		/**
 		Class ProductDatabase: Method emptyProduct
@@ -204,7 +204,7 @@ public class ProductDatabase
 		}
 		return -1; // there are no empty products. have a -1 so you know what happened.
 	}
-	public boolean productExists(String extProductName)
+	public final boolean productExists(String extProductName)
 	{
 	    
 	    for(i = 0; i < logicalSize; i++) { //loop until a product that matches the artist and name specified
@@ -234,7 +234,7 @@ public class ProductDatabase
 		}
 		
 	}
-	public int partitionByName(int lb, int  ub)
+	public final int partitionByName(int lb, int  ub)
 	{
 		Product pivotElement = allProducts[lb]; // store the left most value as the pivot element
 		int max = logicalSize;
@@ -263,7 +263,7 @@ public class ProductDatabase
 		return right; // return the new pivot (see quick sort)
 	}
 
-	public void quickSortByName(int left, int right)
+	public final void quickSortByName(int left, int right)
 	{
 		if (left < right) // start the sort.
 		{
@@ -272,7 +272,7 @@ public class ProductDatabase
 			quickSortByName(pivot+1, right); // do the above for the right of the pivot
 		}
 	}
-	public int partitionByPrice(int lb, int  ub)
+	public final int partitionByPrice(int lb, int  ub)
 	{ // for an outline of how this works, see the partition method for name
 		Product pivotElement = allProducts[lb];
 		int max = logicalSize;
@@ -301,7 +301,7 @@ public class ProductDatabase
 		return right;
 	}
 
-	public void quickSortByPrice(int left, int right)
+	public final void quickSortByPrice(int left, int right)
 	{ // for an outline of how this works, see the sorting method for name
 		if (left < right)
 		{
@@ -310,7 +310,7 @@ public class ProductDatabase
 			quickSortByPrice(pivot+1, right);
 		}
 	}
-	public int partitionByBarCode(int lb, int  ub)
+	public final int partitionByBarCode(int lb, int  ub)
 	{ // for an outline of how this works, see the partition method for name
 		Product pivotElement = allProducts[lb];
 		int max = logicalSize;
@@ -339,7 +339,7 @@ public class ProductDatabase
 		return right;
 	}
 
-	public void quickSortByBarCode(int left, int right)
+	public final void quickSortByBarCode(int left, int right)
 	{ // for an outline of how this works, see the sorting method for name
 		if (left < right)
 		{
@@ -349,7 +349,7 @@ public class ProductDatabase
 		}
 	}
 
-	public int writeOutDatabase(String path) 
+	public final int writeOutDatabase(String path) 
 	{
 		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
 		try {
@@ -372,7 +372,7 @@ public class ProductDatabase
 			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
 			return 0; // let the program and thus the user know that everything is shiny. 
 	}
-	public int adminWriteOutDatabase(String path) 
+	public final int adminWriteOutDatabase(String path) 
 	{
 		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
 		try {
@@ -395,7 +395,7 @@ public class ProductDatabase
 			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
 			return 0; // let the program and thus the user know that everything is shiny. 
 	}
-	public int readDatabase(String path) 
+	public final int readDatabase(String path) 
 	{
 		String tempName, tempInput;
 		long tempProductPrice;
@@ -436,7 +436,7 @@ public class ProductDatabase
 			return -1; // this is what we use to tell them that something we didn't expect happened. Like the user assuring me that the file exists.
 		}
 	}
-	public void sortBy(int sort)
+	public final void sortBy(int sort)
 	{
 		switch(sort) { // Rather than place this switch every time the sort is used, Call this.
 			case (1): this.quickSortByName(0, logicalSize-1); // when sort is one: call sort by name
@@ -449,25 +449,25 @@ public class ProductDatabase
 						break;
 		}
 	}
-	public int findProduct(long barCode)
+	public final int findProduct(long barCode)
 	{
 		for(int i = 0; i < logicalSize; i++) 
 			if(allProducts[i].getBarCode() == barCode) return i;
 		return -1;
 	}
-	public boolean productExists(int number)
+	public final boolean productExists(int number)
 	{
 		return (number < logicalSize);
 	}
-	public int getNumber(int productNo)
+	public final int getNumber(int productNo)
 	{
 		return allProducts[productNo].getNumber();
 	}
-	public void setNumber(int productNo, int number)
+	public final void setNumber(int productNo, int number)
 	{
 		allProducts[productNo].setNumber(number);
 	}
-	public Product getProductRef(int productNo)
+	public final Product getProductRef(int productNo)
 	{
 		return allProducts[productNo];       
         }

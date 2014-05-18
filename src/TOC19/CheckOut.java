@@ -25,7 +25,7 @@ import java.util.Arrays;
 * Description: This program will allow for the creation, retreval, modification and deletion of checkOuts created from products in the product database.
 */
 
-public class CheckOut
+public final class CheckOut
 {
 	// create the necessary variables in the order of use
 	private Product[] products;
@@ -45,7 +45,7 @@ public class CheckOut
 	    totalPrice = 0;
 	}
 	    
-	public int addProduct(int productNo, Product item, int quantity)
+	public final int addProduct(int productNo, Product item, int quantity)
 	{
 		if(logicalSize == products.length) {
 			products = resizeCheckOut(true, products);
@@ -60,7 +60,7 @@ public class CheckOut
 		++logicalSize;
 		return 0;
 	}
-	public int addProduct(int productNo, String name, long price, int barCode)
+	public final int addProduct(int productNo, String name, long price, int barCode)
 	{
 		/** 
 		Class CheckOut: Method addProduct
@@ -77,7 +77,7 @@ public class CheckOut
 		++logicalSize; // incerment the logicalSize value to show the added product.
 		return 0;
 	}
-	public String getCheckOut(int sort) 
+	public final String getCheckOut(int sort) 
 	{
 		/**
 		Class CheckOut: Method getCheckOut
@@ -94,11 +94,11 @@ public class CheckOut
 		output +=  (double)totalPrice/100; 
 		return output;
 	}
-	public long getPrice()
+	public final long getPrice()
 	{
 		return totalPrice;
 	}
-	public void delProduct(int productNo)
+	public final void delProduct(int productNo)
 	{
 		/**
 		Class CheckOut: Method delProduct
@@ -118,7 +118,7 @@ public class CheckOut
 		}
 
 	}
-	public int emptyProduct() // return the logicalSize to if another class needs it. logicalSize will always point to the next free position.
+	public final int emptyProduct() // return the logicalSize to if another class needs it. logicalSize will always point to the next free position.
 	{
 		/**
 		Class CheckOut: Method emptyProduct
@@ -129,7 +129,7 @@ public class CheckOut
 		return logicalSize;
 	}
 
-	public int productEqualTo(String extProduct)
+	public final int productEqualTo(String extProduct)
 	{
 		/**
 		Class CheckOut: Method productEqualTo
@@ -145,7 +145,7 @@ public class CheckOut
 		return -1; // return on unfound match.
 
 	}
-	public Product[] resizeCheckOut(Boolean action, Product[] resizing)
+	public final Product[] resizeCheckOut(Boolean action, Product[] resizing)
 	{
 		if(action) { //Make the checkOut bigger
 			return (Arrays.copyOf(resizing, resizing.length + 4));
@@ -159,7 +159,7 @@ public class CheckOut
 		}
 		
 	}
-	public int[] resizeQuantities(Boolean action, int[] resize)
+	public final int[] resizeQuantities(Boolean action, int[] resize)
 	{
 		if(action) {
 			return (Arrays.copyOf(resize, resize.length + 4));
@@ -173,7 +173,7 @@ public class CheckOut
 
 	}
 
-	public int partitionByName(int left, int  right) // used by sort by name
+	public final int partitionByName(int left, int  right) // used by sort by name
 	{
 		int max = logicalSize;
 		Product pivotElement = products[left]; //Store the left most product as the object that all other objects will be tested against
@@ -202,7 +202,7 @@ public class CheckOut
 		return right; // return the new pivot (see quick sort)
 	}
 
-	public void quickSortByName(int left, int right)
+	public final void quickSortByName(int left, int right)
 	{
 		if (left < right) // start the sort.
 		{
@@ -211,7 +211,7 @@ public class CheckOut
 			quickSortByName(pivot+1, right); // do the above for the right of the pivot
 		}
 	}
-	public int partitionByPrice(int left, int  right) // see the name version of this method
+	public final int partitionByPrice(int left, int  right) // see the name version of this method
 	{
 		Product pivotElement = products[left];
 		int max = logicalSize;
@@ -240,7 +240,7 @@ public class CheckOut
 		return right;
 	}
 
-	public void quickSortByPrice(int left, int right) // see the name version of this method
+	public final void quickSortByPrice(int left, int right) // see the name version of this method
 	{
 		if (left < right)
 		{
@@ -249,7 +249,7 @@ public class CheckOut
 			quickSortByPrice(pivot+1, right);
 		}
 	}
-	public int partitionByBarCode(int left, int  right) // see the name version of this method
+	public final int partitionByBarCode(int left, int  right) // see the name version of this method
 	{
 		Product pivotElement = products[left];
 		int max = logicalSize;
@@ -278,7 +278,7 @@ public class CheckOut
 		return right;
 	}
 
-	public void quickSortByBarCode(int left, int right) // see the name version of this method
+	public final void quickSortByBarCode(int left, int right) // see the name version of this method
 	{
 		if (left < right)
 		{
@@ -288,7 +288,7 @@ public class CheckOut
 		}
 	}
 
-	public void sortBy(int sort) // Rather than place this switch every time the sort is used, Call this.
+	public final void sortBy(int sort) // Rather than place this switch every time the sort is used, Call this.
 	{
 		switch(sort) {
 			case (1): this.quickSortByName(0, logicalSize-1); // when sort is one: call sort by name
@@ -301,7 +301,7 @@ public class CheckOut
 						break;
 		}
 	}
-	public void productBought()
+	public final void productBought()
 	{
 		for(int i = 0; i < logicalSize; i++) {
 			for (int z = 0; z < quantities[i]; z++) {
@@ -309,7 +309,7 @@ public class CheckOut
 			}
 		}
 	}
-	public void addQuantity(int productNo, int add)
+	public final void addQuantity(int productNo, int add)
 	{
 		products[productNo].setQuantity(products[productNo].getQuantity() + add);
 		totalPrice += products[productNo].productPrice();
