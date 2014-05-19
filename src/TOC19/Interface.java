@@ -86,7 +86,7 @@ public final class Interface
 		error = 0; // setting up error
 		boolean admin = false; // how the program knows that it is in admin mode
 		boolean sameUser = true; // How the program knows that it is serving the same user. 
-                boolean first = true;
+        boolean first = true;
 		int another = 0; // whether another item will be added 
 		final JPasswordField passwordField = new JPasswordField(10); // box to take passwords from the user
 		
@@ -109,35 +109,35 @@ public final class Interface
 		while(true) // perminantly loop through this code. 
 		{
 
-				tempBarCode = getPMKeyS();
-				personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
-				sameUser = true; // tells the program that a user is logged in. 
-                first = true;
-				if(-2 == personNumber) { // checks whether that user is an admin
-					String passWd = "";
-					passWd = getPassWd(true);
-					if (passWd != null) {
-						passWd = getSecurePassword(passWd);
-					}
-					if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
-						admin = true; // the above conversion will return -2 for all admins. This will enact that. 
-						sameUser = false; // skip the normal user interface for non admin personnel. 
-						passWd = null;
-					}
-					else if(passWd != null) {
-						JOptionPane.showMessageDialog(null, "Password incorrect", "Error", JOptionPane.ERROR_MESSAGE);
-						admin = false; 
-						sameUser = false;
-						passWd = null;
-					}
-					else {
-						admin = false; 
-						sameUser = false;
-					}
+			tempBarCode = getPMKeyS();
+			personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
+			sameUser = true; // tells the program that a user is logged in. 
+			first = true;
+			if(-2 == personNumber) { // checks whether that user is an admin
+				String passWd = "";
+				passWd = getPassWd(true);
+				if (passWd != null) {
+					passWd = getSecurePassword(passWd);
 				}
+				if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
+					admin = true; // the above conversion will return -2 for all admins. This will enact that. 
+					sameUser = false; // skip the normal user interface for non admin personnel. 
+					passWd = null;
+				}
+				else if(passWd != null) {
+					JOptionPane.showMessageDialog(null, "Password incorrect", "Error", JOptionPane.ERROR_MESSAGE);
+					admin = false; 
+					sameUser = false;
+					passWd = null;
+				}
+				else {
+					admin = false; 
+					sameUser = false;
+				}
+			}
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
 				while(!admin) {
-				//	tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
+					//	tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
 					tempInput = showInputDialog("<html>Hello " + personDatabase.getPersonUser(personNumber, true) + "<br>Enter the bar code of the product you would like</html>", 
 													"what would you like",
 												JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
@@ -179,13 +179,15 @@ public final class Interface
 
 					int checkProduct; // create this for use below
 					tempInput = productDatabase.getProduct(productNumber);
-					checkProduct = checkOuts.productEqualTo(tempInput); // check that the product was not entered into the database before. If it was, just add the quantity to the one in the database
+					checkProduct = checkOuts.productEqualTo(tempInput); // check that the product was not entered into the database before. 
+																					//If it was, just add the quantity to the one in the database
 					if(checkProduct != -1) {
 						checkOuts.addQuantity(checkProduct, 1);
 					}
 					else checkOuts.addProduct(checkOuts.emptyProduct(), productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
 					//another = JOptionPane.showConfirmDialog(null, "Would you like to add another item?", "Continue", JOptionPane.YES_NO_OPTION);
-					another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nWould you like to add more items?" + "\nHitting no will buy this cart", "Cart", JOptionPane.YES_NO_CANCEL_OPTION);
+					another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nWould you like to add more items?" + 
+															"\nHitting no will buy this cart", "Cart", JOptionPane.YES_NO_CANCEL_OPTION);
 					if(another == JOptionPane.NO_OPTION) break; // let the user buy already. 
 					else if(another == JOptionPane.CANCEL_OPTION) {
 						checkOuts = new CheckOut();
@@ -256,7 +258,6 @@ public final class Interface
 							if(error ==  1) {
 							JOptionPane.showMessageDialog(null, "The person that you asked for could not be found, please try again", "Error", JOptionPane.ERROR_MESSAGE);
 							q2 = 0;
-							continue;
 							}
 					}
 				}	
@@ -357,7 +358,8 @@ public final class Interface
 					int tempNumber = 0;
 					for(i = 0; productDatabase.productExists(i); i++) { // for each product ask for the new number of items you have. 
 						tempInput = showInputDialog("You have " + productDatabase.getNumber(i) + " " + productDatabase.getProductName(i) + 
-								" left from last stocktake\n Including these, how many do you have now?", "Stock Count", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
+								" left from last stocktake\n Including these, how many do you have now?", "Stock Count", JOptionPane.QUESTION_MESSAGE, 
+								JOptionPane.OK_CANCEL_OPTION, new String[0], false);
 						if(!isInteger(tempInput)) continue;
 						tempNumber = Integer.parseInt(tempInput);
 						productDatabase.setNumber(i, tempNumber);
@@ -375,7 +377,8 @@ public final class Interface
 						continue;
 					}
 					tempInput = showInputDialog("You had " + productDatabase.getNumber(productNumber) + " " + productDatabase.getProductName(productNumber) + 
-							" left from last stocktake\n Inclunding these, how many do you have now?", "Stock Counts", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false); // ask the user how many they had, and how many they now have
+							" left from last stocktake\n Inclunding these, how many do you have now?", "Stock Counts", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
+							// ask the user how many they had, and how many they now have
 					if(!isInteger(tempInput)) continue;
 					tempNumber = Integer.parseInt(tempInput);
 					productDatabase.setNumber(productNumber, tempNumber); // enter all this into the database and write it out.
@@ -564,7 +567,7 @@ public final class Interface
             String[] options = new String[] {"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
 					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", 
 					"change password", "save databases to USB", "close the program"}; // admin options
-			return showInputDialog("Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, options, true);
+			return (showInputDialog("Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, options, true));
            // return (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
         }
 		private void addToDatabase(String type)
@@ -684,7 +687,7 @@ public final class Interface
 		}
 		private final String showInputDialog(String message, String title, int messageType, int optionType, final String[] text, boolean combo)
 		{
-			String input = "";
+			String input;
 			JPanel panel = new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 			panel.add(new JLabel(message));
@@ -743,7 +746,7 @@ public final class Interface
 			if (combo) {
 				input = (String)comboBox.getSelectedItem();
 			}
-			else input = textField.getText().length() == 0 ? null : textField.getText();
+			else input = textField.getText().length() == 0 ? null : (textField.getText());
 			return input;
 		}
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      
