@@ -233,24 +233,32 @@ public final class Interface
 					addToDatabase("person");
 				}
 				else if(tempInput.equals("remove people")) {
-					error = 1;
-					tempInput = showInputDialog("Enter the PMKeyS of the person you would like to delete", "PMKeyS", JOptionPane.QUESTION_MESSAGE,
-							JOptionPane.OK_CANCEL_OPTION, new String[0], false);
-					if(!isLong(tempInput)) continue;
-					tempBarCode = Long.parseLong(tempInput);
-						q2 = personDatabase.findPerson(tempBarCode);	
-					if(q2 != -1 && tempBarCode != 7000000) {
-						error = personDatabase.delPerson(q2); // recieve a one value on an error
-						q2++; // confirmation output error
-						personDatabase.writeOutDatabase("personDatabase.txt");
-					}
-					if(error != 1 && q2 != 0) {
-						JOptionPane.showMessageDialog(null, "The person that you asked for has been deleted.", "Success", JOptionPane.INFORMATION_MESSAGE);
-					}
-						if(error ==  1) {
-						JOptionPane.showMessageDialog(null, "The person that you asked for could not be found, please try again", "Error", JOptionPane.ERROR_MESSAGE);
-						q2 = 0;
+					while(true) {
+						error = 1;
+						tempInput = showInputDialog("Enter the PMKeyS of the person you would like to delete", "PMKeyS", JOptionPane.QUESTION_MESSAGE,
+								JOptionPane.OK_CANCEL_OPTION, new String[0], false);
+						if(tempInput == null) break;
+						else if(!tempInput.equals("") && (tempInput.charAt(0) == 'c' || tempInput.charAt(0) == 'n' || tempInput.charAt(0) == 'C' || tempInput.charAt(0) == 'N')) {
+							tempInput = tempInput.substring(1);
 						}
+						if(!isLong(tempInput)) continue;
+						tempBarCode = Long.parseLong(tempInput);
+							q2 = personDatabase.findPerson(tempBarCode);	
+						if(q2 != -1 && tempBarCode != 7000000) {
+							error = personDatabase.delPerson(q2); // recieve a one value on an error
+							q2++; // confirmation output error
+							personDatabase.writeOutDatabase("personDatabase.txt");
+						}
+						if(error != 1 && q2 != 0) {
+							JOptionPane.showMessageDialog(null, "The person that you asked for has been deleted.", "Success", JOptionPane.INFORMATION_MESSAGE);
+							break;
+						}
+							if(error ==  1) {
+							JOptionPane.showMessageDialog(null, "The person that you asked for could not be found, please try again", "Error", JOptionPane.ERROR_MESSAGE);
+							q2 = 0;
+							continue;
+							}
+					}
 				}	
 					else if(tempInput.equals("save product database")) {
 						error = 0;
@@ -491,11 +499,11 @@ public final class Interface
                 JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
                 continue;
             }
-			else if(!tempInput.equals("") && tempInput.charAt(0) == 'c') {
+			else if(!tempInput.equals("") && (tempInput.charAt(0) == 'c' || tempInput.charAt(0) == 'n' || tempInput.charAt(0) == 'C' || tempInput.charAt(0) == 'N')) {
 				tempInput = tempInput.substring(1);
 			}
             if(tempInput.equals("") || !isLong(tempInput) || (tempInput.length() != 7 && tempInput.length() != 5) || !personDatabase.personExists(Integer.parseInt(tempInput))) { // checks for valid numbers in the PMKeyS
-                JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Errror", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Error", JOptionPane.ERROR_MESSAGE);
                 continue;
             }
             correct = true;
@@ -615,7 +623,7 @@ public final class Interface
 						done = 1; // exit the loop
 						continue;
 					}
-					else if(!tempInput.equals("") && tempInput.charAt(0) == 'c') {
+					else if(!tempInput.equals("") && (tempInput.charAt(0) == 'c' || tempInput.charAt(0) == 'n' || tempInput.charAt(0) == 'C' || tempInput.charAt(0) == 'N')) {
 						tempInput = tempInput.substring(1);
 					}
 					if(!isLong(tempInput)) {
@@ -631,7 +639,7 @@ public final class Interface
 						added = productDatabase.setDatabaseProduct(q2, tempName, tempProductPrice, tempBarCode);
 					}
 					else {
-						if(productDatabase.findProduct(tempBarCode) != -1) {
+						if(personDatabase.findPerson(tempBarCode) != -1) {
 						JOptionPane.showMessageDialog(null, "The PMKeyS you entered has already been taken", "Error", JOptionPane.ERROR_MESSAGE);
 						continue;
 						}
