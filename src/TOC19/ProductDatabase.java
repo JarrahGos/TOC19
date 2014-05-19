@@ -451,7 +451,7 @@ public final class ProductDatabase
 	}
 	public final int findProduct(long barCode)
 	{
-		for(int i = logicalSize; i > 0; i--) 
+		for(int i = logicalSize -1; i > 0; i--) 
 			if(allProducts[i].getBarCode() == barCode) return i;
 		return -1;
 	}
