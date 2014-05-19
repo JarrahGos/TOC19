@@ -491,7 +491,10 @@ public final class Interface
                 JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
                 continue;
             }
-            else if(tempInput.equals("") || !isLong(tempInput) || tempInput.length() != 7 || !personDatabase.personExists(Integer.parseInt(tempInput))) { // checks for valid numbers in the PMKeyS
+			else if(!tempInput.equals("") && tempInput.charAt(0) == 'c') {
+				tempInput = tempInput.substring(1);
+			}
+            if(tempInput.equals("") || !isLong(tempInput) || (tempInput.length() != 7 && tempInput.length() != 5) || !personDatabase.personExists(Integer.parseInt(tempInput))) { // checks for valid numbers in the PMKeyS
                 JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Errror", JOptionPane.ERROR_MESSAGE);
                 continue;
             }
@@ -612,7 +615,10 @@ public final class Interface
 						done = 1; // exit the loop
 						continue;
 					}
-					else if(!isLong(tempInput)) {
+					else if(!tempInput.equals("") && tempInput.charAt(0) == 'c') {
+						tempInput = tempInput.substring(1);
+					}
+					if(!isLong(tempInput)) {
 						JOptionPane.showMessageDialog(null, "You did not enter a valid barcode", "Error", JOptionPane.ERROR_MESSAGE);
 						continue; // ensure that the string is an integer. 
 					}
