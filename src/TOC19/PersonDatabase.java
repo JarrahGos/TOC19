@@ -29,7 +29,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class PersonDatabase {
+public final class PersonDatabase {
 
 	private Person[] allPersons;
 	private Person admin;
@@ -46,7 +46,7 @@ public class PersonDatabase {
 		output = "";
 	}
 
-	public int setDatabasePerson(int personNo, String name, double running, double week, long barCode) // take the persons data and pass it to the persons constructor
+	public final int setDatabasePerson(int personNo, String name, long running, long week, long barCode) // take the persons data and pass it to the persons constructor
 	{
 		/**
 		 * Class PersonDatabase: Method setDatabase Precondition: augments int personNo, String name, String artist, double size, double duration are input Postcondition: Data for the currant working
@@ -68,7 +68,7 @@ public class PersonDatabase {
 		}
 	}
 
-	public String getDatabase(int sort) {
+	public final String getDatabase(int sort) {
 		/**
 		 * Class PersonDatabase: Method getDatabase Precondition: setDatabase has been run Postcondition: the user will be see an output of the persons in the database.
 		 */
@@ -84,7 +84,7 @@ public class PersonDatabase {
 		return output; // send the calling program one large string containing the ingredients of all the persons in the database
 	}
 
-	public String personsUnder(double price, int sort) {
+	public final String personsUnder(long price, int sort) {
 		/**
 		 * Class PersonDatabase: Method personsUnder Precondition: setDatabase has been run, paremeters time and sort type have been passed as double and int respectively Postcondition: the user will
 		 * be given a list of all of the persons under the specified time in the order requested.
@@ -105,7 +105,7 @@ public class PersonDatabase {
 		return output; // pass the results back to the interface
 	}
 
-	public String getPerson(int personNo) {
+	public final String getPerson(int personNo) {
 		/**
 		 * Class PersonDatabase: Method getPerson Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4 Postconditions: the user will see the details of their chosen
 		 * person output.
@@ -120,7 +120,7 @@ public class PersonDatabase {
 
 	}
 
-	public String getPersonUser(int personNo) {
+	public final String getPersonUser(int personNo, boolean html) {
 		/**
 		 * Class PersonDatabase: Method getPerson Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4 Postconditions: the user will see the details of their 
 		 *							chosen
@@ -128,7 +128,7 @@ public class PersonDatabase {
 		 */
 
 		if (personNo < logicalSize) { // check that the person exists
-			return allPersons[personNo].getDataUser(); // now that we know that it does, send it to the interface
+			return allPersons[personNo].getDataUser(html); // now that we know that it does, send it to the interface
 		} else {
 			return "the person that you have identified does not exist"; // We cannot find the person that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
 			//PEBKAC: It is possible to commit no errors and still lose. That is not a weakness. That is life. --CAPTAIN PICARD
@@ -136,7 +136,7 @@ public class PersonDatabase {
 
 	}
 
-	public int delPerson(int personNo) {
+	public final int delPerson(int personNo) {
 		/**
 		 * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
 		 * failure of this will be given by a 0 or 1 returned respectively.
@@ -155,7 +155,7 @@ public class PersonDatabase {
 		}
 	}
 
-	public String getPersonName(int personNo) {
+	public final String getPersonName(int personNo) {
 		/**
 		 * Class PersonDatabase: Method getPersonName Preconditions: setDatabase has been run for the invoking person Postconditions: the person name will be returned
 		 */
@@ -171,7 +171,7 @@ public class PersonDatabase {
 
 	}
 
-	public double getPersonPriceYear(int personNo) {
+	public final double getPersonPriceYear(int personNo) {
 		/**
 		 * Class PersonDatabase: Method getPersonSize Preconditions: setDatabase has been run for the invoking person Postconditions: the size of the invoking person will be returned as a double
 		 */
@@ -183,7 +183,7 @@ public class PersonDatabase {
 
 	}
 
-	public double getPersonPriceWeek(int personNo) {
+	public final double getPersonPriceWeek(int personNo) {
 		/**
 		 * Class PersonDatabase: Method getPersonSize Preconditions: setDatabase has been run for the invoking person Postconditions: the size of the invoking person will be returned as a double
 		 */
@@ -195,7 +195,7 @@ public class PersonDatabase {
 
 	}
 
-	public long getBarCode(int personNo) {
+	public final long getBarCode(int personNo) {
 		/**
 		 * Class PersonDatabase: Method getPersonBarCode Precondition: setDatabase has been run for the invoking person Postcondition: the duration of the invoking person will be returned as a double
 		 */
@@ -207,7 +207,7 @@ public class PersonDatabase {
 
 	}
 
-	public int emptyPerson() {
+	public final int emptyPerson() {
 		/**
 		 * Class PersonDatabase: Method emptyPerson Preconditions: none Postconditions: the number of the first found empty person will be returned an as integer or -1 will be returned if there are no
 		 * empty persons
@@ -220,7 +220,7 @@ public class PersonDatabase {
 		return -1; // there are no empty persons. have a -1 so you know what happened.
 	}
 
-	public boolean personExists(String extPersonName, long extBarCode) {
+	public final boolean personExists(String extPersonName, long extBarCode) {
 
 		for (i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
 			if (allPersons[i] != null && allPersons[i].getName().equals(extPersonName) && allPersons[i].getBarCode() == extBarCode) {
@@ -231,7 +231,7 @@ public class PersonDatabase {
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
 
-	public boolean personExists(long extBarCode) {
+	public final boolean personExists(long extBarCode) {
 		if (extBarCode == 7000000) {
 			return true;
 		}
@@ -245,12 +245,12 @@ public class PersonDatabase {
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
 
-	public void resizeDatabase(boolean action) {
+	public final void resizeDatabase(boolean action) {
 		allPersons = resizeDatabase(action, allPersons); // when calling for a resise outside this class, one needs to be able to access the database array to send it. 
 		// Thanks to this little trick of signatures, they now have it. 
 	}
 
-	public Person[] resizeDatabase(Boolean action, Person[] resizing) {
+	public final Person[] resizeDatabase(Boolean action, Person[] resizing) {
 		if (action) { // make the database 4 persons bigger so that we have more room. 
 			return (Arrays.copyOf(resizing, resizing.length + 4));
 		} 
@@ -262,7 +262,7 @@ public class PersonDatabase {
 		}
 	}
 
-	public int partitionByName(int lb, int ub) {
+	public final int partitionByName(int lb, int ub) {
 		Person pivotElement = allPersons[lb]; // store the left most value as the pivot element
 		int max = logicalSize;
 		int left = lb, right = ub; // store left and right as the unchanging values of lb and ub respectively. This is used for the final move of this method
@@ -289,7 +289,7 @@ public class PersonDatabase {
 		return right; // return the new pivot (see quick sort)
 	}
 
-	public void quickSortByName(int left, int right) {
+	public final void quickSortByName(int left, int right) {
 		if (left < right) // start the sort.
 		{
 			int pivot = partitionByName(left, right); // run the first instance of the sort
@@ -298,7 +298,7 @@ public class PersonDatabase {
 		}
 	}
 
-	public int partitionByCost(int lb, int ub) { // for an outline of how this works, see the partition method for name
+	public final int partitionByCost(int lb, int ub) { // for an outline of how this works, see the partition method for name
 		Person pivotElement = allPersons[lb];
 		int max = logicalSize;
 		int left = lb, right = ub;
@@ -324,7 +324,7 @@ public class PersonDatabase {
 		return right;
 	}
 
-	public void quickSortByPrice(int left, int right) { // for an outline of how this works, see the sorting method for name
+	public final void quickSortByPrice(int left, int right) { // for an outline of how this works, see the sorting method for name
 		if (left < right) {
 			int pivot = partitionByCost(left, right);
 			quickSortByPrice(left, pivot - 1);
@@ -332,7 +332,7 @@ public class PersonDatabase {
 		}
 	}
 
-	public int partitionByBarCode(int lb, int ub) { // for an outline of how this works, see the partition method for name
+	public final int partitionByBarCode(int lb, int ub) { // for an outline of how this works, see the partition method for name
 		Person pivotElement = allPersons[lb];
 		int max = logicalSize;
 		int left = lb, right = ub;
@@ -358,7 +358,7 @@ public class PersonDatabase {
 		return right;
 	}
 
-	public void quickSortByBarCode(int left, int right) { // for an outline of how this works, see the sorting method for name
+	public final void quickSortByBarCode(int left, int right) { // for an outline of how this works, see the sorting method for name
 		if (left < right) {
 			int pivot = partitionByBarCode(left, right);
 			quickSortByBarCode(left, pivot - 1);
@@ -366,7 +366,7 @@ public class PersonDatabase {
 		}
 	}
 
-	public int writeOutDatabase(String path) {
+	public final int writeOutDatabase(String path) {
 		this.quickSortByName(0, logicalSize - 1); // ensure that the database is sorted.
 		try {
 			file = new File(path);
@@ -391,7 +391,7 @@ public class PersonDatabase {
 		return 0; // let the program and thus the user know that everything is shiny. 
 	}
 
-	public int adminWriteOutDatabase(String path) {
+	public final int adminWriteOutDatabase(String path) {
 		this.quickSortByName(0, logicalSize - 1); // ensure that the database is sorted.
 		try {
 			file = new File(path);
@@ -413,9 +413,10 @@ public class PersonDatabase {
 		return 0; // let the program and thus the user know that everything is shiny. 
 	}
 
-	public int readDatabase(String path) {
+	public final int readDatabase(String path) {
 		String tempName, tempInput;
-		double tempSize, tempTotalCostRunning, tempTotalCostWeek;
+		long tempTotalCostRunning, tempTotalCostWeek;
+		double doubleCosts;
 		int tempBarCode;
 		int count = 0;
 		int z = 0;
@@ -433,8 +434,10 @@ public class PersonDatabase {
 				tempInput = readOutFile.nextLine();
 				tempBarCode = Integer.parseInt(tempInput);
 				tempName = readOutFile.nextLine();
-				tempTotalCostRunning = Double.parseDouble(readOutFile.nextLine());
-				tempTotalCostWeek = Double.parseDouble(readOutFile.nextLine());
+				doubleCosts = Double.parseDouble(readOutFile.nextLine());
+				tempTotalCostRunning = (long)(doubleCosts*100);
+				doubleCosts = Double.parseDouble(readOutFile.nextLine());
+				tempTotalCostWeek = (long)(doubleCosts*100);
 				count += this.setDatabasePerson(z, tempName, tempTotalCostRunning, tempTotalCostWeek, tempBarCode); // send the big pile of lines that we just read to the person constructor. 
 			}
 			readOutFile.close(); // clean up by closing the file
@@ -445,7 +448,7 @@ public class PersonDatabase {
 		}
 	}
 
-	public void sortBy(int sort) {
+	public final void sortBy(int sort) {
 		switch (sort) { // Rather than place this switch every time the sort is used, Call this.
 			case (1):
 				this.quickSortByName(0, logicalSize - 1); // when sort is one: call sort by name
@@ -462,12 +465,12 @@ public class PersonDatabase {
 		}
 	}
 
-	public int findPerson(long barCode) {
+	public final int findPerson(long barCode) {
 		int i = 0;
 		if (7000000 == barCode) {
 			return -2;
 		}
-		for (i = 0; i < logicalSize; i++) {
+		for (i = logicalSize -1; i > 0; i--) {
 			if (allPersons[i].getBarCode() == barCode) {
 				return i;
 			}
@@ -475,16 +478,16 @@ public class PersonDatabase {
 		return -1;
 	}
 
-	public void addCost(int personNo, double cost) {
+	public final void addCost(int personNo, long cost) {
 		allPersons[personNo].addPrice(cost);
 	}
 
-	public void resetBills() {
-		for (int i = 0; i < logicalSize; i++) {
+	public final void resetBills() {
+		for (int i = logicalSize -1; i > 0; i--) {
 			allPersons[i].resetWeekCost();
 		}
 	}
-	public void setAdminPassword(String extPassword) {
+	public final void setAdminPassword(String extPassword) {
 		admin.setName(extPassword);
 	}
 }

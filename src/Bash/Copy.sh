@@ -4,11 +4,11 @@
 #should be run on Save database
 
 # mount the drive
-mount /dev/sda1 /mnt
+mount /dev/sd* /mnt
 
 # copy the databases
-cp /home/TOC/adminPersonDatabase.txt /mnt/adminPersonDatabase.txt
-cp home/TOC/adminProductDatabase.txt /mnt/adminPersonDatabase.txt
+cp /root/adminPersonDatabase.txt /mnt/adminPersonDatabase.txt
+cp /root/adminProductDatabase.txt /mnt/adminPersonDatabase.txt
 
 # Unmount the drive
 umount /mnt

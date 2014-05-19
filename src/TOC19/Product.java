@@ -23,18 +23,18 @@
 * Description: This program will allow for the input and retreval of products in the product database.
 */
 
-public class Product
+public final class Product
 {
 
 	// create the variables that are needed in order of use
 	private String name;
 	private String output;
-	private double productPrice;
+	private long productPrice;
 	private long barCode;
 	private int numberOfItems;
 	private int quantity;
 
-	public Product(String extName, double extProductPrice, long extBarCode) // construtor which will give the product its values
+	public Product(String extName, long extProductPrice, long extBarCode) // construtor which will give the product its values
 	{
 		output = "";
 		name = extName;
@@ -42,7 +42,7 @@ public class Product
 		barCode = extBarCode;
 	}
 	// Begin methods
-	public void setData(String name, String artist, double productPrice, long barCode) 
+	public final void setData(String name, String artist, long productPrice, long barCode) 
 	{ // redundant method which has been left in case products are edited in some way which would require this to be used.
 		/**
 		Class Song: Method setData
@@ -53,23 +53,23 @@ public class Product
 		this.productPrice = productPrice;
 		this.barCode = barCode;
 	}
-	public void setNumber(int number)
+	public final void setNumber(int number)
 	{
 		numberOfItems = number;
 	}
-        public void setName(String name)
-        {
-            this.name = name;
-        }
-        public void setPrice(double extPrice)
-        {
-            this.productPrice = extPrice;
-        }
-	public int getNumber()
+    public final void setName(String name)
+    {
+       this.name = name;
+    }
+    public final void setPrice(long extPrice)
+    {
+        this.productPrice = extPrice;
+    }
+	public final int getNumber()
 	{
 		return numberOfItems;
 	}
-	public String getData() // output the product data as a string
+	public final String getData() // output the product data as a string
 	{
 		/**
 		Class Song: Method getData
@@ -83,13 +83,13 @@ public class Product
 		output += "\n	Bar Code: ";
 		output += barCode;
 		output += "\n	Price: $";
-		output += productPrice;
+		output += (double)productPrice/100;
 		output += "\n	Quantity: ";
 		output += numberOfItems;
 
 		return output; //return a string with all of the product's data in it
 	}
-	public String getDataScreen() // output the product data as a string
+	public final String getDataScreen() // output the product data as a string
 	{
 		/**
 		Class Song: Method getData
@@ -103,11 +103,11 @@ public class Product
 		output += " x ";
 		output += quantity;
 		output += "\n	Price: $";
-		output += productPrice*quantity;
+		output += ((double)productPrice/100)*quantity;
 		
 		return output; //return a string with all of the product's data in it
 	}
-	public String getName() // return the name of the product
+	public final String getName() // return the name of the product
 	{
 		/**
 		Class Song: Method getData
@@ -117,7 +117,7 @@ public class Product
 
 		return name;
 	}
-	public long getBarCode() // return the barcode assoiated with the product
+	public final long getBarCode() // return the barcode assoiated with the product
 	{
 		 /**
 		 Class Song: Method getBarCode
@@ -126,7 +126,7 @@ public class Product
 		 */
 		return barCode;
 	}
-	public double productPrice() // retung the size of the product. 
+	public final long productPrice() // retung the size of the product. 
 	{
 		/**
 		Class Song: Method productPrice
@@ -136,15 +136,15 @@ public class Product
 		
 		return productPrice;
 	}
-	public void decrementNumber()
+	public final void decrementNumber()
 	{
 		numberOfItems--;
 	}
-	public void setQuantity(int quantity)
+	public final void setQuantity(int quantity)
 	{
 		this.quantity = quantity;
 	}
-	public int getQuantity()
+	public final int getQuantity()
 	{
 		return quantity;
 	}
