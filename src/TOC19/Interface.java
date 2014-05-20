@@ -505,7 +505,7 @@ public final class Interface
 			else if(!tempInput.equals("") && (tempInput.charAt(0) == 'c' || tempInput.charAt(0) == 'n' || tempInput.charAt(0) == 'C' || tempInput.charAt(0) == 'N')) {
 				tempInput = tempInput.substring(1);
 			}
-            if(tempInput.equals("") || !isLong(tempInput) || (tempInput.length() != 7 && tempInput.length() != 5) || !personDatabase.personExists(Integer.parseInt(tempInput))) { // checks for valid numbers in the PMKeyS
+            if(tempInput.equals("") || !isLong(tempInput) || (tempInput.length() != 7 && tempInput.length() != 5 && tempInput.length() != 6) || !personDatabase.personExists(Integer.parseInt(tempInput))) { // checks for valid numbers in the PMKeyS
                 JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Error", JOptionPane.ERROR_MESSAGE);
                 continue;
             }
