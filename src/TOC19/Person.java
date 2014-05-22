@@ -28,7 +28,7 @@ public final class Person
 
 	// create the variables that are needed in order of use
 	private String name;
-	private String output;
+//	private StringBuilder output;
 	private long totalCostRunning, totalCostWeek; // Running can be yearly, or can be perminant. Up to TOC. Weekly will be reset each stocktake
 	private long barCode; // PMKeys number off ID
 
@@ -58,16 +58,16 @@ public final class Person
 		Procondition: setData has been run for invoking person or the person constructor outlined above has been run
 		Postcondition: The data that has been entered for the invoking person will be returned. 
 		*/
-		
-		output = "";
-		output += "\n	Name: ";
-		output += name;
-		output += "\n	Running Cost: $";
-		output += (double)totalCostRunning/100;
-		output += "\n	Weekly Cost: $";
-		output += (double)totalCostWeek/100;
+		StringBuilder output = new StringBuilder();
+		output.append("");
+		output.append("\n	Name: ");
+		output.append(name);
+		output.append("\n	Running Cost: $");
+		output.append((double)totalCostRunning/100);
+		output.append("\n	Weekly Cost: $");
+		output.append((double)totalCostWeek/100);
 
-		return output; //return a string with all of the person's data in it
+		return output.toString(); //return a string with all of the person's data in it
 	}
 		public final String getDataUser(Boolean html) // output the person data as a string
 	{
@@ -76,21 +76,23 @@ public final class Person
 		Procondition: setData has been run for invoking person or the person constructor outlined above has been run
 		Postcondition: The data that has been entered for the invoking person will be returned. 
 		*/
+			
+		StringBuilder output = new StringBuilder();
 		if (html) {
-			output = "";
-			output += name;
-			output += "<br>	Current Bill Total: $";
-			output += (double)totalCostWeek/100;
+			output.append("");
+			output.append(name);
+			output.append("<br>	Current Bill Total: $");
+			output.append((double)totalCostWeek/100);
 		}
 		else {
-			output = "";
-			output += name;
-			output += "\n	Running Cost: $";
-			output += (double)totalCostRunning/100;
-			output += "\n	Current Bill Total: $";
-			output += (double)totalCostWeek/100;
+			output.append("");
+			output.append(name);
+			output.append("\n	Running Cost: $");
+			output.append((double)totalCostRunning/100);
+			output.append("\n	Current Bill Total: $");
+			output.append((double)totalCostWeek/100);
 		}
-		return output; //return a string with all of the person's data in it
+		return output.toString(); //return a string with all of the person's data in it
 	}
 	public final String getName() // return the name of the person
 	{

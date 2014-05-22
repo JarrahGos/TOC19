@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,27 +23,29 @@ public class WorkingUser {
 	private PersonDatabase personDatabase;
 	private CheckOut checkOuts;
 	private int logicalSize;
+	private static int userNumber;
 	
 	public WorkingUser() {
 		productDatabase = new ProductDatabase();
 		personDatabase = new PersonDatabase();
 		checkOuts = new CheckOut();
 		logicalSize = 0;
+		userNumber = 0;
 	}
-	public long getPMKeyS(String input) // take this recursion and make it iteration. 
+	public void getPMKeyS(String input) // take this recursion and make it iteration. 
     {
         boolean correct = false;
 		if(input == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
-			return -1; // 2001 esq error message for a bad PMKeyS
+			userNumber = -1;
 		}
 		else if(!input.equals("") && (input.charAt(0) == 'c' || input.charAt(0) == 'n' || input.charAt(0) == 'C' || input.charAt(0) == 'N')) {
 			input = input.substring(1);
 		}
 		if(input.equals("") || !isLong(input) || (input.length() != 7 && input.length() != 5 && input.length() != 6) || !personDatabase.personExists(Integer.parseInt(input))) { // checks for valid numbers in the PMKeyS
-			return -1;
+			userNumber =  -1;
 		}
 		correct = true;
-        return Long.parseLong(input);
+        userNumber =  personDatabase.findPerson(Long.parseLong(input));
     }
 	public static String getSecurePassword(String passwordToHash)
     {
@@ -125,5 +128,34 @@ public class WorkingUser {
 		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
 		personDatabase.writeOutDatabase("personDatabase.txt");
 		checkOuts = new CheckOut(); // ensure checkout clear
+	}
+	public final String getCheckOut()
+	{
+		return checkOuts.getCheckOut(1);
+	}
+	public final String userName()
+	{
+		return userNumber == -1 ? "error" : PersonDatabase.getPersonName(userNumber);
+	}
+	public final void addToCart(String input) 
+	{
+		long tempBarCode = -1; 
+		String tempInput;
+		if(input != null && !input.equals("") && isLong(input)) {
+			tempBarCode = Long.parseLong(input); // disallows the user from entering nothing or clicking cancel. 
+		}
+		else if((input == null ) || ("".equals(input) )) {
+			// find a way to handle this. 
+		}
+		int productNumber = productDatabase.findProduct(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
+		int checkProduct; // create this for use below
+		tempInput = productDatabase.getProduct(productNumber);
+		checkProduct = checkOuts.productEqualTo(tempInput); // check that the product was not entered into the database before. 
+	//																					//If it was, just add the quantity to the one in the database
+		if(checkProduct != -1) {
+			checkOuts.addQuantity(checkProduct, 1);
+		}
+		else checkOuts.addProduct(productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
+
 	}
 }

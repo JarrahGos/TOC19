@@ -24,61 +24,48 @@
 * Description: This program will allow the user to interact with the program, creating, deleting and modifying products and checkOuts.
 */
 // GUI Inports
-//import javax.swing.JOptionPane;
-//import javax.swing.JTextArea;
-//import java.awt.Dimension;
-//import javax.swing.*;
-//import javax.swing.UIManager;
-//import javax.swing.JScrollPane;
-//import javax.swing.JPasswordField;
-//import javax.swing.JLabel;
-//import javax.swing.BoxLayout;
-//import javax.swing.JPanel;
-//import javax.swing.JTextField;
-//import javax.swing.JDialog;
-//import javax.swing.JComboBox;
-//import java.awt.Font;
-import javafx.stage.Stage;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Button;
-import javafx.scene.Scene;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
-
-//Security imports
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import java.util.Arrays;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
+
+//Security imports
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.application.Application;
 
 
-public final class Interface
+public final class Interface extends Application
 {
 	// Create the necessary instance variables.
-	private ProductDatabase productDatabase;
-	private PersonDatabase personDatabase;
-	private CheckOut checkOuts;
+	private WorkingUser workingUser;
+	private ScrollPane dataOut;
+
 	private int logicalSize;
 //	Timer timeOut = new Timer(60000000, new actionListener());
 		
 	public Interface() 
 	{
 		//initalize the variables created above
-		productDatabase = new ProductDatabase();
-		personDatabase = new PersonDatabase();
-		checkOuts = new CheckOut();
-		logicalSize = 0;
+		
 	}	
 	public void start(Stage primaryStage)
 	{
 		primaryStage.setTitle("TOC19");
 		GridPane grid = new GridPane();
-                grid.setGridLinesVisable(true);
+        grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -90,17 +77,69 @@ public final class Interface
 		
 		TextField input = new TextField();
 		grid.add(input, 0,1,0,4);
-                
-                Button enterText = new Button("OK");
-                grid.add(enterText, 0,5,0,0);
-                
-                Text data = new text(checkOuts.getCheckOut(1));
-                data.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-                ScrollPane dataOut = new ScrollPane(data);
-                grid.add(dataOut, 1,1,4,6);
-                
-                Button adminMode = new Button("Enter Admin Mode");
-                grid.add(adminMode, 5,6,0,0);
+		
+		Text userLabel = new Text("Error"); 
+        
+		Button enterBarCode = new Button("OK");
+		Button enterPMKeyS = new Button("OK");
+		enterPMKeyS.setOnAction(new EventHandler<ActionEvent>() {
+		
+			@Override
+			public void handle(ActionEvent e) {
+				PMKeySEntered(input.getText());
+				
+				inputLabel.setText("Enter Barcode");
+				grid.add(inputLabel, 0,0,0,0);
+				
+				userLabel.setText(workingUser.userName());
+				if(!userLabel.toString().equals("error")) {
+					grid.add(userLabel, 0,6,0,0);
+					grid.getChildren().remove(enterPMKeyS);
+					grid.add(enterBarCode, 0,5,0,0);
+				}
+				else {
+					input.setText("");
+					grid.add(input, 0,1,0,4);
+				}
+				
+			}
+		});
+		grid.add(enterPMKeyS, 0,5,0,0);
+		
+
+		Text data = new Text(workingUser.getCheckOut());
+		data.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		dataOut = new ScrollPane(data);
+		grid.add(dataOut, 1,1,4,6);
+		
+		enterBarCode.setOnAction(new EventHandler<ActionEvent>() {
+		
+			@Override
+			public void handle(ActionEvent e) {
+				productEntered(input.getText());
+				
+				data.setText(workingUser.getCheckOut());
+				dataOut = new ScrollPane(data);
+				grid.add(dataOut, 1,1,4,6);
+				
+				input.setText("");
+				grid.add(input, 0,1,0,4);
+				
+				
+			}
+		});
+
+		Button adminMode = new Button("Enter Admin Mode");
+		adminMode.setOnAction(new EventHandler<ActionEvent>() {
+		
+			@Override
+			public void handle(ActionEvent e) {
+				enterAdminMode();
+				
+				
+			}
+		});
+		grid.add(adminMode, 5,6,0,0);
                 
                 
                 
@@ -110,12 +149,18 @@ public final class Interface
 		
 		primaryStage.show();
 	}
-	private void run()
+	private void PMKeySEntered(String input) 
+	{
+		workingUser.getPMKeyS(input);
+	}
+	private void productEntered(String input)
+	{
+		workingUser.addToCart(input);
+	}
+	private void enterAdminMode()
 	{
 		
-		
 	}
-	
 	
 //	private void run() 
 //	{
@@ -475,9 +520,10 @@ public final class Interface
 	public static void main(String[] args)
 	{
 
-		Interface intFace = new Interface(); // initalise task
+//		Interface intFace = new Interface(); // initalise task
 	
-		intFace.run(); // Engage
+//		intFace.start(); // Engage
+		Application.launch(args);
 
 	}
 	private final CheckOut[] resizeCheckOut(Boolean action, CheckOut[] resizing)
@@ -545,261 +591,255 @@ public final class Interface
         }
         return generatedPassword;
     }
-    private long getPMKeyS() // take this recursion and make it iteration. 
-    {
-        boolean correct = false;
-        String tempInput = "error";
-        while (!correct) {   
-            tempInput = JOptionPane.showInputDialog(null, "Enter your PMKeyS", "PMKeyS", JOptionPane.QUESTION_MESSAGE);
-            if(tempInput == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
-                JOptionPane.showMessageDialog(null, "I cannot allow you to close the program Dave. Sorry", "Error", JOptionPane.ERROR_MESSAGE); // 2001 esq error message for a bad PMKeyS
-                continue;
-            }
-			else if(!tempInput.equals("") && (tempInput.charAt(0) == 'c' || tempInput.charAt(0) == 'n' || tempInput.charAt(0) == 'C' || tempInput.charAt(0) == 'N')) {
-				tempInput = tempInput.substring(1);
-			}
-            if(tempInput.equals("") || !isLong(tempInput) || (tempInput.length() != 7 && tempInput.length() != 5 && tempInput.length() != 6) || !personDatabase.personExists(Integer.parseInt(tempInput))) { // checks for valid numbers in the PMKeyS
-                JOptionPane.showMessageDialog(null, "Please enter your valid PMKeyS number", "Error", JOptionPane.ERROR_MESSAGE);
-                continue;
-            }
-            correct = true;
-        }
-        return Long.parseLong(tempInput);
-    }
-	@SuppressWarnings("empty-statement")
-	private String getPassWd(boolean first)
-	{
-		String passWd = "";
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		if (first) panel.add(new JLabel("Enter Password\n\n"));
-		else panel.add(new JLabel("Re-enter Password\n\n"));
-		final JPasswordField passwordField = new JPasswordField(10); // box to take passwords from the user
-		panel.add(passwordField);
-		JOptionPane pane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public void selectInitialValue() {
-				passwordField.requestFocusInWindow();
-			}
-		};
-		pane.createDialog(null, "Enter Password").setVisible(true);
-		passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
-		passwordField.setText("");
-		return passWd;
-	}
-	private void printDatabase(String name)
-	{
-		JTextArea textArea;
-		switch(name) {
-			case("Product"):textArea = new JTextArea(productDatabase.getDatabase(1));
-							break;
-			case("Person"):textArea = new JTextArea(personDatabase.getDatabase(1));
-							break;
-			default:textArea = new JTextArea(personDatabase.getDatabase(1));
-							break;
-		}
-		textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
-		JScrollPane scrollPane = new JScrollPane(textArea);
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		scrollPane.setPreferredSize(new Dimension(800,600));
-		JOptionPane.showMessageDialog(null, scrollPane, name + "Database", JOptionPane.INFORMATION_MESSAGE);
-		
-	}
-        private void buyProducts(int personNumber, long price)
-        {
-            personDatabase.addCost(personNumber, price);// add the bill to the persons account
-            checkOuts.productBought(); // clear the quantities and checkout
-            productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
-            personDatabase.writeOutDatabase("personDatabase.txt");
-            checkOuts = new CheckOut(); // ensure checkout clear
-        }
-        private String showAdminMenu()
-        {
-            String[] options = new String[] {"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
-					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", 
-					"change password", "save databases to USB", "close the program"}; // admin options
-			return (showInputDialog("Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, options, true));
-           // return (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
-        }
-		private void addToDatabase(String type)
-		{
-			int done = 0;
-			String tempInput;
-			String tempName = "error";
-			int added = 1;
-			long tempBarCode;
-			int q2 = 0;
-			long tempProductPrice = 0;
-			double tempPriceDouble = 0;
-			
-			boolean person = !(type.equals("product"));
-			while(done != 1) { // Not sure that this while loop has a reason for existance. 
-				if(!person) {
-					q2 = productDatabase.emptyProduct(); // find the next available product.
-				}
-				else {
-					q2 = personDatabase.emptyPerson();
-				}
-				if(q2 != -1) {
-					if(!person) {
-						tempInput = JOptionPane.showInputDialog(null, "Please enter the name of the product that you would like to create: ", "Product Name", JOptionPane.QUESTION_MESSAGE);
-					}
-					else {
-						tempInput = JOptionPane.showInputDialog(null, "Please enter the name of the person that you would like to add: ", "Person Name", JOptionPane.QUESTION_MESSAGE);
-					}
-					if(tempInput == null) break; // testing that a string was entered
-					else if(tempInput.length() < 1) {
-						JOptionPane.showMessageDialog(null, "Please enter a valid name", "Error", JOptionPane.ERROR_MESSAGE);
-						continue;
-					}
-					tempName = tempInput;
-					if(!person) {
-						tempInput = JOptionPane.showInputDialog(null, "Please enter the price of the new product: (no dollar Sign, decimals are fine) ", "Price", JOptionPane.QUESTION_MESSAGE);
-						if (tempInput == null) {
-							done = 1; // exit the loop
-							continue;
-						}
-						else if(!isDouble(tempInput)) {
-							JOptionPane.showMessageDialog(null, "You did not enter a valid price.\n Maybe you added the dollar sign, don't next time.", "Error", JOptionPane.ERROR_MESSAGE);
-							continue; // Ensure that the string is a double
-						}
-						tempPriceDouble = Double.parseDouble(tempInput);
-						tempPriceDouble *= 100;
-						tempProductPrice = (long)tempPriceDouble;
-					}
-					if(!person) {
-						tempInput = JOptionPane.showInputDialog(null, "Please enter the bar code of " + tempName, "Barcode", JOptionPane.QUESTION_MESSAGE);
-					}
-					else {
-						tempInput = JOptionPane.showInputDialog(null, "Please enter the PMKeyS of " + tempName, "PMKeyS", JOptionPane.QUESTION_MESSAGE);
-					}
-					if(tempInput == null) {
-						done = 1; // exit the loop
-						continue;
-					}
-					else if(!tempInput.equals("") && (tempInput.charAt(0) == 'c' || tempInput.charAt(0) == 'n' || tempInput.charAt(0) == 'C' || tempInput.charAt(0) == 'N')) {
-						tempInput = tempInput.substring(1);
-					}
-					if(!isLong(tempInput)) {
-						JOptionPane.showMessageDialog(null, "You did not enter a valid barcode", "Error", JOptionPane.ERROR_MESSAGE);
-						continue; // ensure that the string is an integer. 
-					}
-					tempBarCode = Long.parseLong(tempInput);
-					if(!person) {
-						if(productDatabase.findProduct(tempBarCode) != -1) {
-						JOptionPane.showMessageDialog(null, "The barcode you entered has already been taken", "Error", JOptionPane.ERROR_MESSAGE);
-						continue;
-						}
-						added = productDatabase.setDatabaseProduct(q2, tempName, tempProductPrice, tempBarCode);
-					}
-					else {
-						if(personDatabase.findPerson(tempBarCode) != -1) {
-						JOptionPane.showMessageDialog(null, "The PMKeyS you entered has already been taken", "Error", JOptionPane.ERROR_MESSAGE);
-						continue;
-						}
-						added = personDatabase.setDatabasePerson(q2, tempName,0 ,0, tempBarCode);
-					}
-					// send the values to productDatabase where they will be sent to the product/erson constructor. 
-					if(!person) {
-						productDatabase.writeOutDatabase("productDatabase.txt"); // ensure that the database has been saved to file
-					}
-					else {
-						personDatabase.writeOutDatabase("personDatabase.txt");
-					}
-					if(added == 0) { // output on success
-						if(!person) {
-							JOptionPane.showMessageDialog(null, tempName + " is now a product in your product database", "Success", JOptionPane.INFORMATION_MESSAGE); 
-						}
-						else {
-							JOptionPane.showMessageDialog(null, tempName + " is now a person in your person database", "Success", JOptionPane.INFORMATION_MESSAGE);
-						}
-					}
-					else { // output on error
-						if(!person) {
-							JOptionPane.showMessageDialog(null, tempName + " is already a product in your product database", "Error", JOptionPane.ERROR_MESSAGE);
-						}
-						else {
-							JOptionPane.showMessageDialog(null, tempName + " is already a product in your product database", "Error", JOptionPane.ERROR_MESSAGE);
-						}
-					}
-					done = 1; // close the loop
-				}
-			}
-		}
-		private final static void setUIFont (javax.swing.plaf.FontUIResource f)
-		{
-			java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
-			while (keys.hasMoreElements()) {
-				Object key = keys.nextElement();
-				Object value = UIManager.get (key);
-				if (value != null && value instanceof javax.swing.plaf.FontUIResource)
-					UIManager.put (key, f);
-			}
-		}
-		private final String showInputDialog(String message, String title, int messageType, int optionType, final String[] text, boolean combo)
-		{
-			String input;
-			JPanel panel = new JPanel();
-			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-			panel.add(new JLabel(message));
-			final JTextField textField = new JTextField(15);
-			final JComboBox<String> comboBox = new JComboBox<>(text);
-			
-			if(combo) {
-		
-				panel.add(comboBox);
-			}
-			else {
-				
-				panel.add(textField);
-			}
-			final JOptionPane pane;
-			pane = new JOptionPane(panel, messageType, optionType) {
-				private static final long serialVersionUID = 1L;
-			@Override
-			public void selectInitialValue() {
-				if (!text.equals(new String [0])) {
-					comboBox.requestFocusInWindow();
-				}
-				else {
-					textField.requestFocusInWindow();
-				}
-			}
-		};
-			final JDialog dialog = pane.createDialog(null, title); // .setVisible(true);
-			Thread thread = new Thread(new Runnable()
-			{
-
-				@Override
-				public void run()
-				{
-					try {
-						Thread.sleep(90000);
-					}
-					catch (InterruptedException e) {
-						dialog.dispose();
-					}
-					dialog.dispose();
-					pane.setValue(JOptionPane.CANCEL_OPTION);
-				}
-			});
-			thread.setDaemon(true);
-			thread.setPriority(Thread.MIN_PRIORITY);
-			thread.start();
-			dialog.setVisible(true);
-			thread.interrupt();
-			Object cancel = pane.getValue();
-			if(cancel == null) return null;
-			if(cancel instanceof Integer && (int)cancel == JOptionPane.CANCEL_OPTION) {
-				return null;
-			}
-			
-			if (combo) {
-				input = (String)comboBox.getSelectedItem();
-			}
-			else input = textField.getText().length() == 0 ? null : (textField.getText());
-			return input;
-		}
+//    private long getPMKeyS(String input) // take this recursion and make it iteration. 
+//    {
+//        boolean correct = false;
+//		if(input == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
+//			return -1; // 2001 esq error message for a bad PMKeyS
+//		}
+//		else if(!input.equals("") && (input.charAt(0) == 'c' || input.charAt(0) == 'n' || input.charAt(0) == 'C' || input.charAt(0) == 'N')) {
+//			input = input.substring(1);
+//		}
+//		if(input.equals("") || !isLong(input) || (input.length() != 7 && input.length() != 5 && input.length() != 6) || !personDatabase.personExists(Integer.parseInt(input))) { // checks for valid numbers in the PMKeyS
+//			return -1;
+//		}
+//		correct = true;
+//        return Long.parseLong(input);
+//    }
+//	@SuppressWarnings("empty-statement")
+//	private String getPassWd(boolean first)
+//	{
+//		String passWd = "";
+//		JPanel panel = new JPanel();
+//		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+//		if (first) panel.add(new JLabel("Enter Password\n\n"));
+//		else panel.add(new JLabel("Re-enter Password\n\n"));
+//		final JPasswordField passwordField = new JPasswordField(10); // box to take passwords from the user
+//		panel.add(passwordField);
+//		JOptionPane pane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
+//			private static final long serialVersionUID = 1L;
+//			@Override
+//			public void selectInitialValue() {
+//				passwordField.requestFocusInWindow();
+//			}
+//		};
+//		pane.createDialog(null, "Enter Password").setVisible(true);
+//		passWd = passwordField.getPassword().length == 0 ? null : new String(passwordField.getPassword());
+//		passwordField.setText("");
+//		return passWd;
+//	}
+//	private ScrollPane printDatabase(String type)
+//	{
+//		TextArea textArea;
+//		switch(type) {
+//			case("Product"):textArea = new TextArea(productDatabase.getDatabase(1));
+//							break;
+//			case("Person"):textArea = new TextArea(personDatabase.getDatabase(1));
+//							break;
+//			default:textArea = new TextArea(personDatabase.getDatabase(1));
+//							break;
+//		}
+//		textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 
+//		ScrollPane scrollPane = new ScrollPane(textArea);
+//		textArea.setWrapText(true);
+//		scrollPane.setHvalue(600);
+//		scrollPane.setVvalue(800);
+//		return scrollPane;
+//		
+//	}
+//        private void buyProducts(int personNumber, long price)
+//        {
+//            personDatabase.addCost(personNumber, price);// add the bill to the persons account
+//            checkOuts.productBought(); // clear the quantities and checkout
+//            productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
+//            personDatabase.writeOutDatabase("personDatabase.txt");
+//            checkOuts = new CheckOut(); // ensure checkout clear
+//        }
+//        private String showAdminMenu()
+//        {
+//            String[] options = new String[] {"add products", "change product", "remove products", "add people", "remove people", "save person database", "save product database", 
+//					"print the person database to the screen", "print the product database to the screen", "reset bills", "Enter stock counts (bulk)", "Enter stock count (individual)", 
+//					"change password", "save databases to USB", "close the program"}; // admin options
+//			return (showInputDialog("Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, options, true));
+//           // return (String)JOptionPane.showInputDialog(null, "Select Admin Option", "Admin Menu", JOptionPane.PLAIN_MESSAGE, null, options, "ham"); // Don't ask me what ham does. 
+//        }
+//		private void addToDatabase(String type)
+//		{
+//			int done = 0;
+//			String tempInput;
+//			String tempName = "error";
+//			int added = 1;
+//			long tempBarCode;
+//			int q2 = 0;
+//			long tempProductPrice = 0;
+//			double tempPriceDouble = 0;
+//			
+//			boolean person = !(type.equals("product"));
+//			while(done != 1) { // Not sure that this while loop has a reason for existance. 
+//				if(!person) {
+//					q2 = productDatabase.emptyProduct(); // find the next available product.
+//				}
+//				else {
+//					q2 = personDatabase.emptyPerson();
+//				}
+//				if(q2 != -1) {
+//					if(!person) {
+//						tempInput = JOptionPane.showInputDialog(null, "Please enter the name of the product that you would like to create: ", "Product Name", JOptionPane.QUESTION_MESSAGE);
+//					}
+//					else {
+//						tempInput = JOptionPane.showInputDialog(null, "Please enter the name of the person that you would like to add: ", "Person Name", JOptionPane.QUESTION_MESSAGE);
+//					}
+//					if(tempInput == null) break; // testing that a string was entered
+//					else if(tempInput.length() < 1) {
+//						JOptionPane.showMessageDialog(null, "Please enter a valid name", "Error", JOptionPane.ERROR_MESSAGE);
+//						continue;
+//					}
+//					tempName = tempInput;
+//					if(!person) {
+//						tempInput = JOptionPane.showInputDialog(null, "Please enter the price of the new product: (no dollar Sign, decimals are fine) ", "Price", JOptionPane.QUESTION_MESSAGE);
+//						if (tempInput == null) {
+//							done = 1; // exit the loop
+//							continue;
+//						}
+//						else if(!isDouble(tempInput)) {
+//							JOptionPane.showMessageDialog(null, "You did not enter a valid price.\n Maybe you added the dollar sign, don't next time.", "Error", JOptionPane.ERROR_MESSAGE);
+//							continue; // Ensure that the string is a double
+//						}
+//						tempPriceDouble = Double.parseDouble(tempInput);
+//						tempPriceDouble *= 100;
+//						tempProductPrice = (long)tempPriceDouble;
+//					}
+//					if(!person) {
+//						tempInput = JOptionPane.showInputDialog(null, "Please enter the bar code of " + tempName, "Barcode", JOptionPane.QUESTION_MESSAGE);
+//					}
+//					else {
+//						tempInput = JOptionPane.showInputDialog(null, "Please enter the PMKeyS of " + tempName, "PMKeyS", JOptionPane.QUESTION_MESSAGE);
+//					}
+//					if(tempInput == null) {
+//						done = 1; // exit the loop
+//						continue;
+//					}
+//					else if(!tempInput.equals("") && (tempInput.charAt(0) == 'c' || tempInput.charAt(0) == 'n' || tempInput.charAt(0) == 'C' || tempInput.charAt(0) == 'N')) {
+//						tempInput = tempInput.substring(1);
+//					}
+//					if(!isLong(tempInput)) {
+//						JOptionPane.showMessageDialog(null, "You did not enter a valid barcode", "Error", JOptionPane.ERROR_MESSAGE);
+//						continue; // ensure that the string is an integer. 
+//					}
+//					tempBarCode = Long.parseLong(tempInput);
+//					if(!person) {
+//						if(productDatabase.findProduct(tempBarCode) != -1) {
+//						JOptionPane.showMessageDialog(null, "The barcode you entered has already been taken", "Error", JOptionPane.ERROR_MESSAGE);
+//						continue;
+//						}
+//						added = productDatabase.setDatabaseProduct(q2, tempName, tempProductPrice, tempBarCode);
+//					}
+//					else {
+//						if(personDatabase.findPerson(tempBarCode) != -1) {
+//						JOptionPane.showMessageDialog(null, "The PMKeyS you entered has already been taken", "Error", JOptionPane.ERROR_MESSAGE);
+//						continue;
+//						}
+//						added = personDatabase.setDatabasePerson(q2, tempName,0 ,0, tempBarCode);
+//					}
+//					// send the values to productDatabase where they will be sent to the product/erson constructor. 
+//					if(!person) {
+//						productDatabase.writeOutDatabase("productDatabase.txt"); // ensure that the database has been saved to file
+//					}
+//					else {
+//						personDatabase.writeOutDatabase("personDatabase.txt");
+//					}
+//					if(added == 0) { // output on success
+//						if(!person) {
+//							JOptionPane.showMessageDialog(null, tempName + " is now a product in your product database", "Success", JOptionPane.INFORMATION_MESSAGE); 
+//						}
+//						else {
+//							JOptionPane.showMessageDialog(null, tempName + " is now a person in your person database", "Success", JOptionPane.INFORMATION_MESSAGE);
+//						}
+//					}
+//					else { // output on error
+//						if(!person) {
+//							JOptionPane.showMessageDialog(null, tempName + " is already a product in your product database", "Error", JOptionPane.ERROR_MESSAGE);
+//						}
+//						else {
+//							JOptionPane.showMessageDialog(null, tempName + " is already a product in your product database", "Error", JOptionPane.ERROR_MESSAGE);
+//						}
+//					}
+//					done = 1; // close the loop
+//				}
+//			}
+//		}
+//		private final static void setUIFont (javax.swing.plaf.FontUIResource f)
+//		{
+//			java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
+//			while (keys.hasMoreElements()) {
+//				Object key = keys.nextElement();
+//				Object value = UIManager.get (key);
+//				if (value != null && value instanceof javax.swing.plaf.FontUIResource)
+//					UIManager.put (key, f);
+//			}
+//		}
+//		private final String showInputDialog(String message, String title, int messageType, int optionType, final String[] text, boolean combo)
+//		{
+//			String input;
+//			JPanel panel = new JPanel();
+//			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+//			panel.add(new JLabel(message));
+//			final JTextField textField = new JTextField(15);
+//			final JComboBox<String> comboBox = new JComboBox<>(text);
+//			
+//			if(combo) {
+//		
+//				panel.add(comboBox);
+//			}
+//			else {
+//				
+//				panel.add(textField);
+//			}
+//			final JOptionPane pane;
+//			pane = new JOptionPane(panel, messageType, optionType) {
+//				private static final long serialVersionUID = 1L;
+//			@Override
+//			public void selectInitialValue() {
+//				if (!text.equals(new String [0])) {
+//					comboBox.requestFocusInWindow();
+//				}
+//				else {
+//					textField.requestFocusInWindow();
+//				}
+//			}
+//		};
+//			final JDialog dialog = pane.createDialog(null, title); // .setVisible(true);
+//			Thread thread = new Thread(new Runnable()
+//			{
+//
+//				@Override
+//				public void run()
+//				{
+//					try {
+//						Thread.sleep(90000);
+//					}
+//					catch (InterruptedException e) {
+//						dialog.dispose();
+//					}
+//					dialog.dispose();
+//					pane.setValue(JOptionPane.CANCEL_OPTION);
+//				}
+//			});
+//			thread.setDaemon(true);
+//			thread.setPriority(Thread.MIN_PRIORITY);
+//			thread.start();
+//			dialog.setVisible(true);
+//			thread.interrupt();
+//			Object cancel = pane.getValue();
+//			if(cancel == null) return null;
+//			if(cancel instanceof Integer && (int)cancel == JOptionPane.CANCEL_OPTION) {
+//				return null;
+//			}
+//			
+//			if (combo) {
+//				input = (String)comboBox.getSelectedItem();
+//			}
+//			else input = textField.getText().length() == 0 ? null : (textField.getText());
+//			return input;
+//		}
 } // and that's a wrap. Computer, disable all command functions and shut down for the night. I'll see you again in the morning.      
