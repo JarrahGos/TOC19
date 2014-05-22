@@ -1,4 +1,4 @@
-package TOC19;
+//package TOC19;
 
 
 import java.security.MessageDigest;
@@ -29,7 +29,7 @@ public class WorkingUser {
 		checkOuts = new CheckOut();
 		logicalSize = 0;
 	}
-	private long getPMKeyS(String input) // take this recursion and make it iteration. 
+	public long getPMKeyS(String input) // take this recursion and make it iteration. 
     {
         boolean correct = false;
 		if(input == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
@@ -44,7 +44,7 @@ public class WorkingUser {
 		correct = true;
         return Long.parseLong(input);
     }
-	private static String getSecurePassword(String passwordToHash)
+	public static String getSecurePassword(String passwordToHash)
     {
         String generatedPassword = null;
         try {
@@ -63,7 +63,7 @@ public class WorkingUser {
         }
         return generatedPassword;
     }
-	private final boolean isInteger(String s) 
+	public final boolean isInteger(String s) 
 	{
 		if(s == null) return false;
 		try { 
@@ -75,7 +75,7 @@ public class WorkingUser {
 		// only got here if we didn't return false
 		return true;
 	}
-	private final boolean isDouble(String s) 
+	public final boolean isDouble(String s) 
 	{
 		if(s == null) return false;
 		try { 
@@ -87,7 +87,7 @@ public class WorkingUser {
 		// only got here if we didn't return false
 		return true;
 	}
-	private final boolean isLong(String s)
+	public final boolean isLong(String s)
 	{
 		if(s == null) return false;
 		try {
@@ -99,7 +99,7 @@ public class WorkingUser {
 		}
 		return true;
 	}
-		private ScrollPane printDatabase(String type)
+	public ScrollPane printDatabase(String type)
 	{
 		TextArea textArea;
 		switch(type) {
@@ -118,12 +118,12 @@ public class WorkingUser {
 		return scrollPane;
 		
 	}
-        private void buyProducts(int personNumber, long price)
-        {
-            personDatabase.addCost(personNumber, price);// add the bill to the persons account
-            checkOuts.productBought(); // clear the quantities and checkout
-            productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
-            personDatabase.writeOutDatabase("personDatabase.txt");
-            checkOuts = new CheckOut(); // ensure checkout clear
-        }
+	public void buyProducts(int personNumber, long price)
+	{
+		personDatabase.addCost(personNumber, price);// add the bill to the persons account
+		checkOuts.productBought(); // clear the quantities and checkout
+		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
+		personDatabase.writeOutDatabase("personDatabase.txt");
+		checkOuts = new CheckOut(); // ensure checkout clear
+	}
 }
