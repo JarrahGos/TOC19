@@ -32,17 +32,17 @@ public final class ProductDatabase
 {
 	private Product[] allProducts;
 	private int logicalSize;
-	private String output;
-	private File file;
-	private PrintWriter outfile;
-	private Scanner readOutFile;
-	private int i;
+//	private String output;
+//	private File file;
+//	private PrintWriter outfile;
+//	private Scanner readOutFile;
+//	private int i;
 	
 	public ProductDatabase()
 	{
 		allProducts = new Product[10];
 		logicalSize = 0;
-		output = "";
+//		output = "";
 	}
 	
 	
@@ -76,14 +76,14 @@ public final class ProductDatabase
 		*/
 		
 		this.sortBy(sort); // find the sorting method that they asked for and use it to sort the database.
-		output = "";
-		for(i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
+		StringBuilder output = new StringBuilder();
+		for(int i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
 			if(allProducts[i] != null) {
-				output += String.format("\nProduct %d:\n",1+i);
-				output += allProducts[i].getData();
+				output.append(String.format("\nProduct %d:\n",1+i));
+				output.append(allProducts[i].getData());
 			}
 		}
-		return output; // send the calling program one large string containing the ingredients of all the products in the database
+		return output.toString(); // send the calling program one large string containing the ingredients of all the products in the database
 	}
 	
 	public final String productsUnder(long price, int sort)
@@ -95,25 +95,25 @@ public final class ProductDatabase
 		*/
 		
 		int test = 1; // check whether any of the products matched the users search.
-		String output = "";
+		StringBuilder output = new StringBuilder("");
 		this.sortBy(sort); // Find the requested sorting method and call it. Much shorter this way, same code, implemented once. 
-		for(i = 0; i < logicalSize; i++) { // loop untill all products have been tested.
+		for(int i = 0; i < logicalSize; i++) { // loop untill all products have been tested.
 			if(allProducts[i] != null && allProducts[i].getBarCode() < price) { // test whether each product is under the specified size
 				test = 0;
-				output += allProducts[i].getData(); // output the data of the recently tested product
+				output.append(allProducts[i].getData()); // output the data of the recently tested product
 			}
 		}
 		if(test == 1) {
-			output += "No products match your search"; // output on a search that gives no products
+			output.append("No products match your search"); // output on a search that gives no products
 		}
-		return output; // pass the results back to the interface
+		return output.toString(); // pass the results back to the interface
 	}
 
 	public final String getProduct(int productNo) 
 	{
 		/**
 		Class ProductDatabase: Method getProduct
-		Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4
+		Preconditions: setDatabase has been run, parameter is an integer between from 1 to 4
 		Postconditions: the user will see the details of their chosen product output.
 		*/
 
@@ -197,7 +197,7 @@ public final class ProductDatabase
 		Preconditions: none
 		Postconditions: the number of the first found empty product will be returned an as integer or -1 will be returned if there are no empty products
 		*/
-		for(i = 0; i < allProducts.length; i++) { // keep looping until an empty product has been found
+		for(int i = 0; i < allProducts.length; i++) { // keep looping until an empty product has been found
 			if(allProducts[i] == null) {
 				return i; // pass back the empty product to the caller
 			}
@@ -207,7 +207,7 @@ public final class ProductDatabase
 	public final boolean productExists(String extProductName)
 	{
 	    
-	    for(i = 0; i < logicalSize; i++) { //loop until a product that matches the artist and name specified
+	    for(int i = 0; i < logicalSize; i++) { //loop until a product that matches the artist and name specified
 			if(allProducts[i] != null && allProducts[i].getName().equals(extProductName)) {
 				return true; // when one is found, send true back to the caller
 			}
@@ -352,12 +352,13 @@ public final class ProductDatabase
 	public final int writeOutDatabase(String path) 
 	{
 		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
+		PrintWriter outfile = null;
 		try {
-			file = new File(path);
+			File file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
 		}
 		catch(FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			outfile.close();
+			if (outfile != null)outfile.close();
 			return 1;
 		}
 			outfile.println("ProductDatabase File"); // print the file header
@@ -375,12 +376,13 @@ public final class ProductDatabase
 	public final int adminWriteOutDatabase(String path) 
 	{
 		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
+		PrintWriter outfile = null;
 		try {
-			file = new File(path);
+			File file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
 		}
 		catch(FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			outfile.close();
+			if (outfile != null)outfile.close();
 			return 1;
 		}
 			outfile.println("ProductDatabase File"); // print the file header
@@ -405,8 +407,9 @@ public final class ProductDatabase
 		boolean negative = false;
 		int count = 0;
 		int z = 0;
+		Scanner readOutFile = null; 
 		try {
-			file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
+			File file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
 			readOutFile = new Scanner(file); // create the scanner 
 			readOutFile.nextLine(); // header
 			for(z = 0; readOutFile.hasNext(); z++) { // until all of the lines have been read, I want to read the lines.
@@ -432,7 +435,7 @@ public final class ProductDatabase
 			return z - count; // tell the program how many products we just got. If it's more than a thousand, I hope the sort doesn't take too long. 
 		}
 		catch(FileNotFoundException e) {
-			readOutFile.close(); // Well, if something goes wrong, someone should find out. 
+			if (readOutFile != null) readOutFile.close(); // Well, if something goes wrong, someone should find out. 
 			return -1; // this is what we use to tell them that something we didn't expect happened. Like the user assuring me that the file exists.
 		}
 	}

@@ -28,7 +28,7 @@ public final class Product
 
 	// create the variables that are needed in order of use
 	private String name;
-	private String output;
+//	private StringBuilder output;
 	private long productPrice;
 	private long barCode;
 	private int numberOfItems;
@@ -36,7 +36,7 @@ public final class Product
 
 	public Product(String extName, long extProductPrice, long extBarCode) // construtor which will give the product its values
 	{
-		output = "";
+		//output = new StringBuilder("");
 		name = extName;
 		productPrice = extProductPrice;
 		barCode = extBarCode;
@@ -76,18 +76,17 @@ public final class Product
 		Procondition: setData has been run for invoking product or the product constructor outlined above has been run
 		Postcondition: The data that has been entered for the invoking product will be returned. 
 		*/
-		
-		output = "";
-		output += "\n	Product name: ";
-		output += name;
-		output += "\n	Bar Code: ";
-		output += barCode;
-		output += "\n	Price: $";
-		output += (double)productPrice/100;
-		output += "\n	Quantity: ";
-		output += numberOfItems;
+		StringBuilder output = new StringBuilder();
+		output.append("\n	Product name: ");
+		output.append(name);
+		output.append("\n	Bar Code: ");
+		output.append(barCode);
+		output.append("\n	Price: $");
+		output.append((double)productPrice/100);
+		output.append("\n	Quantity: ");
+		output.append(numberOfItems);
 
-		return output; //return a string with all of the product's data in it
+		return output.toString(); //return a string with all of the product's data in it
 	}
 	public final String getDataScreen() // output the product data as a string
 	{
@@ -96,16 +95,16 @@ public final class Product
 		Procondition: setData has been run for invoking product or the product constructor outlined above has been run
 		Postcondition: The data that has been entered for the invoking product will be returned. 
 		*/
+		StringBuilder output = new StringBuilder();
+		output.append("");
+		output.append("\n	Product name: ");
+		output.append(name);
+		output.append(" x ");
+		output.append(quantity);
+		output.append("\n	Price: $");
+		output.append(((double)productPrice/100)*quantity);
 		
-		output = "";
-		output += "\n	Product name: ";
-		output += name;
-		output += " x ";
-		output += quantity;
-		output += "\n	Price: $";
-		output += ((double)productPrice/100)*quantity;
-		
-		return output; //return a string with all of the product's data in it
+		return output.toString(); //return a string with all of the product's data in it
 	}
 	public final String getName() // return the name of the product
 	{
