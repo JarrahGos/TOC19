@@ -121,13 +121,19 @@ public class WorkingUser {
 		return scrollPane;
 		
 	}
-	public void buyProducts(int personNumber, long price)
+        public final void logOut()
+        {
+            userNumber = -1;
+            checkOuts = new CheckOut();
+        }
+	public final void buyProducts()
 	{
-		personDatabase.addCost(personNumber, price);// add the bill to the persons account
+		personDatabase.addCost(userNumber, checkOuts.getPrice());// add the bill to the persons account
 		checkOuts.productBought(); // clear the quantities and checkout
 		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
 		personDatabase.writeOutDatabase("personDatabase.txt");
 		checkOuts = new CheckOut(); // ensure checkout clear
+                userNumber = -1;
 	}
 	public final String getCheckOut()
 	{

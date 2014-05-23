@@ -63,6 +63,7 @@ public final class Interface extends Application
 	}	
 	public void start(Stage primaryStage)
 	{
+            // create the layout
 		primaryStage.setTitle("TOC19");
 		GridPane grid = new GridPane();
         grid.setGridLinesVisible(true);
@@ -71,17 +72,21 @@ public final class Interface extends Application
 		grid.setVgap(10);
 		grid.setPadding(new Insets(25, 25, 25, 25));
 		
+                // create label for input
 		Text inputLabel = new Text("Enter your PMKeyS");
 		inputLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		grid.add(inputLabel, 0,0,0,0);
 		
+                // create input textfield
 		TextField input = new TextField();
 		grid.add(input, 0,1,0,4);
 		
 		Text userLabel = new Text("Error"); 
-        
+                
+                // create button to enter data from input
 		Button enterBarCode = new Button("OK");
 		Button enterPMKeyS = new Button("OK");
+                // action if PMKeyS button is pressed
 		enterPMKeyS.setOnAction(new EventHandler<ActionEvent>() {
 		
 			@Override
@@ -106,12 +111,13 @@ public final class Interface extends Application
 		});
 		grid.add(enterPMKeyS, 0,5,0,0);
 		
-
+                // work checkout output
 		Text data = new Text(workingUser.getCheckOut());
 		data.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		dataOut = new ScrollPane(data);
 		grid.add(dataOut, 1,1,4,6);
 		
+                //listen on enter product barcode button
 		enterBarCode.setOnAction(new EventHandler<ActionEvent>() {
 		
 			@Override
@@ -128,7 +134,8 @@ public final class Interface extends Application
 				
 			}
 		});
-
+                
+                // create and listen on admin button
 		Button adminMode = new Button("Enter Admin Mode");
 		adminMode.setOnAction(new EventHandler<ActionEvent>() {
 		
@@ -139,8 +146,37 @@ public final class Interface extends Application
 				
 			}
 		});
-		grid.add(adminMode, 5,6,0,0);
+		grid.add(adminMode, 5,0,0,0);
                 
+                // create and listen on purchase button
+                Button purchase = new Button("Purchase");
+                purchase.setOnAction(new EventHandler<ActionEvent>() {
+		
+			@Override
+			public void handle(ActionEvent e) {
+				workingUser.buyProducts();
+                                grid.getChildren().remove(userLabel);
+                                
+				
+			}
+		});
+                grid.add(purchase, 5,6,0,0);
+                
+                Button cancel = new Button("cancel");
+                cancel.setOnAction(new EventHandler<ActionEvent>() {
+		
+			@Override
+			public void handle(ActionEvent e) {
+				workingUser.logOut();
+                                grid.getChildren().remove(userLabel);
+			}
+		});
+                
+                // create label and text field for totalOutput
+                Text totalLabel = new Text("Total:");
+                grid.add(totalLabel, 0,0,0,0); // need to work out where this will be placed
+                TextField total = new TextField(workingUser.getCheckOut());
+                grid.add(total, 0,0,0,0); // Find a place as above
                 
                 
 		
@@ -159,7 +195,7 @@ public final class Interface extends Application
 	}
 	private void enterAdminMode()
 	{
-		
+		// code to bring up the admin menu here...
 	}
 	
 //	private void run() 
