@@ -5,7 +5,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.text.Text;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,14 +21,13 @@ public class WorkingUser {
 	private ProductDatabase productDatabase;
 	private PersonDatabase personDatabase;
 	private CheckOut checkOuts;
-	private int logicalSize;
 	private static int userNumber;
 	
 	public WorkingUser() {
 		productDatabase = new ProductDatabase();
 		personDatabase = new PersonDatabase();
 		checkOuts = new CheckOut();
-		logicalSize = 0;
+
 		userNumber = 0;
 	}
 	public void getPMKeyS(String input) // take this recursion and make it iteration. 
