@@ -562,71 +562,71 @@ public final class Interface extends Application
 		Application.launch(args);
 
 	}
-	private final CheckOut[] resizeCheckOut(Boolean action, CheckOut[] resizing)
-	{
-		if(action) {
-			return (Arrays.copyOf(resizing, resizing.length + 1));
-		}
-		else {
-			return (Arrays.copyOf(resizing, resizing.length - 1));
-		}
-		
-	}
-	private final boolean isInteger(String s) 
-	{
-		if(s == null) return false;
-		try { 
-			Integer.parseInt(s); // try to parse the string, catching a failure
-		} 
-		catch(NumberFormatException e) { 
-			return false; 
-		}
-		// only got here if we didn't return false
-		return true;
-	}
-	private final boolean isDouble(String s) 
-	{
-		if(s == null) return false;
-		try { 
-			Double.parseDouble(s);  // try to parse the string, catching a failure
-		} 
-		catch(NumberFormatException e) { 
-		 return false; 
-		}
-		// only got here if we didn't return false
-		return true;
-	}
-	private final boolean isLong(String s)
-	{
-		if(s == null) return false;
-		try {
-			Long.parseLong(s); // try to parse the string, catching a failure. 
-		}
-		catch(NumberFormatException e)
-		{
-			return false;
-		}
-		return true;
-	}
-	private static String getSecurePassword(String passwordToHash)
-    {
-        String generatedPassword = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            byte[] bytes = md.digest(passwordToHash.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
-            {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            generatedPassword = sb.toString();
-        }
-        catch (NoSuchAlgorithmException e)
-        {
-            e.printStackTrace();
-        }
-        return generatedPassword;
-    }
+//	private final CheckOut[] resizeCheckOut(Boolean action, CheckOut[] resizing)
+//	{
+//		if(action) {
+//			return (Arrays.copyOf(resizing, resizing.length + 1));
+//		}
+//		else {
+//			return (Arrays.copyOf(resizing, resizing.length - 1));
+//		}
+//		
+//	}
+//	private final boolean isInteger(String s) 
+//	{
+//		if(s == null) return false;
+//		try { 
+//			Integer.parseInt(s); // try to parse the string, catching a failure
+//		} 
+//		catch(NumberFormatException e) { 
+//			return false; 
+//		}
+//		// only got here if we didn't return false
+//		return true;
+//	}
+//	private final boolean isDouble(String s) 
+//	{
+//		if(s == null) return false;
+//		try { 
+//			Double.parseDouble(s);  // try to parse the string, catching a failure
+//		} 
+//		catch(NumberFormatException e) { 
+//		 return false; 
+//		}
+//		// only got here if we didn't return false
+//		return true;
+//	}
+//	private final boolean isLong(String s)
+//	{
+//		if(s == null) return false;
+//		try {
+//			Long.parseLong(s); // try to parse the string, catching a failure. 
+//		}
+//		catch(NumberFormatException e)
+//		{
+//			return false;
+//		}
+//		return true;
+//	}
+//	private static String getSecurePassword(String passwordToHash)
+//    {
+//        String generatedPassword = null;
+//        try {
+//            MessageDigest md = MessageDigest.getInstance("SHA-1");
+//            byte[] bytes = md.digest(passwordToHash.getBytes());
+//            StringBuilder sb = new StringBuilder();
+//            for(int i=0; i< bytes.length ;i++)
+//            {
+//                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+//            }
+//            generatedPassword = sb.toString();
+//        }
+//        catch (NoSuchAlgorithmException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return generatedPassword;
+//    }
 //    private long getPMKeyS(String input) // take this recursion and make it iteration. 
 //    {
 //        boolean correct = false;
