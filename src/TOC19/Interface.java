@@ -24,14 +24,9 @@
 * Description: This program will allow the user to interact with the program, creating, deleting and modifying products and checkOuts.
 */
 // GUI Inports
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
-
-//Security imports
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -211,145 +206,19 @@ public final class Interface extends Application
             adminStage.show();
                 
 	}
+	public static void main(String[] args)
+	{
+
+		Interface intFace = new Interface(); // initalise task
 	
+//		intFace.start(); // Engage
+		Application.launch(args);
+//            Stage initial = new Stage();
+//            intFace.start(initial);
+
+	}
 //	private void run() 
 //	{
-//		/**
-//		Class Interface: Method run
-//		Preconditions: Interface constructor has been run
-//		Postconditions: the program will have run and all user interactions will have been acted upon. 
-//						If ended correctly, the program will write the productDatabase to productDatabase.txt. The program will end.
-//		*/
-//		setUIFont (new javax.swing.plaf.FontUIResource("Serif",Font.PLAIN,25));
-//		// create the variables that will be used throughout the program
-//		String tempName; // names of things which we will be entering and reusing	
-//		long tempProductPrice; // the above but as a price
-//		String tempInput; // what will be storing any input for testing and conversion
-//		long tempBarCode; 
-//		int quantity; // the bar code and number of each item that we have. 
-//		int personNumber = -1; // the position of the person in the database
-//		int productNumber; // as above but for products
-//		int q1, q2; // test question integer for menus.
-//		int i, error, added; //minor variables which will be used in multiple parts of the program. 
-//		error = 0; // setting up error
-//		boolean admin = false; // how the program knows that it is in admin mode
-//		boolean sameUser = true; // How the program knows that it is serving the same user. 
-//        boolean first = true;
-//		int another = 0; // whether another item will be added 
-//		final JPasswordField passwordField = new JPasswordField(10); // box to take passwords from the user
-//		
-//		// Import the productDatabase
-//		q2 = 0;
-//		error = productDatabase.readDatabase("productDatabase.txt"); // read in the product database
-//		if(error == -1) { // tell the user there was an error reading the above
-//			System.out.println("There was an error reading the productDatabase");
-//		}
-//		else { // tell the user the above went swimingly. 
-//			System.out.printf("I have imported %d products\n", error);
-//		}
-//		error = personDatabase.readDatabase("personDatabase.txt"); // as above for the person database
-//		if(error == -1) {
-//			System.out.println("There was an error reading the personDatabase");
-//		}
-//		else {
-//			System.out.printf("I have imported %d people\n", error);
-//		}
-//		while(true) // perminantly loop through this code. 
-//		{
-//
-//			tempBarCode = getPMKeyS();
-//			personNumber = personDatabase.findPerson(tempBarCode); // convert this integer to the person number in the databate.
-//			sameUser = true; // tells the program that a user is logged in. 
-//			first = true;
-//			if(-2 == personNumber) { // checks whether that user is an admin
-//				String passWd = "";
-//				passWd = getPassWd(true);
-//				if (passWd != null) {
-//					passWd = getSecurePassword(passWd);
-//				}
-//				if(passWd != null && !"".equals(passWd) && passWd.equals(personDatabase.getPersonName(-2))) { 
-//					admin = true; // the above conversion will return -2 for all admins. This will enact that. 
-//					sameUser = false; // skip the normal user interface for non admin personnel. 
-//					passWd = null;
-//				}
-//				else if(passWd != null) {
-//					JOptionPane.showMessageDialog(null, "Password incorrect", "Error", JOptionPane.ERROR_MESSAGE);
-//					admin = false; 
-//					sameUser = false;
-//					passWd = null;
-//				}
-//				else {
-//					admin = false; 
-//					sameUser = false;
-//				}
-//			}
-//			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
-//				while(!admin) {
-//					//	tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
-//					tempInput = showInputDialog("<html>Hello " + personDatabase.getPersonUser(personNumber, true) + "<br>Enter the bar code of the product you would like</html>", 
-//													"what would you like",
-//												JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, new String[0], false);
-//					if(tempInput != null && !tempInput.equals("") && isLong(tempInput)) {
-//						tempBarCode = Long.parseLong(tempInput); // disallows the user from entering nothing or clicking cancel. 
-//					}
-//					else if((tempInput == null && !first) || ("".equals(tempInput) && !first)) {
-//						// if canceled and not on the first run of adding items. 
-//						another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nWould you like to add more items?" + "\nHitting no will buy this cart",
-//																"Cart", JOptionPane.YES_NO_CANCEL_OPTION);
-//						if(another == JOptionPane.NO_OPTION) break; // let the user buy already. 
-//						else if(another == JOptionPane.CANCEL_OPTION) {
-//							checkOuts = new CheckOut();
-//							sameUser = false;
-//							break;
-//						}
-//						else if(another == JOptionPane.YES_OPTION) continue;
-//					}
-//					else { // what to do if the user does the above on the first run.
-//						sameUser = false;
-//						another = 1;
-//						//checkOuts = new CheckOut();
-//						break;
-//					}
-//					if (tempBarCode == personDatabase.getBarCode(personNumber)) {
-//						JOptionPane.showMessageDialog(null, "Little early in your career to start selling yourself isn't it?\n"
-//														+ "This incident has been reported", "Attempted prostitution", JOptionPane.ERROR_MESSAGE);
-//						continue;
-//					}
-//					productNumber = productDatabase.findProduct(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
-//					if(productNumber == -1) { // -1 is output by the above on error
-//						if (tempBarCode == personDatabase.getBarCode(personNumber)) {
-//							JOptionPane.showMessageDialog(null, "Little early in your career to start selling yourself isn't it?\n"
-//														+ "This incident has been reported", "Attempted prostitution", JOptionPane.ERROR_MESSAGE);
-//						}
-//						else JOptionPane.showMessageDialog(null, "That product does not exist, please try again.", "Error", JOptionPane.ERROR_MESSAGE);
-//						continue;
-//					}
-//
-//					int checkProduct; // create this for use below
-//					tempInput = productDatabase.getProduct(productNumber);
-//					checkProduct = checkOuts.productEqualTo(tempInput); // check that the product was not entered into the database before. 
-//																					//If it was, just add the quantity to the one in the database
-//					if(checkProduct != -1) {
-//						checkOuts.addQuantity(checkProduct, 1);
-//					}
-//					else checkOuts.addProduct(checkOuts.emptyProduct(), productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
-//					//another = JOptionPane.showConfirmDialog(null, "Would you like to add another item?", "Continue", JOptionPane.YES_NO_OPTION);
-//					another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nWould you like to add more items?" + 
-//															"\nHitting no will buy this cart", "Cart", JOptionPane.YES_NO_CANCEL_OPTION);
-//					if(another == JOptionPane.NO_OPTION) break; // let the user buy already. 
-//					else if(another == JOptionPane.CANCEL_OPTION) {
-//						checkOuts = new CheckOut();
-//						sameUser = false;
-//						break;
-//					}
-//					else first = false; // make the add another product. 
-//				}
-//				if(!admin && sameUser) {
-//					buyProducts(personNumber, checkOuts.getPrice());
-//					sameUser = false; // reset to enter PMKeyS
-//					JOptionPane.showMessageDialog(null, "Thank You for coming to TOC", "Thanks", JOptionPane.INFORMATION_MESSAGE);
-//				}
-//			}
 //			while(admin) {
 //				tempInput = showAdminMenu();
 //				if(tempInput == null || tempInput.length() < 1) {
@@ -481,12 +350,6 @@ public final class Interface extends Application
 //
 //					}
 //				}
-//				else if(tempInput.equals("print the person database to the screen")) {
-//					printDatabase("Person");
-//				}
-//				else if(tempInput.equals("print the product database to the screen")) { // see above
-//					printDatabase("Product");
-//				}
 //				else if(tempInput.equals("save databases to USB")) { 
 //					error = 0;
 //					error = personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
@@ -567,17 +430,7 @@ public final class Interface extends Application
 //			}
 //		}
 //	}
-	public static void main(String[] args)
-	{
-
-		Interface intFace = new Interface(); // initalise task
 	
-//		intFace.start(); // Engage
-		Application.launch(args);
-//            Stage initial = new Stage();
-//            intFace.start(initial);
-
-	}
 //	private final CheckOut[] resizeCheckOut(Boolean action, CheckOut[] resizing)
 //	{
 //		if(action) {
