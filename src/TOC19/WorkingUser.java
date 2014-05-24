@@ -30,20 +30,36 @@ public class WorkingUser {
 
 		userNumber = 0;
 	}
-	public void getPMKeyS(String input) // take this recursion and make it iteration. 
+	public final void addDatabases()
+	{
+		int error = productDatabase.readDatabase("productDatabase.txt"); // read in the product database
+		if(error == -1) { // tell the user there was an error reading the above
+			System.out.println("There was an error reading the productDatabase");
+		}
+		else { // tell the user the above went swimingly. 
+			System.out.printf("I have imported %d products\n", error);
+		}
+		error = personDatabase.readDatabase("personDatabase.txt"); // as above for the person database
+		if(error == -1) {
+			System.out.println("There was an error reading the personDatabase");
+		}
+		else {
+			System.out.printf("I have imported %d people\n", error);
+		}
+	}
+	public final void getPMKeyS(String input) 
     {
         boolean correct = false;
-		if(input == null) { // First check that the PMKeyS was properly entered. This is for the cancel button
-			userNumber = -1;
-		}
-		else if(!input.equals("") && (input.charAt(0) == 'c' || input.charAt(0) == 'n' || input.charAt(0) == 'C' || input.charAt(0) == 'N')) {
+		if(( input != null && !input.equals("")) && (input.charAt(0) == 'c' || input.charAt(0) == 'n' || input.charAt(0) == 'C' || input.charAt(0) == 'N')) {
 			input = input.substring(1);
 		}
-		if(input.equals("") || !isLong(input) || (input.length() != 7 && input.length() != 5 && input.length() != 6) || !personDatabase.personExists(Integer.parseInt(input))) { // checks for valid numbers in the PMKeyS
+		if(input == null || input.equals("") || !isLong(input) || (input.length() != 7 && input.length() != 5 && input.length() != 6) || !personDatabase.personExists(Long.parseLong(input))) { // checks for valid numbers in the PMKeyS
 			userNumber =  -1;
 		}
-		correct = true;
-        userNumber =  personDatabase.findPerson(Long.parseLong(input));
+		else {
+			correct = true;
+			userNumber =  personDatabase.findPerson(Long.parseLong(input));
+		}
     }
 	public static String getSecurePassword(String passwordToHash)
     {
@@ -161,5 +177,9 @@ public class WorkingUser {
 		}
 		else checkOuts.addProduct(productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
 
+	}
+	public final int userNumber()
+	{
+		return userNumber;
 	}
 }

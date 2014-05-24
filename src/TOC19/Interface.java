@@ -53,66 +53,69 @@ public final class Interface extends Application
 		
 	public Interface() 
 	{
+		workingUser = new WorkingUser();
 		//initalize the variables created above
 		
 	}	
 	public void start(Stage primaryStage)
 	{
-            // create the layout
-            primaryStage.setTitle("TOC19");
-            GridPane grid = new GridPane();
-            grid.setGridLinesVisible(true);
-            grid.setAlignment(Pos.CENTER);
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(25, 25, 25, 25));
+		// create the layout
+		primaryStage.setTitle("TOC19");
+		workingUser.addDatabases();
+		GridPane grid = new GridPane();
+//	    grid.setGridLinesVisible(true);
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(15, 15, 15, 15));
+
+		// create label for input
+		Text inputLabel = new Text("Enter your PMKeyS");
+		inputLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		grid.add(inputLabel, 0,0);
+
+		// create input textfield
+		TextField input = new TextField();
+		grid.add(input, 1,0);
+
+		Text userLabel = new Text("Error"); 
+
+		// create button to enter data from input
+		Button enterBarCode = new Button("OK");
+		Button enterPMKeyS = new Button("OK");
+		// action if PMKeyS button is pressed
+		enterPMKeyS.setOnAction(new EventHandler<ActionEvent>() {
 		
-            // create label for input
-            Text inputLabel = new Text("Enter your PMKeyS");
-            inputLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-            grid.add(inputLabel, 0,0);
-	
-            // create input textfield
-            TextField input = new TextField();
-            grid.add(input, 0,1,1,4);
-	
-            Text userLabel = new Text("Error"); 
-                
-            // create button to enter data from input
-            Button enterBarCode = new Button("OK");
-            Button enterPMKeyS = new Button("OK");
-            // action if PMKeyS button is pressed
-            enterPMKeyS.setOnAction(new EventHandler<ActionEvent>() {
-		
-		@Override
-		public void handle(ActionEvent e) {
-			PMKeySEntered(input.getText());
-			
-			inputLabel.setText("Enter Barcode");
-			grid.add(inputLabel, 0,1);
-			
-			userLabel.setText(workingUser.userName());
-			if(!userLabel.toString().equals("error")) {
-                            grid.add(userLabel, 0,6);
-                            grid.getChildren().remove(enterPMKeyS);
-                            grid.add(enterBarCode, 0,5);
-                        }
-                        else {
-                            input.setText("");
-                            grid.add(input, 0,1,1,4);
+			@Override
+			public void handle(ActionEvent e) {
+				PMKeySEntered(input.getText());
+
+
+
+				if(workingUser.userNumber() != -1) {
+					userLabel.setText(workingUser.userName());
+					inputLabel.setText("Enter Barcode");
+					//grid.add(inputLabel, 0,0);
+					grid.add(userLabel, 4,0);
+					grid.getChildren().remove(enterPMKeyS);
+					grid.add(enterBarCode, 2,0);
+				}
+				else {
+					input.setText("");
+//					grid.add(input, 1,0);
+				}
+
 			}
-				
-		}
-            });
-    	grid.add(enterPMKeyS, 1,5);
+		});
+    	grid.add(enterPMKeyS, 2,0);
 		
                // work checkout output
 		Text data = new Text(workingUser.getCheckOut());
 		data.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		dataOut = new ScrollPane(data);
-		grid.add(dataOut, 1,1,4,6);
+		grid.add(dataOut, 0,1,8,7);
 		
-                //listen on enter product barcode button
+        //listen on enter product barcode button
 		enterBarCode.setOnAction(new EventHandler<ActionEvent>() {
 		
 			@Override
@@ -121,7 +124,7 @@ public final class Interface extends Application
 				
 				data.setText(workingUser.getCheckOut());
 				dataOut = new ScrollPane(data);
-				grid.add(dataOut, 1,1,4,6);
+				grid.add(dataOut, 1,1,4,7);
 				
 				input.setText("");
 				grid.add(input, 1,2,1,4);
@@ -136,12 +139,12 @@ public final class Interface extends Application
 		
 			@Override
 			public void handle(ActionEvent e) {
-				enterAdminMode();
+				enterAdminMode(new Stage());
 				
 				
 			}
 		});
-		grid.add(adminMode, 5,0);
+		grid.add(adminMode, 0,8);
                 
                 // create and listen on purchase button
                 Button purchase = new Button("Purchase");
@@ -155,23 +158,24 @@ public final class Interface extends Application
 				
 			}
 		});
-                grid.add(purchase, 5,6);
+        grid.add(purchase, 5,8);
                 
-                Button cancel = new Button("cancel");
-                cancel.setOnAction(new EventHandler<ActionEvent>() {
+		Button cancel = new Button("cancel");
+		cancel.setOnAction(new EventHandler<ActionEvent>() {
 		
 			@Override
 			public void handle(ActionEvent e) {
 				workingUser.logOut();
-                                grid.getChildren().remove(userLabel);
+                grid.getChildren().remove(userLabel);
 			}
 		});
+		grid.add(cancel, 5,0);
                 
                 // create label and text field for totalOutput
                 Text totalLabel = new Text("Total:");
-                grid.add(totalLabel, 3,6); 
+                grid.add(totalLabel, 3,8); 
                 TextField total = new TextField(workingUser.getCheckOut());
-                grid.add(total, 4,6); 
+                grid.add(total, 4,8); 
                 
                 
 		

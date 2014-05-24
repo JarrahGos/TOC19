@@ -31,9 +31,9 @@ import java.util.Scanner;
 
 public final class PersonDatabase {
 
-	private Person[] allPersons;
-	private Person admin;
-	private int logicalSize;
+	private static Person[] allPersons;
+	private static Person admin;
+	private static int logicalSize;
 //	private String output;
 //	private File file;
 //	private PrintWriter outfile;
@@ -42,7 +42,7 @@ public final class PersonDatabase {
 
 	public PersonDatabase() {
 		allPersons = new Person[45];
-		logicalSize = 0;
+	logicalSize = 0;
 //		output = "";
 	}
 
@@ -468,7 +468,6 @@ public final class PersonDatabase {
 	}
 
 	public final int findPerson(long barCode) {
-		int i = 0;
 		if (7000000 == barCode) {
 			return -2;
 		}
