@@ -135,6 +135,7 @@ public final class Interface
 					sameUser = false;
 				}
 			}
+//			else if(-1 == personNumber
 			while(sameUser) { // avoids people having to re-enter their PMKeyS to get to the shopping cart if they stuff something up. 
 				while(!admin) {
 					//	tempInput = JOptionPane.showInputDialog("Hello " + personDatabase.getPersonUser(personNumber) + "\nEnter the bar code of the product you would like");
