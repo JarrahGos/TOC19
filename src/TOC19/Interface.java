@@ -45,7 +45,7 @@ import javafx.application.Application;
 public final class Interface extends Application
 {
 	// Create the necessary instance variables.
-	private WorkingUser workingUser;
+	private final WorkingUser workingUser;
 	private ScrollPane dataOut;
 
 	private int logicalSize;
@@ -57,6 +57,7 @@ public final class Interface extends Application
 		//initalize the variables created above
 		
 	}	
+	@Override
 	public void start(Stage primaryStage)
 	{
 		// create the layout
@@ -79,32 +80,33 @@ public final class Interface extends Application
 		grid.add(input, 1,0);
 
 		Text userLabel = new Text("Error"); 
-
+		
+		// create label and text field for totalOutput
+		Text totalLabel = new Text("Total:");
+		grid.add(totalLabel, 3,8); 
+		TextField total = new TextField(String.valueOf("$" + workingUser.getPrice()));
+		grid.add(total, 4,8); 
+				
 		// create button to enter data from input
 		Button enterBarCode = new Button("OK");
 		Button enterPMKeyS = new Button("OK");
 		// action if PMKeyS button is pressed
-		enterPMKeyS.setOnAction(new EventHandler<ActionEvent>() {
-		
-			@Override
-			public void handle(ActionEvent e) {
-				PMKeySEntered(input.getText());
-
-
-
-				if(workingUser.userNumber() != -1) {
-					userLabel.setText(workingUser.userName());
-					inputLabel.setText("Enter Barcode");
-					//grid.add(inputLabel, 0,0);
-					grid.add(userLabel, 4,0);
-					grid.getChildren().remove(enterPMKeyS);
-					grid.add(enterBarCode, 2,0);
-				}
-				else {
-					input.setText("");
+		enterPMKeyS.setOnAction((ActionEvent e) -> {
+			PMKeySEntered(input.getText());
+			
+			
+			
+			if(workingUser.userNumber() != -1) {
+				userLabel.setText(workingUser.userName());
+				inputLabel.setText("Enter Barcode");
+				//grid.add(inputLabel, 0,0);
+				grid.add(userLabel, 4,0);
+				grid.getChildren().remove(enterPMKeyS);
+				grid.add(enterBarCode, 2,0);
+			}
+			else {
+				input.clear();
 //					grid.add(input, 1,0);
-				}
-
 			}
 		});
     	grid.add(enterPMKeyS, 2,0);
@@ -124,10 +126,12 @@ public final class Interface extends Application
 				
 				data.setText(workingUser.getCheckOut());
 				dataOut = new ScrollPane(data);
-				grid.add(dataOut, 1,1,4,7);
+//				grid.add(dataOut, 1,1,4,7);
+				total.setText(String.valueOf("$" + workingUser.getPrice()));
+				grid.add(enterBarCode, 2,0);
 				
-				input.setText("");
-				grid.add(input, 1,2,1,4);
+				input.clear();
+//				grid.add(input, 1,2,1,4);
 				
 				
 			}
@@ -147,15 +151,21 @@ public final class Interface extends Application
 		grid.add(adminMode, 0,8);
                 
                 // create and listen on purchase button
-                Button purchase = new Button("Purchase");
-                purchase.setOnAction(new EventHandler<ActionEvent>() {
+        Button purchase = new Button("Purchase");
+        purchase.setOnAction(new EventHandler<ActionEvent>() {
 		
 			@Override
 			public void handle(ActionEvent e) {
 				workingUser.buyProducts();
-                                grid.getChildren().remove(userLabel);
-                                
-				
+				grid.getChildren().remove(userLabel);
+				grid.getChildren().remove(enterBarCode);
+				inputLabel.setText("Enter your PMKeyS");
+				grid.add(enterPMKeyS, 2,0);
+				total.setText(String.valueOf(workingUser.getPrice()));
+				input.clear();
+				data.setText(workingUser.getCheckOut());
+				dataOut = new ScrollPane(data);
+                           	
 			}
 		});
         grid.add(purchase, 5,8);
@@ -167,15 +177,16 @@ public final class Interface extends Application
 			public void handle(ActionEvent e) {
 				workingUser.logOut();
                 grid.getChildren().remove(userLabel);
+				grid.getChildren().remove(enterBarCode);
+				inputLabel.setText("Enter your PMKeyS");
+				dataOut = new ScrollPane(data);
+				data.setText(workingUser.getCheckOut());
+				total.setText(String.valueOf(workingUser.getPrice()));
+				grid.add(enterPMKeyS, 2,0);
 			}
 		});
 		grid.add(cancel, 5,0);
                 
-                // create label and text field for totalOutput
-                Text totalLabel = new Text("Total:");
-                grid.add(totalLabel, 3,8); 
-                TextField total = new TextField(workingUser.getCheckOut());
-                grid.add(total, 4,8); 
                 
                 
 		

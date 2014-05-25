@@ -90,8 +90,10 @@ public final class CheckOut
 			output += products[i].getDataScreen();
 		}
 		// Output the summary data of the checkOut
-		output += "\nThe total price is: $";
-		output +=  (double)totalPrice/100; 
+		if(totalPrice != 0) {
+			output += "\nThe total price is: $";
+			output +=  (double)totalPrice/100; 
+		}
 		return output;
 	}
 	public final long getPrice()

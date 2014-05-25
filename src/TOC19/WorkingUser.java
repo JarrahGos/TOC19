@@ -147,7 +147,7 @@ public class WorkingUser {
 		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
 		personDatabase.writeOutDatabase("personDatabase.txt");
 		checkOuts = new CheckOut(); // ensure checkout clear
-                userNumber = -1;
+        userNumber = -1;
 	}
 	public final String getCheckOut()
 	{
@@ -181,5 +181,10 @@ public class WorkingUser {
 	public final int userNumber()
 	{
 		return userNumber;
+	}
+	public final double getPrice()
+	{
+		long price = checkOuts.getPrice();
+		return ((double)price)/100;
 	}
 }
