@@ -25,6 +25,7 @@
 */
 // GUI Inports
 
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -32,14 +33,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.application.Application;
 
 
 public final class Interface extends Application
@@ -78,7 +81,7 @@ public final class Interface extends Application
 		// create input textfield
 		TextField input = new TextField();
 		grid.add(input, 1,0);
-
+		input.requestFocus();
 		Text userLabel = new Text("Error"); 
 		
 		// create label and text field for totalOutput
@@ -115,6 +118,7 @@ public final class Interface extends Application
 		Text data = new Text(workingUser.getCheckOut());
 		data.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		dataOut = new ScrollPane(data);
+		dataOut.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 		grid.add(dataOut, 0,1,8,7);
 		
         //listen on enter product barcode button
@@ -136,6 +140,46 @@ public final class Interface extends Application
 				
 			}
 		});
+		input.setOnKeyPressed((KeyEvent ke) -> {
+			if (ke.getCode().equals(KeyCode.ENTER)) {
+				if(workingUser.userNumber() == -1) {
+					PMKeySEntered(input.getText());
+			
+			
+			
+					if(workingUser.userNumber() != -1) {
+						userLabel.setText(workingUser.userName());
+						inputLabel.setText("Enter Barcode");
+						//grid.add(inputLabel, 0,0);
+						grid.getChildren().remove(userLabel);
+						grid.add(userLabel, 4,0);
+						grid.getChildren().remove(enterPMKeyS);
+						grid.add(enterBarCode, 2,0);
+						input.clear();
+					}
+					else {
+						input.clear();
+						userLabel.setText("error");
+						grid.getChildren().remove(userLabel);
+						grid.add(userLabel, 4,0);
+//						grid.add(input, 1,0);
+					}
+				}
+				else {
+					productEntered(input.getText());
+				
+					data.setText(workingUser.getCheckOut());
+					dataOut = new ScrollPane(data);
+//					grid.add(dataOut, 1,1,4,7);
+					total.setText(String.valueOf("$" + workingUser.getPrice()));
+					//grid.add(enterBarCode, 2,0);
+				
+					input.clear();
+//					grid.add(input, 1,2,1,4);
+				}
+			}
+		});
+
                 
                 // create and listen on admin button
 		Button adminMode = new Button("Enter Admin Mode");
@@ -144,7 +188,7 @@ public final class Interface extends Application
 			@Override
 			public void handle(ActionEvent e) {
 				enterAdminMode(new Stage());
-				
+				primaryStage.hide();
 				
 			}
 		});
