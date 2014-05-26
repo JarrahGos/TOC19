@@ -31,19 +31,19 @@ import java.util.Scanner;
 
 public final class PersonDatabase {
 
-	private Person[] allPersons;
-	private Person admin;
-	private int logicalSize;
-	private String output;
-	private File file;
-	private PrintWriter outfile;
+	private static Person[] allPersons;
+	private static Person admin;
+	private static int logicalSize;
+//	private String output;
+//	private File file;
+//	private PrintWriter outfile;
 	private Scanner readOutFile;
 	private int i;
 
 	public PersonDatabase() {
 		allPersons = new Person[45];
-		logicalSize = 0;
-		output = "";
+	logicalSize = 0;
+//		output = "";
 	}
 
 	public final int setDatabasePerson(int personNo, String name, long running, long week, long barCode) // take the persons data and pass it to the persons constructor
@@ -74,14 +74,14 @@ public final class PersonDatabase {
 		 */
 
 		this.sortBy(sort); // find the sorting method that they asked for and use it to sort the database.
-		output = "";
-		for (i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
+		StringBuilder output = new StringBuilder();
+		for (int i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
 			if (allPersons[i] != null) {
-				output += String.format("\nPerson %d:\n", 1 + i);
-				output += allPersons[i].getData();
+				output.append(String.format("\nPerson %d:\n", 1 + i));
+				output.append(allPersons[i].getData());
 			}
 		}
-		return output; // send the calling program one large string containing the ingredients of all the persons in the database
+		return output.toString(); // send the calling program one large string containing the ingredients of all the persons in the database
 	}
 
 	public final String personsUnder(long price, int sort) {
@@ -91,18 +91,18 @@ public final class PersonDatabase {
 		 */
 
 		int test = 1; // check whether any of the persons matched the users search.
-		String output = "";
+		StringBuilder output = new StringBuilder();
 		this.sortBy(sort); // Find the requested sorting method and call it. Much shorter this way, same code, implemented once. 
-		for (i = 0; i < logicalSize; i++) { // loop untill all persons have been tested.
+		for (int i = 0; i < logicalSize; i++) { // loop untill all persons have been tested.
 			if (allPersons[i] != null && allPersons[i].getBarCode() < price) { // test whether each person is under the specified size
 				test = 0;
-				output += allPersons[i].getData(); // output the data of the recently tested person
+				output.append(allPersons[i].getData()); // output the data of the recently tested person
 			}
 		}
 		if (test == 1) {
-			output += "No persons match your search"; // output on a search that gives no persons
+			output.append("No persons match your search"); // output on a search that gives no persons
 		}
-		return output; // pass the results back to the interface
+		return output.toString(); // pass the results back to the interface
 	}
 
 	public final String getPerson(int personNo) {
@@ -155,7 +155,7 @@ public final class PersonDatabase {
 		}
 	}
 
-	public final String getPersonName(int personNo) {
+	public static final String getPersonName(int personNo) {
 		/**
 		 * Class PersonDatabase: Method getPersonName Preconditions: setDatabase has been run for the invoking person Postconditions: the person name will be returned
 		 */
@@ -212,7 +212,7 @@ public final class PersonDatabase {
 		 * Class PersonDatabase: Method emptyPerson Preconditions: none Postconditions: the number of the first found empty person will be returned an as integer or -1 will be returned if there are no
 		 * empty persons
 		 */
-		for (i = 0; i < allPersons.length; i++) { // keep looping until an empty person has been found
+		for (int i = 0; i < allPersons.length; i++) { // keep looping until an empty person has been found
 			if (allPersons[i] == null) {
 				return i; // pass back the empty person to the caller
 			}
@@ -222,7 +222,7 @@ public final class PersonDatabase {
 
 	public final boolean personExists(String extPersonName, long extBarCode) {
 
-		for (i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
+		for (int i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
 			if (allPersons[i] != null && allPersons[i].getName().equals(extPersonName) && allPersons[i].getBarCode() == extBarCode) {
 				return true; // when one is found, send true back to the caller
 			}
@@ -235,7 +235,7 @@ public final class PersonDatabase {
 		if (extBarCode == 7000000) {
 			return true;
 		}
-		for (i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
+		for (int i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
 			if (allPersons[i] != null && allPersons[i].getBarCode() == extBarCode) {
 				return true; // when one is found, send true back to the caller
 			}
@@ -368,11 +368,12 @@ public final class PersonDatabase {
 
 	public final int writeOutDatabase(String path) {
 		this.quickSortByName(0, logicalSize - 1); // ensure that the database is sorted.
+		PrintWriter outfile = null;
 		try {
-			file = new File(path);
+			File file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
 		} catch (FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			outfile.close();
+			if (outfile != null) outfile.close();
 			return 1;
 		}
 		outfile.println("PersonDatabase File"); // print the file header
@@ -393,11 +394,12 @@ public final class PersonDatabase {
 
 	public final int adminWriteOutDatabase(String path) {
 		this.quickSortByName(0, logicalSize - 1); // ensure that the database is sorted.
+		PrintWriter outfile = null;
 		try {
-			file = new File(path);
+			File file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
 		} catch (FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			outfile.close();
+			if (outfile != null)outfile.close();
 			return 1;
 		}
 		outfile.println("PersonDatabase File"); // print the file header
@@ -419,9 +421,9 @@ public final class PersonDatabase {
 		double doubleCosts;
 		int tempBarCode;
 		int count = 0;
-		int z = 0;
+		int z;
 		try {
-			file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
+			File file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
 			readOutFile = new Scanner(file); // create the scanner 
 			readOutFile.nextLine(); // exclude the header of the file
 			readOutFile.nextLine(); // exclude dashes
@@ -466,11 +468,10 @@ public final class PersonDatabase {
 	}
 
 	public final int findPerson(long barCode) {
-		int i = 0;
 		if (7000000 == barCode) {
 			return -2;
 		}
-		for (i = logicalSize -1; i > 0; i--) {
+		for (int i = logicalSize -1; i > 0; i--) {
 			if (allPersons[i].getBarCode() == barCode) {
 				return i;
 			}

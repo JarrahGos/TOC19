@@ -45,7 +45,7 @@ public final class CheckOut
 	    totalPrice = 0;
 	}
 	    
-	public final int addProduct(int productNo, Product item, int quantity)
+	public final int addProduct(Product item, int quantity)
 	{
 		if(logicalSize == products.length) {
 			products = resizeCheckOut(true, products);
@@ -54,13 +54,13 @@ public final class CheckOut
         item.setName(item.getName());
         item.setPrice(item.productPrice());
 		item.setQuantity(quantity);
-		products[productNo] = item;
+		products[logicalSize] = item;
 		quantities[logicalSize] = quantity;
 		totalPrice += item.productPrice()*quantity;
 		++logicalSize;
 		return 0;
 	}
-	public final int addProduct(int productNo, String name, long price, int barCode)
+	public final int addProduct(String name, long price, int barCode)
 	{
 		/** 
 		Class CheckOut: Method addProduct
@@ -72,7 +72,7 @@ public final class CheckOut
 			products = resizeCheckOut(true, products);
 		} //max time times 60 due to the fact that it is stored in minutes while the product stores time in seconds. 
 		// pass the values which are given to the product object.
-		products[productNo] = new Product(name, price, barCode);
+		products[logicalSize] = new Product(name, price, barCode);
 		totalPrice += price;
 		++logicalSize; // incerment the logicalSize value to show the added product.
 		return 0;
@@ -90,8 +90,10 @@ public final class CheckOut
 			output += products[i].getDataScreen();
 		}
 		// Output the summary data of the checkOut
-		output += "\nThe total price is: $";
-		output +=  (double)totalPrice/100; 
+		if(totalPrice != 0) {
+			output += "\nThe total price is: $";
+			output +=  (double)totalPrice/100; 
+		}
 		return output;
 	}
 	public final long getPrice()
