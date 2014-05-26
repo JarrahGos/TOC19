@@ -106,6 +106,23 @@ public final class Product
 		
 		return output.toString(); //return a string with all of the product's data in it
 	}
+        public final String getDataUser() // output the product data as a string
+	{
+		/**
+		Class Song: Method getData
+		Procondition: setData has been run for invoking product or the product constructor outlined above has been run
+		Postcondition: The data that has been entered for the invoking product will be returned. 
+		*/
+		StringBuilder output = new StringBuilder();
+		output.append(name);
+		output.append(" x ");
+		output.append(quantity);
+		output.append("                                                                 	Price: $");
+		output.append(((double)productPrice/100)*quantity);
+                output.append("\n");
+		
+		return output.toString(); //return a string with all of the product's data in it
+	}
 	public final String getName() // return the name of the product
 	{
 		/**

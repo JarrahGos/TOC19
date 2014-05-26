@@ -87,13 +87,13 @@ public final class CheckOut
 		this.sortBy(sort); // sort the database before printing it in the order specified by the user.
 		output = ""; //clear the output incase it has values.
 		for(int i = 0; i < logicalSize; i++) { // loop untill all products have been output.
-			output += products[i].getDataScreen();
+			output += products[i].getDataUser();
 		}
 		// Output the summary data of the checkOut
-		if(totalPrice != 0) {
-			output += "\nThe total price is: $";
-			output +=  (double)totalPrice/100; 
-		}
+//		if(totalPrice != 0) {
+//			output += "\nThe total price is: $";
+//			output +=  (double)totalPrice/100; 
+//		}
 		return output;
 	}
 	public final long getPrice()

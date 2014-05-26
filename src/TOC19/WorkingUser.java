@@ -28,7 +28,7 @@ public class WorkingUser {
 		personDatabase = new PersonDatabase();
 		checkOuts = new CheckOut();
 
-		userNumber = 0;
+		userNumber = -1;
 	}
 	public final void addDatabases()
 	{
