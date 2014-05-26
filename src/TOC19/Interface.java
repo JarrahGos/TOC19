@@ -47,7 +47,7 @@ import javafx.scene.control.Button;
 import javafx.scene.Scene;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
-
+import javafx.Stage.Stage;
 
 public final class Interface extends Application
 {
