@@ -407,8 +407,8 @@ public final class PersonDatabase {
 			outfile.println("------------------------------------------");
 			outfile.println("Bar Code: " + allPersons[b].getBarCode());
 			outfile.println("Name: " + allPersons[b].getName());
-			outfile.println("Yearly: $" + allPersons[b].totalCostRunning());
-			outfile.println("Weekly: $" + allPersons[b].totalCostWeek());
+			outfile.println("Total: $" + allPersons[b].totalCostRunning());
+			outfile.println("Bill: $" + allPersons[b].totalCostWeek());
 
 		}
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
