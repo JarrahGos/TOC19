@@ -32,8 +32,10 @@ The programs security is heavily based on ease of use over security. The main se
 IDs. Users are unlikely to know the id of another and thus are unlikely to be able to log in. 
 The admin account has it's own ID, completly different to the ids of the other users. 
 
-Passwords have not been implemented in this system. However, they may become useful if security questions are raised in
-regards to the incorrect use of the admin or user systems. These would have to be hashed and added to the database. 
+Passwords have not been implemented in this system for normal users. However, they may become useful if security questions are raised in
+regards to the incorrect use of the user systems. These would have to be hashed and added to the database. 
+
+The admin system contains a password, which is stored as an SHA1 hash in the person database. This is changeable within the program. 
 
 Export
 
