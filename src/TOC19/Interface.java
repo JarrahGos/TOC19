@@ -647,7 +647,7 @@ public final class Interface
 						JOptionPane.showMessageDialog(null, "The PMKeyS you entered has already been taken", "Error", JOptionPane.ERROR_MESSAGE);
 						continue;
 						}
-						added = personDatabase.setDatabasePerson(q2, tempName,0 ,0, tempBarCode);
+						added = personDatabase.setDatabasePerson(q2, tempName,0 ,0, tempBarCode, true);
 					}
 					// send the values to productDatabase where they will be sent to the product/erson constructor. 
 					if(!person) {
