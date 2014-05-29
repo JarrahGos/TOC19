@@ -64,7 +64,7 @@ public final class Interface extends Application
 		primaryStage.setTitle("TOC19"); // set the window title. 
 		workingUser.addDatabases(); // import the user and product data
 		GridPane grid = new GridPane(); // create the layout manager
-//	    grid.setGridLinesVisible(true); // used for debugging object placement
+	    grid.setGridLinesVisible(true); // used for debugging object placement
 		grid.setAlignment(Pos.CENTER); 
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -99,7 +99,7 @@ public final class Interface extends Application
                 dataOut.setPrefViewportHeight(400);
                 dataOut.setPrefViewportWidth(550);
 		dataOut.setVbarPolicy(ScrollBarPolicy.ALWAYS); // ensure that there is a scroll bar.
-		grid.add(dataOut, 0,1,8,7); // place front and centre. 
+		grid.add(dataOut, 0,1,6,7); // place front and centre. 
 		
         //listen on enter product barcode button
 		enterBarCode.setOnAction((ActionEvent e) -> {
