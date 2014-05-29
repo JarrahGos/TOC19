@@ -96,6 +96,8 @@ public final class Interface extends Application
 		Text data = new Text(workingUser.getCheckOut()); // the data which will be output by the checkout
 		data.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		dataOut = new ScrollPane(data); // create a scroll pane to handle the data. 
+                dataOut.setPrefViewportHeight(400);
+                dataOut.setPrefViewportWidth(550);
 		dataOut.setVbarPolicy(ScrollBarPolicy.ALWAYS); // ensure that there is a scroll bar.
 		grid.add(dataOut, 0,1,8,7); // place front and centre. 
 		

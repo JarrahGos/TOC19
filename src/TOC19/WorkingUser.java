@@ -170,7 +170,7 @@ public class WorkingUser {
 		int productNumber = productDatabase.findProduct(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
 		int checkProduct; // create this for use below
 		tempInput = productDatabase.getProduct(productNumber);
-		checkProduct = checkOuts.productEqualTo(tempInput); // check that the product was not entered into the database before. 
+		checkProduct = checkOuts.productEqualTo(tempBarCode); // check that the product was not entered into the database before. 
 	//																					//If it was, just add the quantity to the one in the database
 		if(checkProduct != -1) {
 			checkOuts.addQuantity(checkProduct, 1);

@@ -118,7 +118,7 @@ public final class Product
 		output.append(" x ");
 		output.append(quantity);
 		output.append("                                                                 	Price: $");
-		output.append(((double)productPrice/100)*quantity);
+		output.append(((double)((productPrice*quantity)))/100);
                 output.append("\n");
 		
 		return output.toString(); //return a string with all of the product's data in it

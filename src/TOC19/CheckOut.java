@@ -84,7 +84,7 @@ public final class CheckOut
 		Preconditions: add product has been run for the invoking checkOut at least for one product.
 		Postconditions: the metadata of the products in the invoking checkOut will be returned as a String. If the precondition has not been met nothing will be returned. 
 		*/
-		this.sortBy(sort); // sort the database before printing it in the order specified by the user.
+		//this.sortBy(sort); // sort the database before printing it in the order specified by the user.
 		output = ""; //clear the output incase it has values.
 		for(int i = 0; i < logicalSize; i++) { // loop untill all products have been output.
 			output += products[i].getDataUser();
@@ -131,7 +131,7 @@ public final class CheckOut
 		return logicalSize;
 	}
 
-	public final int productEqualTo(String extProduct)
+	public final int productEqualTo(long extBarCode)
 	{
 		/**
 		Class CheckOut: Method productEqualTo
@@ -139,8 +139,8 @@ public final class CheckOut
 		PostConditions: the integer number of the product that is equal to extProduct will be returned. On the error that no products match 0 will be returned
 		*/
 		
-		for(int i = logicalSize -1; i > 0; i--) { //Loop untill the product that matches the one given as a paremeter is found
-			if(products[i] != null && products[i].getData().equals(extProduct)) {
+		for(int i = 0; i < logicalSize; i++) { //Loop untill the product that matches the one given as a paremeter is found
+			if(products[i] != null && products[i].getBarCode() == extBarCode) {
 				return i; // return the matching product.
 			}
 		}
