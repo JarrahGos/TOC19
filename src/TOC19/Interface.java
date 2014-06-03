@@ -64,7 +64,7 @@ public final class Interface extends Application
 		primaryStage.setTitle("TOC19"); // set the window title. 
 		workingUser.addDatabases(); // import the user and product data
 		GridPane grid = new GridPane(); // create the layout manager
-	    grid.setGridLinesVisible(true); // used for debugging object placement
+//	    grid.setGridLinesVisible(true); // used for debugging object placement
 		grid.setAlignment(Pos.CENTER); 
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -124,13 +124,15 @@ public final class Interface extends Application
 					}
 				}
 				else {
-					productEntered(input.getText()); // if the user is logged in (!= -1) it must be a product. 
-				
-					data.setText(workingUser.getCheckOut()); // set the scrollpane to have the new text. 
-					dataOut = new ScrollPane(data); // as above
-					total.setText(String.valueOf("$" + workingUser.getPrice())); // print the price out at the bottum of the screen. 
-				
-					input.clear(); // give the user a clear input for the next item. 
+					boolean correct = productEntered(input.getText());
+					if (correct) {
+						data.setText(workingUser.getCheckOut());
+						dataOut = new ScrollPane(data);
+						total.setText(String.valueOf("$" + workingUser.getPrice()));
+						input.clear();
+					}
+					else 
+						input.clear();
 				}
 		});
 		input.setOnKeyPressed((KeyEvent ke) -> { // the following allows the user to hit enter rather than OK. Works exactly the same as hitting OK. 
@@ -152,16 +154,19 @@ public final class Interface extends Application
 						userLabel.setText("error");
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 4,0);
+						input.clear();
 					}
 				}
 				else {
-					productEntered(input.getText());
-				
-					data.setText(workingUser.getCheckOut());
-					dataOut = new ScrollPane(data);
-					total.setText(String.valueOf("$" + workingUser.getPrice()));
-				
-					input.clear();
+					boolean correct = productEntered(input.getText());
+					if (correct) {
+						data.setText(workingUser.getCheckOut());
+						dataOut = new ScrollPane(data);
+						total.setText(String.valueOf("$" + workingUser.getPrice()));
+						input.clear();
+					}
+					else 
+						input.clear();
 				}
 			}
 		});
@@ -211,9 +216,9 @@ public final class Interface extends Application
 	{
 		workingUser.getPMKeyS(input);
 	}
-	private void productEntered(String input)
+	private boolean productEntered(String input)
 	{
-		workingUser.addToCart(input);
+		return workingUser.addToCart(input);
 	}
 	private void enterAdminMode(Stage primaryStage)
 	{
