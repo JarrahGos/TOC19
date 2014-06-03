@@ -188,7 +188,7 @@ public final class Interface extends Application
 		});
         grid.add(purchase, 5,8); // add the button to the bottum right corner, next to the total price. 
                 
-		Button cancel = new Button("cancel");
+		Button cancel = new Button("Cancel");
 		cancel.setOnAction((ActionEvent e) -> {
 			workingUser.logOut(); // set user number to -1 and delete any checkout made. 
 			grid.getChildren().remove(userLabel); // make it look like no user is logged in

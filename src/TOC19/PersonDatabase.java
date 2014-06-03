@@ -38,15 +38,14 @@ public final class PersonDatabase {
 //	private File file;
 //	private PrintWriter outfile;
 	private Scanner readOutFile;
-	private int i;
 
 	public PersonDatabase() {
 		allPersons = new Person[45];
-	logicalSize = 0;
+		logicalSize = 0;
 //		output = "";
 	}
 
-	public final int setDatabasePerson(int personNo, String name, long running, long week, long barCode) // take the persons data and pass it to the persons constructor
+	public final int setDatabasePerson(int personNo, String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
 	{
 		/**
 		 * Class PersonDatabase: Method setDatabase Precondition: augments int personNo, String name, String artist, double size, double duration are input Postcondition: Data for the currant working
@@ -54,7 +53,7 @@ public final class PersonDatabase {
 		 */
 		int test = 0; // using test because something keeps changing my i...
 		if (!personExists(name, barCode)) { // check whether the person already exists
-			allPersons[logicalSize] = new Person(name, barCode, running, week); // pass off the work to the constructor: "make it so."
+			allPersons[logicalSize] = new Person(name, barCode, running, week, canBuy); // pass off the work to the constructor: "make it so."
 			logicalSize++; // We have a new person, Now we have something to show for it.
 			test = 1;
 		}
@@ -127,7 +126,8 @@ public final class PersonDatabase {
 		 * person output.
 		 */
 
-		if (personNo < logicalSize) { // check that the person exists
+		if(personNo == -1 || personNo == -2) return "admin";
+		else if(personNo < logicalSize) { // check that the person exists
 			return allPersons[personNo].getDataUser(html); // now that we know that it does, send it to the interface
 		} else {
 			return "the person that you have identified does not exist"; // We cannot find the person that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
@@ -236,7 +236,7 @@ public final class PersonDatabase {
 			return true;
 		}
 		for (int i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
-			if (allPersons[i] != null && allPersons[i].getBarCode() == extBarCode) {
+			if (allPersons[i] != null && allPersons[i].getBarCode() == extBarCode && allPersons[i].canBuy()) {
 				return true; // when one is found, send true back to the caller
 			}
 
@@ -386,6 +386,7 @@ public final class PersonDatabase {
 			outfile.println(allPersons[b].getName());
 			outfile.println(allPersons[b].totalCostRunning());
 			outfile.println(allPersons[b].totalCostWeek());
+			outfile.println(allPersons[b].canBuy());
 
 		}
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
@@ -407,8 +408,8 @@ public final class PersonDatabase {
 			outfile.println("------------------------------------------");
 			outfile.println("Bar Code: " + allPersons[b].getBarCode());
 			outfile.println("Name: " + allPersons[b].getName());
-			outfile.println("Yearly: $" + allPersons[b].totalCostRunning());
-			outfile.println("Weekly: $" + allPersons[b].totalCostWeek());
+			outfile.println("Total: $" + allPersons[b].totalCostRunning());
+			outfile.println("Bill: $" + allPersons[b].totalCostWeek());
 
 		}
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
@@ -421,6 +422,7 @@ public final class PersonDatabase {
 		double doubleCosts;
 		int tempBarCode;
 		int count = 0;
+		boolean tempCanBuy;
 		int z;
 		try {
 			File file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
@@ -430,7 +432,7 @@ public final class PersonDatabase {
 			tempInput = readOutFile.nextLine();
 			tempBarCode = Integer.parseInt(tempInput);
 			tempName = readOutFile.nextLine();
-			admin = new Person(tempName, tempBarCode, 0, 0);
+			admin = new Person(tempName, tempBarCode, 0, 0, true);
 			for (z = 0; readOutFile.hasNext(); z++) { // until all of the lines have been read, I want to read the lines.
 				readOutFile.nextLine(); // someone decided to put a redundant line in each person of the file, this throws it away.
 				tempInput = readOutFile.nextLine();
@@ -440,7 +442,9 @@ public final class PersonDatabase {
 				tempTotalCostRunning = (long)(doubleCosts*100);
 				doubleCosts = Double.parseDouble(readOutFile.nextLine());
 				tempTotalCostWeek = (long)(doubleCosts*100);
-				count += this.setDatabasePerson(z, tempName, tempTotalCostRunning, tempTotalCostWeek, tempBarCode); // send the big pile of lines that we just read to the person constructor. 
+				tempInput = readOutFile.nextLine();
+				tempCanBuy = Boolean.parseBoolean(tempInput);
+				count += this.setDatabasePerson(z, tempName, tempTotalCostRunning, tempTotalCostWeek, tempBarCode, tempCanBuy); // send the big pile of lines that we just read to the person constructor. 
 			}
 			readOutFile.close(); // clean up by closing the file
 			return z - count; // tell the program how many persons we just got. If it's more than a thousand, I hope the sort doesn't take too long. 

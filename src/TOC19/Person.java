@@ -31,16 +31,18 @@ public final class Person
 //	private StringBuilder output;
 	private long totalCostRunning, totalCostWeek; // Running can be yearly, or can be perminant. Up to TOC. Weekly will be reset each stocktake
 	private long barCode; // PMKeys number off ID
+	private boolean canBuy;
 
-	public Person(String extName, long extBarCode, long running, long week) // construtor which will give the person its values
+	public Person(String extName, long extBarCode, long running, long week, boolean extCanBuy) // construtor which will give the person its values
 	{
 		name = extName;
 		barCode = extBarCode;
 		totalCostRunning = running;
 		totalCostWeek = week;
+		canBuy = extCanBuy;
 	}
 	// Begin methods
-	public final void setData(String name, int barCode) // redundant method which has been left in case persons are edited in some way which would require this to be used.
+	public final void setData(String name, int barCode, boolean extCanBuy) // redundant method which has been left in case persons are edited in some way which would require this to be used.
 	{
 		/**
 		Class Song: Method setData
@@ -49,6 +51,7 @@ public final class Person
 		*/
 		this.name = name;
 		this.barCode = barCode;
+		canBuy = extCanBuy;
 	}
 
 	public final String getData() // output the person data as a string
@@ -145,5 +148,9 @@ public final class Person
 	public final void setName(String extName)
 	{
 		name = extName;
+	}
+	public final boolean canBuy()
+	{
+		return canBuy;
 	}
 }
