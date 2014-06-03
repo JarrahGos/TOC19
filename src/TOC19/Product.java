@@ -123,6 +123,23 @@ public final class Product
 		
 		return output.toString(); //return a string with all of the product's data in it
 	}
+	public final String getDataName()
+	{
+		StringBuilder output = new StringBuilder();
+		output.append(name);
+		output.append(" x ");
+		output.append(quantity);
+		output.append("\n");
+		return output.toString();
+	}
+	public final String getDataPrice()
+	{
+		StringBuilder output = new StringBuilder();
+		output.append("Price: $");
+		output.append(((double)((productPrice*quantity)))/100);
+		output.append("\n");
+		return output.toString();
+	}
 	public final String getName() // return the name of the product
 	{
 		/**

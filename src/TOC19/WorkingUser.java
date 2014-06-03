@@ -153,11 +153,19 @@ public class WorkingUser {
 	{
 		return checkOuts.getCheckOut(1);
 	}
+	public final String getCheckOutNames()
+	{
+		return checkOuts.getCheckOutNames();
+	}
+	public final String getCheckOutPrices()
+	{
+		return checkOuts.getCheckOutPrices();
+	}
 	public final String userName()
 	{
 		return userNumber == -1 ? "error" : PersonDatabase.getPersonName(userNumber);
 	}
-	public final void addToCart(String input) 
+	public final boolean addToCart(String input) 
 	{
 		long tempBarCode = -1; 
 		String tempInput;
@@ -165,18 +173,21 @@ public class WorkingUser {
 			tempBarCode = Long.parseLong(input); // disallows the user from entering nothing or clicking cancel. 
 		}
 		else if((input == null ) || ("".equals(input) )) {
-			// find a way to handle this. 
+			return false; 
 		}
 		int productNumber = productDatabase.findProduct(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
 		int checkProduct; // create this for use below
-		tempInput = productDatabase.getProduct(productNumber);
-		checkProduct = checkOuts.productEqualTo(tempBarCode); // check that the product was not entered into the database before. 
+		if(productNumber != -1) {
+			tempInput = productDatabase.getProduct(productNumber);
+			checkProduct = checkOuts.productEqualTo(tempBarCode); // check that the product was not entered into the database before. 
 	//																					//If it was, just add the quantity to the one in the database
-		if(checkProduct != -1) {
-			checkOuts.addQuantity(checkProduct, 1);
+			if(checkProduct != -1) {
+				checkOuts.addQuantity(checkProduct, 1);
+			}
+			else checkOuts.addProduct(productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
+			return true;
 		}
-		else checkOuts.addProduct(productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
-
+		return false;
 	}
 	public final int userNumber()
 	{

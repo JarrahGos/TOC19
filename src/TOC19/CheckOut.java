@@ -31,14 +31,14 @@ public final class CheckOut
 	private Product[] products;
 	private Product[] resized; // used for creating larger databases. 
 	private int[] quantities;
-	private String output;
+//	private String output;
 	private int logicalSize;
 	private long totalPrice;
 
 	public CheckOut()
 	{
 		// Initalise the needed variables
-		output = "";
+//		output = "";
 	    products = new Product[4];
             quantities = new int[4];
 	    logicalSize = 0;
@@ -85,16 +85,32 @@ public final class CheckOut
 		Postconditions: the metadata of the products in the invoking checkOut will be returned as a String. If the precondition has not been met nothing will be returned. 
 		*/
 		//this.sortBy(sort); // sort the database before printing it in the order specified by the user.
-		output = ""; //clear the output incase it has values.
+		StringBuilder output = new StringBuilder(); //clear the output incase it has values.
 		for(int i = 0; i < logicalSize; i++) { // loop untill all products have been output.
-			output += products[i].getDataUser();
+			output.append(products[i].getDataUser());
 		}
 		// Output the summary data of the checkOut
 //		if(totalPrice != 0) {
 //			output += "\nThe total price is: $";
 //			output +=  (double)totalPrice/100; 
 //		}
-		return output;
+		return output.toString();
+	}
+	public final String getCheckOutNames()
+	{
+		StringBuilder output = new StringBuilder();
+		for (int i = 0; i < logicalSize; i++) {
+			output.append(products[i].getDataName());
+		}
+		return output.toString();
+	}
+	public final String getCheckOutPrices()
+	{
+		StringBuilder output = new StringBuilder();
+		for (int i = 0; i < logicalSize; i++) {
+			output.append(products[i].getDataPrice());
+		}
+		return output.toString();
 	}
 	public final long getPrice()
 	{

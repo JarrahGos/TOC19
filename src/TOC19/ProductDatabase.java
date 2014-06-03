@@ -121,7 +121,7 @@ public final class ProductDatabase
 			return allProducts[productNo].getData(); // now that we know that it does, send it to the interface
 		}
 		else {
-		    return "the product that you have identified does not exist"; // We cannot find the product that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
+		    return "error"; // We cannot find the product that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
 			//PEBKAC: It is possible to commit no errors and still lose. That is not a weakness. That is life. --CAPTAIN PICARD
 		}
 
