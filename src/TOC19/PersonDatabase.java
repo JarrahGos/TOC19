@@ -386,6 +386,7 @@ public final class PersonDatabase {
 			outfile.println(allPersons[b].getName());
 			outfile.println(allPersons[b].totalCostRunning());
 			outfile.println(allPersons[b].totalCostWeek());
+			outfile.println(allPersons[b].canBuy());
 
 		}
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
