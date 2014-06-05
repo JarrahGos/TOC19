@@ -185,7 +185,7 @@ public final class Interface
 					if(checkProduct != -1) {
 						checkOuts.addQuantity(checkProduct, 1);
 					}
-					else checkOuts.addProduct(checkOuts.emptyProduct(), productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
+					else checkOuts.addProduct(productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
 					//another = JOptionPane.showConfirmDialog(null, "Would you like to add another item?", "Continue", JOptionPane.YES_NO_OPTION);
 					another = JOptionPane.showConfirmDialog(null, "You are purchasing " + checkOuts.getCheckOut(1) + "\nWould you like to add more items?" + 
 															"\nHitting no will buy this cart", "Cart", JOptionPane.YES_NO_CANCEL_OPTION);
