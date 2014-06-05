@@ -30,7 +30,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -120,6 +119,7 @@ public final class Interface extends Application
 		DoubleProperty vPosition = new SimpleDoubleProperty();
 			vPosition.bind(priceDataOut.vvalueProperty());
 			vPosition.addListener(new ChangeListener() {
+				@Override
 				public void changed(ObservableValue arg0, Object arg1, Object arg2) {
 //					 nameDataOut.setVvalue((double) arg2);
 					nameDataOut.setVvalue(priceDataOut.getVvalue()); // this is going in the right direction, but does not work. 
