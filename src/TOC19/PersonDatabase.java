@@ -396,6 +396,7 @@ public final class PersonDatabase {
 	public final int adminWriteOutDatabase(String path) {
 		this.quickSortByName(0, logicalSize - 1); // ensure that the database is sorted.
 		PrintWriter outfile = null;
+		double total = 0;
 		try {
 			File file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
@@ -410,8 +411,11 @@ public final class PersonDatabase {
 			outfile.println("Name: " + allPersons[b].getName());
 			outfile.println("Total: $" + allPersons[b].totalCostRunning());
 			outfile.println("Bill: $" + allPersons[b].totalCostWeek());
+			total += allPersons[b].totalCostWeek();
 
 		}
+		outfile.println("------------------------------------------");
+		outfile.println("Total For this bill is: $" + total);
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
 		return 0; // let the program and thus the user know that everything is shiny. 
 	}
