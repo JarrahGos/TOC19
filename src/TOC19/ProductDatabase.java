@@ -113,7 +113,7 @@ public final class ProductDatabase
 	{
 		/**
 		Class ProductDatabase: Method getProduct
-		Preconditions: setDatabase has been run, parameter is an integer between from 1 to 4
+		Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4
 		Postconditions: the user will see the details of their chosen product output.
 		*/
 

@@ -31,21 +31,21 @@ public final class CheckOut
 	private Product[] products;
 	private Product[] resized; // used for creating larger databases. 
 	private int[] quantities;
-	private String output;
+//	private String output;
 	private int logicalSize;
 	private long totalPrice;
 
 	public CheckOut()
 	{
 		// Initalise the needed variables
-		output = "";
+//		output = "";
 	    products = new Product[4];
             quantities = new int[4];
 	    logicalSize = 0;
 	    totalPrice = 0;
 	}
 	    
-	public final int addProduct(int productNo, Product item, int quantity)
+	public final int addProduct(Product item, int quantity)
 	{
 		if(logicalSize == products.length) {
 			products = resizeCheckOut(true, products);
@@ -54,13 +54,13 @@ public final class CheckOut
         item.setName(item.getName());
         item.setPrice(item.productPrice());
 		item.setQuantity(quantity);
-		products[productNo] = item;
+		products[logicalSize] = item;
 		quantities[logicalSize] = quantity;
 		totalPrice += item.productPrice()*quantity;
 		++logicalSize;
 		return 0;
 	}
-	public final int addProduct(int productNo, String name, long price, int barCode)
+	public final int addProduct(String name, long price, int barCode)
 	{
 		/** 
 		Class CheckOut: Method addProduct
@@ -72,7 +72,7 @@ public final class CheckOut
 			products = resizeCheckOut(true, products);
 		} //max time times 60 due to the fact that it is stored in minutes while the product stores time in seconds. 
 		// pass the values which are given to the product object.
-		products[productNo] = new Product(name, price, barCode);
+		products[logicalSize] = new Product(name, price, barCode);
 		totalPrice += price;
 		++logicalSize; // incerment the logicalSize value to show the added product.
 		return 0;
@@ -85,14 +85,14 @@ public final class CheckOut
 		Postconditions: the metadata of the products in the invoking checkOut will be returned as a String. If the precondition has not been met nothing will be returned. 
 		*/
 		this.sortBy(sort); // sort the database before printing it in the order specified by the user.
-		output = ""; //clear the output incase it has values.
+		StringBuilder output = new StringBuilder(); //clear the output incase it has values.
 		for(int i = 0; i < logicalSize; i++) { // loop untill all products have been output.
-			output += products[i].getDataScreen();
+			output.append(products[i].getDataScreen());
 		}
 		// Output the summary data of the checkOut
-		output += "\nThe total price is: $";
-		output +=  (double)totalPrice/100; 
-		return output;
+		output.append("\nThe total price is: $");
+		output.append((double)totalPrice/100); 
+		return output.toString();
 	}
 	public final long getPrice()
 	{
