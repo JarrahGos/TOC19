@@ -120,7 +120,7 @@ public class WorkingUser {
 	{
 		TextArea textArea;
 		switch(type) {
-			case("Product"):textArea = new TextArea(productDatabase.getDatabase(1));
+			case("Product"):textArea = new TextArea(productDatabase.getDatabase(3));
 							break;
 			case("Person"):textArea = new TextArea(personDatabase.getDatabase(1));
 							break;
