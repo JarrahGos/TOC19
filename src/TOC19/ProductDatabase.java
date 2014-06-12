@@ -395,6 +395,7 @@ public final class ProductDatabase
 				
 			}
 			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
+			quickSortByBarCode(0, logicalSize-1);
 			return 0; // let the program and thus the user know that everything is shiny. 
 	}
 	public final int readDatabase(String path) 
@@ -432,6 +433,7 @@ public final class ProductDatabase
 				allProducts[z].setNumber(tempNumberOfProduct);
 			}
 			readOutFile.close(); // clean up by closing the file
+			quickSortByBarCode(0,logicalSize-1);
 			return z - count; // tell the program how many products we just got. If it's more than a thousand, I hope the sort doesn't take too long. 
 		}
 		catch(FileNotFoundException e) {
