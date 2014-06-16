@@ -170,7 +170,13 @@ public final class PersonDatabase {
 		}
 
 	}
-
+	public final String[] getUserNames() {
+		String[] output = new String[logicalSize];
+		for(int i = 0; i < logicalSize; i++) {
+			output[i] = allPersons[i].getName();
+		}
+		return output;
+	}
 	public final double getPersonPriceYear(int personNo) {
 		/**
 		 * Class PersonDatabase: Method getPersonSize Preconditions: setDatabase has been run for the invoking person Postconditions: the size of the invoking person will be returned as a double

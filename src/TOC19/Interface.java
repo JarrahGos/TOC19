@@ -29,11 +29,14 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
@@ -84,7 +87,7 @@ public final class Interface extends Application
 		TextField input = new TextField();
 		grid.add(input, 1,0); // place to the right of the input label
 		input.requestFocus(); // make this the focus for the keyboard when the program starts
-		Text userLabel = new Text("Error"); // this should never be shown. 
+		Text userLabel = new Text("Error"); 
 		
 		// create label and text field for totalOutput
 		Text totalLabel = new Text("				Total:");
@@ -113,7 +116,7 @@ public final class Interface extends Application
 		priceDataOut.setPrefViewportHeight(400); // was 400
 		priceDataOut.setPrefViewportWidth(100);
 		priceDataOut.setVbarPolicy(ScrollBarPolicy.ALWAYS); // ensure that there is a scroll bar.
-		grid.add(priceDataOut, 4,1,1,7); // place front and centre. 
+		grid.add(priceDataOut, 4,1,2,7); // place front and centre. 
 		
 		// listen for changes to the scroll bar value
 		DoubleProperty vPosition = new SimpleDoubleProperty();
@@ -208,7 +211,7 @@ public final class Interface extends Application
 		Button adminMode = new Button("Enter Admin Mode"); // button which will bring up the admin mode. 
 		adminMode.setOnAction((ActionEvent e) -> {
 			enterAdminMode(new Stage()); // method which will work the admin mode features. 
-			primaryStage.hide(); // hide the user side of things. 
+//			primaryStage.hide(); // hide the user side of things. 
 		});
 		grid.add(adminMode, 0,8); // add the button to the bottum left of the screen. 
                 
@@ -258,20 +261,71 @@ public final class Interface extends Application
 	}
 	private void enterAdminMode(Stage primaryStage)
 	{
-            primaryStage.hide();
-            Stage adminStage = new Stage();
-            adminStage.setTitle("TOC19");
-            GridPane grid = new GridPane();
-            grid.setGridLinesVisible(true);
-            grid.setAlignment(Pos.CENTER);
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(15, 15, 15, 15));
-            
-            // add working code in here
-            Scene adminScene = new Scene(grid, 800, 600);
-            adminStage.setScene(adminScene);
-            adminStage.show();
+		primaryStage.hide();
+		Stage adminStage = new Stage();
+		adminStage.setTitle("TOC19");
+		GridPane grid = new GridPane();
+		grid.setGridLinesVisible(true);
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(15, 15, 15, 15));
+		ListView<String> optionList = new ListView<>();
+		ObservableList<String> items = FXCollections.observableArrayList();
+		optionList.setItems(items);
+		grid.add(optionList, 0,1, 1, 7);
+		Button people = new Button("People");
+		people.setOnAction((ActionEvent e) -> {
+			items.setAll("Add Person", "Remove Person", "List People", "Save Person Database");
+			optionList.setItems(items);
+		});
+		grid.add(people, 2,0);
+		Button products = new Button("Products");
+		products.setOnAction((ActionEvent e) -> {
+			items.setAll("Add Products", "Remove Products", "Change a Product", "List Products", "Save Product Database");
+			optionList.setItems(items);
+		});
+		grid.add(products, 3,0);
+		Button admin = new Button("Admin");
+		admin.setOnAction((ActionEvent e) -> {
+			items.setAll("Reset Bills", "Enter Stock Counts", "Change Password", "Save Databases To USB", "Close The Program");
+			optionList.setItems(items);
+		});
+		grid.add(admin, 4,0);
+		Button logout = new Button("Logout");
+		logout.setOnAction((ActionEvent e) -> {
+			adminStage.close();
+		});
+		grid.add(logout, 5,0);
+		optionList.getSelectionModel().selectedItemProperty().addListener(
+            (ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
+				if( selectedOption.equals("Add Person")) {
+					Text nameLabel = new Text("Name:");
+					grid.add(nameLabel, 1,1);
+					TextField nameEntry = new TextField();
+					grid.add(nameEntry, 2, 1, 3,1);
+					Text PMKeySLabel = new Text("PMKeyS:");
+					grid.add(PMKeySLabel, 1,2);
+					TextField PMKeySEntry = new TextField();
+					grid.add(PMKeySEntry, 2,2,3,1);
+					
+				}
+				else if(selectedOption.equals("Remove Person")) {
+					Button remove = new Button("Remove");
+					remove.setOnAction((ActionEvent e) -> {
+						
+					});
+					grid.add(remove, 2,2);
+					items.setAll(workingUser.getUserNames());
+				}
+				else if(selectedOption.equals("List People")) {
+					ScrollPane users = workingUser.printDatabase("Person");
+					grid.add(users, 2,2,4,6);
+				}
+		});
+		Scene adminScene = new Scene(grid, 800, 600);
+		adminStage.setScene(adminScene);
+		adminStage.show();
                 
 	}
 	public static void main(String[] args)

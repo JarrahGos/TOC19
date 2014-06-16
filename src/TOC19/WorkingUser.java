@@ -61,6 +61,9 @@ public class WorkingUser {
 			userNumber =  personDatabase.findPerson(Long.parseLong(input));
 		}
     }
+	public final String[] getUserNames() {
+		return personDatabase.getUserNames()
+	}
 	public static String getSecurePassword(String passwordToHash)
     {
         String generatedPassword = null;
