@@ -475,5 +475,21 @@ public final class ProductDatabase
 	public final Product getProductRef(int productNo)
 	{
 		return allProducts[productNo];       
-        }
+    }
+	public final int binarySearch(long extBarCode)
+	{
+		int iMax = logicalSize-1;
+		int iMin = 0;
+		int mid;
+		while (iMax >= iMin) {
+			mid = (iMax-iMin)/2;
+			if(allProducts[mid].getBarCode() == extBarCode)
+				return mid;
+			else if (allProducts[mid].getBarCode() > extBarCode)
+				iMax = mid;
+			else if (allProducts[mid].getBarCode() < extBarCode)
+				iMin = mid;
+		}
+		return -1;
+	}
 }
