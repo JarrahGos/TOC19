@@ -62,7 +62,10 @@ public class WorkingUser {
 		}
     }
 	public final String[] getUserNames() {
-		return personDatabase.getUserNames()
+		return personDatabase.getUserNames();
+	}
+	public final String[] getProductNames() {
+		return productDatabase.getProductNames();
 	}
 	public static String getSecurePassword(String passwordToHash)
     {
@@ -201,4 +204,23 @@ public class WorkingUser {
 		long price = checkOuts.getPrice();
 		return ((double)price)/100;
 	}
+	public final void addPersonToDatabase(String name, long PMKeyS)
+	{
+		personDatabase.setDatabasePerson(personDatabase.emptyPerson(), name, 0,0, PMKeyS, true);
+	}
+	public final void addProductToDatabase(String name, long barCode, long price)
+	{
+		productDatabase.setDatabaseProduct(productDatabase.emptyProduct(), name, price, barCode);
+	}
+	public final void adminWriteOutDatabase(String type) {
+		switch(type) {
+			case("Person"):personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
+							break;
+			case("Product"):productDatabase.adminWriteOutDatabase("adminProductDatabase.txt");
+							break;
+			default:personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
+		}
+	}
+					
+				
 }

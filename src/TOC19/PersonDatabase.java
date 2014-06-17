@@ -56,6 +56,7 @@ public final class PersonDatabase {
 			allPersons[logicalSize] = new Person(name, barCode, running, week, canBuy); // pass off the work to the constructor: "make it so."
 			logicalSize++; // We have a new person, Now we have something to show for it.
 			test = 1;
+			writeOutDatabase("personDatabase.txt");
 		}
 		if (logicalSize >= allPersons.length) { // of the database is getting to big for it's array, something has to budge
 			allPersons = resizeDatabase(true, allPersons); // This will make the array budge, I can't leave that to the user, they never do.

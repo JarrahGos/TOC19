@@ -58,6 +58,7 @@ public final class ProductDatabase
 		    allProducts[logicalSize] = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
 		    logicalSize++; // We have a new product, Now we have something to show for it.
 			test = 1;
+			writeOutDatabase("productDatabase.txt");
 		}
 		if(logicalSize >= allProducts.length) { // of the database is getting to big for it's array, something has to budge
 			allProducts = resizeDatabase(true, allProducts); // This will make the array budge, I can't leave that to the user, they never do.
@@ -491,5 +492,12 @@ public final class ProductDatabase
 				iMin = mid;
 		}
 		return -1;
+	}
+	public final String[] getProductNames() {
+		String[] output = new String[logicalSize];
+		for(int i = 0; i < logicalSize; i++) {
+			output[i] = allProducts[i].getName();
+		}
+		return output;
 	}
 }

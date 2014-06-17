@@ -265,7 +265,7 @@ public final class Interface extends Application
 		Stage adminStage = new Stage();
 		adminStage.setTitle("TOC19");
 		GridPane grid = new GridPane();
-		grid.setGridLinesVisible(true);
+//		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -282,13 +282,13 @@ public final class Interface extends Application
 		grid.add(people, 2,0);
 		Button products = new Button("Products");
 		products.setOnAction((ActionEvent e) -> {
-			items.setAll("Add Products", "Remove Products", "Change a Product", "List Products", "Save Product Database");
+			items.setAll("Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database");
 			optionList.setItems(items);
 		});
 		grid.add(products, 3,0);
 		Button admin = new Button("Admin");
 		admin.setOnAction((ActionEvent e) -> {
-			items.setAll("Reset Bills", "Enter Stock Counts", "Change Password", "Save Databases To USB", "Close The Program");
+			items.setAll("Reset Bills", "Change Password", "Save Databases To USB", "Close The Program");
 			optionList.setItems(items);
 		});
 		grid.add(admin, 4,0);
@@ -303,11 +303,22 @@ public final class Interface extends Application
 					Text nameLabel = new Text("Name:");
 					grid.add(nameLabel, 1,1);
 					TextField nameEntry = new TextField();
+					nameEntry.requestFocus();
 					grid.add(nameEntry, 2, 1, 3,1);
 					Text PMKeySLabel = new Text("PMKeyS:");
 					grid.add(PMKeySLabel, 1,2);
 					TextField PMKeySEntry = new TextField();
 					grid.add(PMKeySEntry, 2,2,3,1);
+					nameEntry.setOnAction((ActionEvent e) -> {
+						PMKeySEntry.requestFocus();
+					});
+					PMKeySEntry.setOnAction((ActionEvent e) -> {
+						long PMKeyS = Long.parseLong(PMKeySEntry.getText());
+						workingUser.addPersonToDatabase(nameEntry.getText(), PMKeyS);
+						nameEntry.clear();
+						PMKeySEntry.clear();
+						nameEntry.requestFocus();
+					});
 					
 				}
 				else if(selectedOption.equals("Remove Person")) {
@@ -321,6 +332,69 @@ public final class Interface extends Application
 				else if(selectedOption.equals("List People")) {
 					ScrollPane users = workingUser.printDatabase("Person");
 					grid.add(users, 2,2,4,6);
+				}
+				else if(selectedOption.equals("Save Person Database")) {
+					Button save = new Button("Save Person Database");
+					Text saveLabel = new Text("Save database to adminPersonDatabase.txt?");
+					grid.add(saveLabel, 2,1,6,1);
+					grid.add(save, 2,2);
+					save.setOnAction((ActionEvent e) -> {
+						workingUser.adminWriteOutDatabase("Person");
+						saveLabel.setText("saved");
+					});
+				}
+				else if( selectedOption.equals("Add Products")) {
+					Text nameLabel = new Text("Name:");
+					grid.add(nameLabel, 1,1);
+					TextField nameEntry = new TextField();
+					nameEntry.requestFocus();
+					grid.add(nameEntry, 2, 1, 3,1);
+					Text BarCodeLabel = new Text("Barcode:");
+					grid.add(BarCodeLabel, 1,2);
+					TextField BarCodeEntry = new TextField();
+					grid.add(BarCodeEntry, 2,2,3,1);
+					Text priceLabel = new Text("Price: $");
+					grid.add(priceLabel, 1,3);
+					TextField priceEntry = new TextField();
+					grid.add(priceEntry, 2,3,3,1);
+					nameEntry.setOnAction((ActionEvent e) -> {
+						BarCodeEntry.requestFocus();
+					});
+					BarCodeEntry.setOnAction((ActionEvent e) -> {
+						priceEntry.requestFocus();
+					});
+					priceEntry.setOnAction((ActionEvent e) -> {
+						long barCode = Long.parseLong(BarCodeEntry.getText());
+						long price = (long)(Double.parseDouble(priceEntry.getText())*100);
+						workingUser.addProductToDatabase(nameEntry.getText(), barCode, price);
+						nameEntry.clear();
+						BarCodeEntry.clear();
+						priceEntry.clear();
+						nameEntry.requestFocus();
+					});
+					
+				}
+				else if(selectedOption.equals("Remove Products")) {
+					Button remove = new Button("Remove");
+					remove.setOnAction((ActionEvent e) -> {
+						
+					});
+					grid.add(remove, 2,2);
+					items.setAll(workingUser.getProductNames());
+				}
+				else if(selectedOption.equals("List Products")) {
+					ScrollPane productList = workingUser.printDatabase("Product");
+					grid.add(productList, 2,2,4,6);
+				}
+				else if(selectedOption.equals("Save Product Database")) {
+					Button save = new Button("Save Product Database");
+					Text saveLabel = new Text("Save database to adminProductDatabase.txt?");
+					grid.add(saveLabel, 2,1,6,1);
+					grid.add(save, 2,2);
+					save.setOnAction((ActionEvent e) -> {
+						workingUser.adminWriteOutDatabase("Product");
+						saveLabel.setText("saved");
+					});
 				}
 		});
 		Scene adminScene = new Scene(grid, 800, 600);
