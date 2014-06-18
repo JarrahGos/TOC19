@@ -40,10 +40,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -265,6 +268,9 @@ public final class Interface extends Application
 		primaryStage.hide();
 		Stage adminStage = new Stage();
 		adminStage.setTitle("TOC19");
+		SplitPane split = new SplitPane();
+		VBox rightPane = new VBox();
+		
 		GridPane grid = new GridPane();
 //		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
@@ -274,48 +280,48 @@ public final class Interface extends Application
 		ListView<String> optionList = new ListView<>();
 		ObservableList<String> items = FXCollections.observableArrayList();
 		optionList.setItems(items);
+		
 		grid.add(optionList, 0,0, 1, 7);
 		Button people = new Button("People");
 		people.setOnAction((ActionEvent e) -> {
 			items.setAll("Add Person", "Remove Person", "List People", "Save Person Database");
 			optionList.setItems(items);
 		});
-		grid.add(people, 2,0);
+//		grid.add(people, 2,0);
 		Button products = new Button("Products");
 		products.setOnAction((ActionEvent e) -> {
 			items.setAll("Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database");
 			optionList.setItems(items);
 		});
-		grid.add(products, 3,0);
+//		grid.add(products, 3,0);
 		Button admin = new Button("Admin");
 		admin.setOnAction((ActionEvent e) -> {
 			items.setAll("Reset Bills", "Change Password", "Save Databases To USB", "Close The Program");
 			optionList.setItems(items);
 		});
-		grid.add(admin, 4,0);
+//		grid.add(admin, 4,0);
 		Button logout = new Button("Logout");
 		logout.setOnAction((ActionEvent e) -> {
 			adminStage.close();
 		});
-		grid.add(logout, 5,0);
+//		grid.add(logout, 5,0);
+		ToolBar buttonBar = new ToolBar(people, products, admin, logout);
+		rightPane.getChildren().addAll(buttonBar, grid);
+		split.getItems().addAll(optionList, rightPane);
+		split.setDividerPositions(0.2f);
 		optionList.getSelectionModel().selectedItemProperty().addListener(
             (ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
 				if( selectedOption.equals("Add Person")) {
-					ObservableList<Node> childrens = grid.getChildren();
-					for(Node node : childrens) {
-						if(grid.getRowIndex(node) >= 1 && grid.getColumnIndex(node) >= 1) {
-							grid.getChildren().remove(node);
-						}
-					}
+					grid.getChildren().clear();
 					Text nameLabel = new Text("Name:");
-					grid.add(nameLabel, 1,1);
+					grid.add(nameLabel, 0,0);
 					TextField nameEntry = new TextField();
 					nameEntry.requestFocus();
-					grid.add(nameEntry, 2, 1, 3,1);
+					grid.add(nameEntry, 1, 0);
 					Text PMKeySLabel = new Text("PMKeyS:");
-					grid.add(PMKeySLabel, 1,2);
+					grid.add(PMKeySLabel, 0,1);
 					TextField PMKeySEntry = new TextField();
-					grid.add(PMKeySEntry, 2,2,3,1);
+					grid.add(PMKeySEntry, 1,1);
 					nameEntry.setOnAction((ActionEvent e) -> {
 						PMKeySEntry.requestFocus();
 					});
@@ -329,41 +335,52 @@ public final class Interface extends Application
 					
 				}
 				else if(selectedOption.equals("Remove Person")) {
+					grid.getChildren().clear();
 					Button remove = new Button("Remove");
+					grid.add(remove, 1,0);
+					ListView<String> personList = new ListView<>();
+					ObservableList<String> persons = FXCollections.observableArrayList();
+					persons.setAll(workingUser.getUserNames());
+					personList.setItems(persons);
+					grid.add(personList,0,0);
 					remove.setOnAction((ActionEvent e) -> {
-						
+						int index = personList.getSelectionModel().getSelectedIndex();
+						workingUser.removePerson(index);
+						persons.setAll(workingUser.getUserNames());
 					});
-					grid.add(remove, 2,2);
-					items.setAll(workingUser.getUserNames());
+					
 				}
 				else if(selectedOption.equals("List People")) {
+					grid.getChildren().clear();
 					ScrollPane users = workingUser.printDatabase("Person");
-					grid.add(users, 2,2,4,6);
+					grid.add(users, 0,0);
 				}
 				else if(selectedOption.equals("Save Person Database")) {
+					grid.getChildren().clear();
 					Button save = new Button("Save Person Database");
 					Text saveLabel = new Text("Save database to adminPersonDatabase.txt?");
-					grid.add(saveLabel, 2,1,6,1);
-					grid.add(save, 2,2);
+					grid.add(saveLabel, 0,0);
+					grid.add(save, 0,1);
 					save.setOnAction((ActionEvent e) -> {
 						workingUser.adminWriteOutDatabase("Person");
 						saveLabel.setText("saved");
 					});
 				}
 				else if( selectedOption.equals("Add Products")) {
+					grid.getChildren().clear();
 					Text nameLabel = new Text("Name:");
-					grid.add(nameLabel, 1,1);
+					grid.add(nameLabel, 0,0);
 					TextField nameEntry = new TextField();
 					nameEntry.requestFocus();
-					grid.add(nameEntry, 2, 1, 3,1);
+					grid.add(nameEntry, 1, 0);
 					Text BarCodeLabel = new Text("Barcode:");
-					grid.add(BarCodeLabel, 1,2);
+					grid.add(BarCodeLabel, 0,1);
 					TextField BarCodeEntry = new TextField();
-					grid.add(BarCodeEntry, 2,2,3,1);
+					grid.add(BarCodeEntry, 1,1);
 					Text priceLabel = new Text("Price: $");
-					grid.add(priceLabel, 1,3);
+					grid.add(priceLabel, 0,2);
 					TextField priceEntry = new TextField();
-					grid.add(priceEntry, 2,3,3,1);
+					grid.add(priceEntry, 1,2);
 					nameEntry.setOnAction((ActionEvent e) -> {
 						BarCodeEntry.requestFocus();
 					});
@@ -382,29 +399,109 @@ public final class Interface extends Application
 					
 				}
 				else if(selectedOption.equals("Remove Products")) {
+					grid.getChildren().clear();
 					Button remove = new Button("Remove");
+					grid.add(remove, 1,0);
+					ListView<String> productList = new ListView<>();
+					ObservableList<String> product = FXCollections.observableArrayList();
+					product.setAll(workingUser.getProductNames());
+					productList.setItems(product);
+					grid.add(productList,0,0);
 					remove.setOnAction((ActionEvent e) -> {
-						
+						int index = productList.getSelectionModel().getSelectedIndex();
+						workingUser.removeProduct(index);
+						product.setAll(workingUser.getUserNames());
 					});
 					grid.add(remove, 2,2);
 					items.setAll(workingUser.getProductNames());
 				}
+				else if( selectedOption.equals("Change a Product")) {
+					grid.getChildren().clear();
+					ListView<String> productList = new ListView<>();
+					ObservableList<String> product = FXCollections.observableArrayList();
+					product.setAll(workingUser.getProductNames());
+					productList.setItems(product);
+					grid.add(productList,0,0, 1, 4);
+					Text nameLabel = new Text("Name:");
+					grid.add(nameLabel, 1,0);
+					TextField nameEntry = new TextField();
+					nameEntry.requestFocus();
+					grid.add(nameEntry, 2, 0);
+					Text BarCodeLabel = new Text("Barcode:");
+					grid.add(BarCodeLabel, 1,1);
+					TextField barCodeEntry = new TextField();
+					grid.add(barCodeEntry, 2,1);
+					Text priceLabel = new Text("Price: $");
+					grid.add(priceLabel, 1,2);
+					TextField priceEntry = new TextField();
+					grid.add(priceEntry, 2,2);
+					productList.getSelectionModel().selectedItemProperty().addListener(
+					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
+						nameEntry.setText(selectedProduct);
+						String BC = Long.toString(workingUser.getProductBarCode(productList.getSelectionModel().getSelectedIndex()));
+						barCodeEntry.setText(BC);
+						String price = Double.toString(workingUser.getProductPrice(productList.getSelectionModel().getSelectedIndex()));
+						priceEntry.setText(price);
+					});
+					nameEntry.setOnAction((ActionEvent e) -> {
+						barCodeEntry.requestFocus();
+					});
+					barCodeEntry.setOnAction((ActionEvent e) -> {
+						priceEntry.requestFocus();
+					});
+					priceEntry.setOnAction((ActionEvent e) -> {
+						long barCode = Long.parseLong(barCodeEntry.getText());
+						long price = (long)(Double.parseDouble(priceEntry.getText())*100);
+						workingUser.addProductToDatabase(nameEntry.getText(), barCode, price);
+						nameEntry.clear();
+						barCodeEntry.clear();
+						priceEntry.clear();
+						nameEntry.requestFocus();
+					});
+					
+				}
+				else if( selectedOption.equals("Enter Stock Counts")) {
+					grid.getChildren().clear();
+					ListView<String> productList = new ListView<>();
+					ObservableList<String> product = FXCollections.observableArrayList();
+					product.setAll(workingUser.getProductNames());
+					productList.setItems(product);
+					grid.add(productList,0,0, 1, 4);
+					Text numberLabel = new Text("Number:");
+					grid.add(numberLabel, 1,0);
+					TextField numberEntry = new TextField();
+					
+					productList.getSelectionModel().selectedItemProperty().addListener(
+					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
+						String numberOfProduct = Integer.toString(workingUser.getProductNumber(productList.getSelectionModel().getSelectedIndex()));
+						numberEntry.setText(numberOfProduct);
+						
+					});
+					numberEntry.setOnAction((ActionEvent e) -> {
+						productList.getSelectionModel().select(productList.getSelectionModel().getSelectedIndex() + 1);
+						numberEntry.requestFocus();
+					});
+						
+					
+				}
 				else if(selectedOption.equals("List Products")) {
+					grid.getChildren().clear();
 					ScrollPane productList = workingUser.printDatabase("Product");
-					grid.add(productList, 2,2,4,6);
+					grid.add(productList, 0,0);
 				}
 				else if(selectedOption.equals("Save Product Database")) {
+					grid.getChildren().clear();
 					Button save = new Button("Save Product Database");
 					Text saveLabel = new Text("Save database to adminProductDatabase.txt?");
-					grid.add(saveLabel, 2,1,6,1);
-					grid.add(save, 2,2);
+					grid.add(saveLabel, 0,0);
+					grid.add(save, 0,1);
 					save.setOnAction((ActionEvent e) -> {
 						workingUser.adminWriteOutDatabase("Product");
 						saveLabel.setText("saved");
 					});
 				}
 		});
-		Scene adminScene = new Scene(grid, 800, 600);
+		Scene adminScene = new Scene(split, 800, 600);
 		adminStage.setScene(adminScene);
 		adminStage.show();
                 
