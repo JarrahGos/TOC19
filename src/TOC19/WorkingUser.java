@@ -86,6 +86,15 @@ public class WorkingUser {
         }
         return generatedPassword;
     }
+	public final boolean passwordsEqual(String PW) 
+	{
+		String testing = getSecurePassword(PW);
+		return (testing.equals(personDatabase.getPersonName(-2)));
+	}
+	public final void setAdminPassword(String PW)
+	{
+		personDatabase.setAdminPassword(PW);
+	}
 	public final boolean isInteger(String s) 
 	{
 		if(s == null) return false;
@@ -181,7 +190,7 @@ public class WorkingUser {
 		else if((input == null ) || ("".equals(input) )) {
 			return false; 
 		}
-		int productNumber = productDatabase.findProduct(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
+		int productNumber = productDatabase.binarySearch(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
 		int checkProduct; // create this for use below
 		if(productNumber != -1) {
 			tempInput = productDatabase.getProduct(productNumber);
@@ -221,6 +230,28 @@ public class WorkingUser {
 			default:personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
 		}
 	}
-					
-				
+	public final void removePerson(int index)
+	{
+		personDatabase.delPerson(index);
+	}
+	public final void removeProduct(int index)
+	{
+		productDatabase.delProduct(index);
+	}		
+	public final long getProductBarCode(int index)
+	{
+		return productDatabase.getBarCode(index);
+	}
+	public final double getProductPrice(int index)
+	{
+		return productDatabase.getProductPrice(index);
+	}
+	public final int getProductNumber(int index)
+	{
+		return productDatabase.getNumber(index);
+	}
+	public final void setNumberOfProducts(int index, int numberOfProducts)
+	{
+		productDatabase.setNumber(index, numberOfProducts);
+	}
 }

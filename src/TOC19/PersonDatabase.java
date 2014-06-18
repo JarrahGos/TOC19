@@ -81,6 +81,7 @@ public final class PersonDatabase {
 				output.append(allPersons[i].getData());
 			}
 		}
+		sortBy(3); // allows the binary search to continue to function
 		return output.toString(); // send the calling program one large string containing the ingredients of all the persons in the database
 	}
 
@@ -102,6 +103,7 @@ public final class PersonDatabase {
 		if (test == 1) {
 			output.append("No persons match your search"); // output on a search that gives no persons
 		}
+		sortBy(3); // allows binary search to continue to function
 		return output.toString(); // pass the results back to the interface
 	}
 
@@ -150,6 +152,7 @@ public final class PersonDatabase {
 			if (allPersons.length > 2 * logicalSize) { // if the array for the database is getting a little big, save some memory and shorten it. 
 				allPersons = resizeDatabase(false, allPersons);
 			}
+			writeOutDatabase("personDatabase.txt");
 			return 0; // everything went fine. We will have to tell someone about that. 
 		} else {
 			return 1; // Telling the user yet again that their person doesn't exist. At least thay don't need to delete it now.
@@ -396,6 +399,7 @@ public final class PersonDatabase {
 			outfile.println(allPersons[b].canBuy());
 
 		}
+		sortBy(3); // binary search
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
 		return 0; // let the program and thus the user know that everything is shiny. 
 	}
@@ -424,6 +428,7 @@ public final class PersonDatabase {
 		outfile.println("------------------------------------------");
 		outfile.println("Total For this bill is: $" + total);
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
+		sortBy(3); // binary search
 		return 0; // let the program and thus the user know that everything is shiny. 
 	}
 
@@ -458,6 +463,7 @@ public final class PersonDatabase {
 				count += this.setDatabasePerson(z, tempName, tempTotalCostRunning, tempTotalCostWeek, tempBarCode, tempCanBuy); // send the big pile of lines that we just read to the person constructor. 
 			}
 			readOutFile.close(); // clean up by closing the file
+			sortBy(3);
 			return z - count; // tell the program how many persons we just got. If it's more than a thousand, I hope the sort doesn't take too long. 
 		} catch (FileNotFoundException e) {
 			readOutFile.close(); // Well, if something goes wrong, someone should find out. 
@@ -486,12 +492,13 @@ public final class PersonDatabase {
 		if (7000000 == barCode) {
 			return -2;
 		}
-		for (int i = logicalSize -1; i > 0; i--) {
-			if (allPersons[i].getBarCode() == barCode) {
-				return i;
-			}
-		}
-		return -1;
+		else return binarySearch(barCode);
+//		for (int i = logicalSize -1; i > 0; i--) {
+//			if (allPersons[i].getBarCode() == barCode) {
+//				return i;
+//			}
+//		}
+//		return -1;
 	}
 
 	public final void addCost(int personNo, long cost) {
@@ -505,5 +512,21 @@ public final class PersonDatabase {
 	}
 	public final void setAdminPassword(String extPassword) {
 		admin.setName(extPassword);
+	}
+	public final int binarySearch(long extBarCode)
+	{
+		int iMax = logicalSize-1;
+		int iMin = 0;
+		int mid;
+		while (iMax >= iMin) {
+			mid = (iMax+iMin)/2;
+			if(allPersons[mid].getBarCode() == extBarCode)
+				return mid;
+			else if (allPersons[mid].getBarCode() > extBarCode)
+				iMax = mid-1;
+			else if (allPersons[mid].getBarCode() < extBarCode)
+				iMin = mid+1;
+		}
+		return -1;
 	}
 }

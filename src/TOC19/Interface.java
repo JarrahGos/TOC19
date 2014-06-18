@@ -38,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.SplitPane;
@@ -279,6 +280,7 @@ public final class Interface extends Application
 		grid.setPadding(new Insets(15, 15, 15, 15));
 		ListView<String> optionList = new ListView<>();
 		ObservableList<String> items = FXCollections.observableArrayList();
+		items.setAll("Add Person", "Remove Person", "List People", "Save Person Database");
 		optionList.setItems(items);
 		
 		grid.add(optionList, 0,0, 1, 7);
@@ -286,18 +288,21 @@ public final class Interface extends Application
 		people.setOnAction((ActionEvent e) -> {
 			items.setAll("Add Person", "Remove Person", "List People", "Save Person Database");
 			optionList.setItems(items);
+			optionList.getSelectionModel().select(0);
 		});
 //		grid.add(people, 2,0);
 		Button products = new Button("Products");
 		products.setOnAction((ActionEvent e) -> {
 			items.setAll("Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database");
 			optionList.setItems(items);
+			optionList.getSelectionModel().select(0);
 		});
 //		grid.add(products, 3,0);
 		Button admin = new Button("Admin");
 		admin.setOnAction((ActionEvent e) -> {
 			items.setAll("Reset Bills", "Change Password", "Save Databases To USB", "Close The Program");
 			optionList.setItems(items);
+			optionList.getSelectionModel().select(0);
 		});
 //		grid.add(admin, 4,0);
 		Button logout = new Button("Logout");
@@ -311,7 +316,9 @@ public final class Interface extends Application
 		split.setDividerPositions(0.2f);
 		optionList.getSelectionModel().selectedItemProperty().addListener(
             (ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
-				if( selectedOption.equals("Add Person")) {
+				if(selectedOption == null) {
+				}
+				else if( selectedOption.equals("Add Person")) {
 					grid.getChildren().clear();
 					Text nameLabel = new Text("Name:");
 					grid.add(nameLabel, 0,0);
@@ -401,7 +408,6 @@ public final class Interface extends Application
 				else if(selectedOption.equals("Remove Products")) {
 					grid.getChildren().clear();
 					Button remove = new Button("Remove");
-					grid.add(remove, 1,0);
 					ListView<String> productList = new ListView<>();
 					ObservableList<String> product = FXCollections.observableArrayList();
 					product.setAll(workingUser.getProductNames());
@@ -412,8 +418,8 @@ public final class Interface extends Application
 						workingUser.removeProduct(index);
 						product.setAll(workingUser.getUserNames());
 					});
-					grid.add(remove, 2,2);
-					items.setAll(workingUser.getProductNames());
+					grid.add(remove, 1,0);
+					product.setAll(workingUser.getProductNames());
 				}
 				else if( selectedOption.equals("Change a Product")) {
 					grid.getChildren().clear();
@@ -470,14 +476,17 @@ public final class Interface extends Application
 					Text numberLabel = new Text("Number:");
 					grid.add(numberLabel, 1,0);
 					TextField numberEntry = new TextField();
+					grid.add(numberEntry, 2,0);
 					
 					productList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
 						String numberOfProduct = Integer.toString(workingUser.getProductNumber(productList.getSelectionModel().getSelectedIndex()));
 						numberEntry.setText(numberOfProduct);
+						numberEntry.requestFocus();
 						
 					});
 					numberEntry.setOnAction((ActionEvent e) -> {
+						workingUser.setNumberOfProducts(productList.getSelectionModel().getSelectedIndex(), Integer.parseInt(numberEntry.getText()));
 						productList.getSelectionModel().select(productList.getSelectionModel().getSelectedIndex() + 1);
 						numberEntry.requestFocus();
 					});
@@ -499,6 +508,67 @@ public final class Interface extends Application
 						workingUser.adminWriteOutDatabase("Product");
 						saveLabel.setText("saved");
 					});
+				}
+				else if(selectedOption.equals("Reset Bills")) {
+					grid.getChildren().clear();
+					Button save = new Button("Reset Bills");
+					Text saveLabel = new Text("Are you sure you would like to reset the bills? \nThis cannot be undone.");
+					saveLabel.setTextAlignment(TextAlignment.CENTER);
+					grid.add(saveLabel, 0,0,2,1);
+					grid.add(save, 1,1);
+					save.setOnAction((ActionEvent e) -> {
+						workingUser.adminWriteOutDatabase("Person");
+						saveLabel.setText("saved");
+					});
+				}
+				else if(selectedOption.equals("Change Password")) {
+					grid.getChildren().clear();
+					Text oldLabel = new Text("Enter old password");
+					Text newLabel = new Text("Enter new password");
+					Text againLabel = new Text("Enter new password again");
+					PasswordField oldPW = new PasswordField();
+					PasswordField newPW = new PasswordField();
+					PasswordField newPW2 = new PasswordField();
+					grid.add(oldLabel, 0,0);
+					grid.add(oldPW, 1,0);
+					Text error = new Text();
+					oldPW.setOnAction((ActionEvent e) -> {
+						if(!workingUser.passwordsEqual(oldPW.getText())) {
+							error.setText("Password incorrect");
+							grid.add(error, 2,0);
+						}
+						else {
+							grid.add(newLabel, 0,1);
+							grid.add(newPW,1,1);
+							grid.add(againLabel, 0,2);
+							grid.add(newPW2, 1,2);
+							newPW.requestFocus();
+							grid.getChildren().remove(error);
+						}
+					});
+					newPW.setOnAction((ActionEvent e) -> {
+						newPW2.requestFocus();
+					});
+					newPW2.setOnAction((ActionEvent e) -> {
+						if(newPW.getText() != null && !newPW.getText().equals("") && newPW.getText().equals(newPW2.getText())) {
+							workingUser.setAdminPassword(workingUser.getSecurePassword(newPW.getText()));
+							Text changed = new Text("Success");
+							grid.add(changed, 1,3);
+						}
+						else {
+							error.setText("Passwords do not match");
+							grid.getChildren().remove(error);
+							grid.add(error, 1,3);
+						}
+					});
+				}
+				else if(selectedOption.equals("Save Databases To USB")) {
+					grid.getChildren().clear();
+					Text sorry = new Text("This feature is not yet functioning");
+					grid.add(sorry, 0,0);
+				}
+				else if(selectedOption.equals("Close The Program")) {
+					System.exit(0);
 				}
 		});
 		Scene adminScene = new Scene(split, 800, 600);

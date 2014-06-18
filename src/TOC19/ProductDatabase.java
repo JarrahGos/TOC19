@@ -84,6 +84,7 @@ public final class ProductDatabase
 				output.append(allProducts[i].getData());
 			}
 		}
+		sortBy(3); // binary search
 		return output.toString(); // send the calling program one large string containing the ingredients of all the products in the database
 	}
 	
@@ -107,6 +108,7 @@ public final class ProductDatabase
 		if(test == 1) {
 			output.append("No products match your search"); // output on a search that gives no products
 		}
+		sortBy(3); // binary search
 		return output.toString(); // pass the results back to the interface
 	}
 
@@ -372,6 +374,7 @@ public final class ProductDatabase
 				
 			}
 			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
+			sortBy(3); // binary search
 			return 0; // let the program and thus the user know that everything is shiny. 
 	}
 	public final int adminWriteOutDatabase(String path) 
@@ -483,13 +486,13 @@ public final class ProductDatabase
 		int iMin = 0;
 		int mid;
 		while (iMax >= iMin) {
-			mid = (iMax-iMin)/2;
+			mid = (iMax+iMin)/2;
 			if(allProducts[mid].getBarCode() == extBarCode)
 				return mid;
 			else if (allProducts[mid].getBarCode() > extBarCode)
-				iMax = mid;
+				iMax = mid-1;
 			else if (allProducts[mid].getBarCode() < extBarCode)
-				iMin = mid;
+				iMin = mid+1;
 		}
 		return -1;
 	}
