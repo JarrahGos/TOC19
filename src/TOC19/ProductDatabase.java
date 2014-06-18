@@ -411,7 +411,7 @@ public final class ProductDatabase
 		int tempNumberOfProduct;
 		boolean negative = false;
 		int count = 0;
-		int z = 0;
+		int z;
 		Scanner readOutFile = null; 
 		try {
 			File file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
@@ -460,8 +460,9 @@ public final class ProductDatabase
 	}
 	public final int findProduct(long barCode)
 	{
-		for(int i = logicalSize -1; i > 0; i--) 
+		for(int i = logicalSize -1; i > 0; i--) {
 			if(allProducts[i].getBarCode() == barCode) return i;
+		}
 		return -1;
 	}
 	public final boolean productExists(int number)

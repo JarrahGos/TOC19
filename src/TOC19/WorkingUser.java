@@ -67,7 +67,7 @@ public class WorkingUser {
 	public final String[] getProductNames() {
 		return productDatabase.getProductNames();
 	}
-	public static String getSecurePassword(String passwordToHash)
+	public final String getSecurePassword(String passwordToHash)
     {
         String generatedPassword = null;
         try {
