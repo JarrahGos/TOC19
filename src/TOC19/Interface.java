@@ -579,4 +579,9 @@ public final class Interface extends Application
 	{
 		Application.launch(args);
 	}
+	@Override
+	public void stop()
+	{
+		
+	}
 }
