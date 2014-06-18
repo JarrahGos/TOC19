@@ -34,6 +34,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -273,7 +274,7 @@ public final class Interface extends Application
 		ListView<String> optionList = new ListView<>();
 		ObservableList<String> items = FXCollections.observableArrayList();
 		optionList.setItems(items);
-		grid.add(optionList, 0,1, 1, 7);
+		grid.add(optionList, 0,0, 1, 7);
 		Button people = new Button("People");
 		people.setOnAction((ActionEvent e) -> {
 			items.setAll("Add Person", "Remove Person", "List People", "Save Person Database");
@@ -300,6 +301,12 @@ public final class Interface extends Application
 		optionList.getSelectionModel().selectedItemProperty().addListener(
             (ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
 				if( selectedOption.equals("Add Person")) {
+					ObservableList<Node> childrens = grid.getChildren();
+					for(Node node : childrens) {
+						if(grid.getRowIndex(node) >= 1 && grid.getColumnIndex(node) >= 1) {
+							grid.getChildren().remove(node);
+						}
+					}
 					Text nameLabel = new Text("Name:");
 					grid.add(nameLabel, 1,1);
 					TextField nameEntry = new TextField();
