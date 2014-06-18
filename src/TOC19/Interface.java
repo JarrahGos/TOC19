@@ -415,7 +415,7 @@ public final class Interface extends Application
 					remove.setOnAction((ActionEvent e) -> {
 						int index = productList.getSelectionModel().getSelectedIndex();
 						workingUser.removeProduct(index);
-						product.setAll(workingUser.getUserNames());
+						product.setAll(workingUser.getProductNames());
 					});
 					grid.add(remove, 1,0);
 					product.setAll(workingUser.getProductNames());

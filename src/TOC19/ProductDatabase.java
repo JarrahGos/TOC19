@@ -144,6 +144,7 @@ public final class ProductDatabase
 			if(allProducts.length > 2 * logicalSize) { // if the array for the database is getting a little big, save some memory and shorten it. 
 				allProducts = resizeDatabase(false, allProducts);
 			}
+			writeOutDatabase("productDatabase.txt");
 			return 0; // everything went fine. We will have to tell someone about that. 
 		}
 		else return 1; // Telling the user yet again that their product doesn't exist. At least thay don't need to delete it now.
