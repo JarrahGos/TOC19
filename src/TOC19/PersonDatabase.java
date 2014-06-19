@@ -529,4 +529,13 @@ public final class PersonDatabase {
 		}
 		return -1;
 	}
+	public final boolean personCanBuy(int personNumber)
+	{
+		return allPersons[personNumber].canBuy();
+	}
+	public final void setPersonCanBuy(int personNumber, boolean canBuy)
+	{
+		allPersons[personNumber].setCanBuy(canBuy);
+		writeOutDatabase("personDatabase.txt");
+	}
 }

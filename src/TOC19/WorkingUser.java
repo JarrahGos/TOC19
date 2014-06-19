@@ -254,4 +254,12 @@ public class WorkingUser {
 	{
 		productDatabase.setNumber(index, numberOfProducts);
 	}
+	public final boolean userCanBuy(int index)
+	{
+		return personDatabase.personCanBuy(index);
+	}
+	public final void setUserCanBuy(int index, boolean canBuy)
+	{
+		personDatabase.setPersonCanBuy(index, canBuy);
+	}
 }

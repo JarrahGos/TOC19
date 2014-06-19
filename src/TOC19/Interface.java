@@ -36,6 +36,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
@@ -279,13 +280,13 @@ public final class Interface extends Application
 		grid.setPadding(new Insets(15, 15, 15, 15));
 		ListView<String> optionList = new ListView<>();
 		ObservableList<String> items = FXCollections.observableArrayList();
-		items.setAll("Add Person", "Remove Person", "List People", "Save Person Database");
+		items.setAll("Add Person", "Remove Person", "List People", "Lock People Out", "Save Person Database");
 		optionList.setItems(items);
 		
 		grid.add(optionList, 0,0, 1, 7);
 		Button people = new Button("People");
 		people.setOnAction((ActionEvent e) -> {
-			items.setAll("Add Person", "Remove Person", "List People", "Save Person Database");
+			items.setAll("Add Person", "Remove Person", "List People", "Lock People Out", "Save Person Database");
 			optionList.setItems(items);
 			optionList.getSelectionModel().select(0);
 		});
@@ -370,6 +371,30 @@ public final class Interface extends Application
 					save.setOnAction((ActionEvent e) -> {
 						workingUser.adminWriteOutDatabase("Person");
 						saveLabel.setText("saved");
+					});
+				}
+				else if(selectedOption.equals("Lock People Out")) {
+					grid.getChildren().clear();
+					ListView<String> personList = new ListView<>();
+					ObservableList<String> persons = FXCollections.observableArrayList();
+					persons.setAll(workingUser.getUserNames());
+					personList.setItems(persons);
+					grid.add(personList,0,0);
+					ChoiceBox canBuy = new ChoiceBox();
+					canBuy.getItems().addAll("true", "false");
+					grid.add(canBuy, 1,0);
+					personList.getSelectionModel().selectedItemProperty().addListener(
+					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
+						if(workingUser.userCanBuy(personList.getSelectionModel().getSelectedIndex())) {
+							canBuy.getSelectionModel().select(0);
+						}
+						else canBuy.getSelectionModel().select(1);
+					});
+					canBuy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number> () {
+						@Override
+						public void changed(ObservableValue ov, Number value, Number newValue) {
+							workingUser.setUserCanBuy(personList.getSelectionModel().getSelectedIndex(), canBuy.getSelectionModel().getSelectedIndex() == 0);
+						}
 					});
 				}
 				else if( selectedOption.equals("Add Products")) {

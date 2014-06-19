@@ -153,4 +153,8 @@ public final class Person
 	{
 		return canBuy;
 	}
+	public final void setCanBuy(boolean extCanBuy)
+	{
+		canBuy = extCanBuy;
+	}
 }
