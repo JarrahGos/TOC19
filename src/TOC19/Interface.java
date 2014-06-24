@@ -215,7 +215,7 @@ public final class Interface extends Application
                 // create and listen on admin button
 		Button adminMode = new Button("Enter Admin Mode"); // button which will bring up the admin mode. 
 		adminMode.setOnAction((ActionEvent e) -> {
-			enterAdminMode(new Stage()); // method which will work the admin mode features. 
+			enterPassword(); // method which will work the admin mode features. 
 //			primaryStage.hide(); // hide the user side of things. 
 		});
 		grid.add(adminMode, 0,8); // add the button to the bottum left of the screen. 
@@ -264,9 +264,38 @@ public final class Interface extends Application
 	{
 		return workingUser.addToCart(input);
 	}
-	private void enterAdminMode(Stage primaryStage)
+	private void enterPassword()
 	{
-		primaryStage.hide();
+		Stage passwordStage = new Stage();
+		passwordStage.setTitle("Password");
+		GridPane grid = new GridPane();
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(15, 15, 15, 15));
+		Text PWLabel = new Text("Enter password");
+		PasswordField PW = new PasswordField();
+		grid.add(PWLabel, 0,0);
+		grid.add(PW, 1,0);
+		Text error = new Text();
+		PW.setOnAction((ActionEvent e) -> {
+			if(!workingUser.passwordsEqual(PW.getText())) {
+				error.setText("Password incorrect");
+				PW.setText("");
+				grid.getChildren().remove(error);
+				grid.add(error, 2,0);
+			}
+			else {
+				enterAdminMode(passwordStage);
+			}
+		});
+		Scene passwordScene = new Scene(grid, 400, 200);
+		passwordStage.setScene(passwordScene);
+		passwordStage.show();
+	}
+	private void enterAdminMode(Stage lastStage)
+	{
+		lastStage.hide();
 		Stage adminStage = new Stage();
 		adminStage.setTitle("TOC19");
 		SplitPane split = new SplitPane();
@@ -290,26 +319,22 @@ public final class Interface extends Application
 			optionList.setItems(items);
 			optionList.getSelectionModel().select(0);
 		});
-//		grid.add(people, 2,0);
 		Button products = new Button("Products");
 		products.setOnAction((ActionEvent e) -> {
 			items.setAll("Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database");
 			optionList.setItems(items);
 			optionList.getSelectionModel().select(0);
 		});
-//		grid.add(products, 3,0);
 		Button admin = new Button("Admin");
 		admin.setOnAction((ActionEvent e) -> {
 			items.setAll("Reset Bills", "Change Password", "Save Databases To USB", "Close The Program");
 			optionList.setItems(items);
 			optionList.getSelectionModel().select(0);
 		});
-//		grid.add(admin, 4,0);
 		Button logout = new Button("Logout");
 		logout.setOnAction((ActionEvent e) -> {
 			adminStage.close();
 		});
-//		grid.add(logout, 5,0);
 		ToolBar buttonBar = new ToolBar(people, products, admin, logout);
 		rightPane.getChildren().addAll(buttonBar, grid);
 		split.getItems().addAll(optionList, rightPane);
@@ -559,6 +584,8 @@ public final class Interface extends Application
 					oldPW.setOnAction((ActionEvent e) -> {
 						if(!workingUser.passwordsEqual(oldPW.getText())) {
 							error.setText("Password incorrect");
+							oldPW.setText("");
+							grid.getChildren().remove(error);
 							grid.add(error, 2,0);
 						}
 						else {
