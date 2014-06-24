@@ -86,6 +86,7 @@ public final class Interface extends Application
 		grid.setVgap(10);
 		grid.setPadding(new Insets(15, 15, 15, 15)); // window borders
 
+		// create the thread which will be used for logging the user out after a given time. 
 		// create label for input
 		Text inputLabel = new Text("Enter your PMKeyS");
 		inputLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -148,12 +149,40 @@ public final class Interface extends Application
 			
 			
 					if(workingUser.userNumber() != -1) {
+						Thread thread = new Thread(new Runnable()
+						{
+
+							@Override
+							public void run()
+							{
+								try {
+									Thread.sleep(90000); // after this time, log the user out. 
+									workingUser.logOut(); // set user number to -1 and delete any checkout made. 
+									System.out.println("logging Out");
+									grid.getChildren().remove(userLabel); // make it look like no user is logged in
+									inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate. 
+									nameData.setText(workingUser.getCheckOutNames()); // clear the data of the checkout. 
+									priceData.setText(workingUser.getCheckOutPrices());
+									nameDataOut = new ScrollPane(nameData); // clear the scroll pane output. 
+									priceDataOut = new ScrollPane(priceData);
+									total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00. 
+								}
+								catch (InterruptedException e) {
+									// do nothing here. 
+								}
+							}
+						});
+						thread.setDaemon(true);
+						thread.setPriority(Thread.MIN_PRIORITY);
+						thread.start();
+						thread.interrupt();
 						userLabel.setText(workingUser.userName()); // find out the name of those who dare log on. 
 						inputLabel.setText("Enter Barcode"); // change the label to suit the next action. 
 						grid.getChildren().remove(userLabel); // remove any error labels which may have appeared. 
 						grid.add(userLabel, 4,0); // add the new user label
 						// the above two are done as we do not know whether a user label exists there. Adding two things to the same place causes an exception. 
 						input.clear(); // clear the PMKeyS from the input ready for product bar codes. 
+						
 					}
 					else {
 						input.clear(); // there was an error with the PMKeyS, get ready for another. 
