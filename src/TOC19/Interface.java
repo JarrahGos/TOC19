@@ -25,6 +25,7 @@
 */
 // GUI Inports
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -32,6 +33,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -53,6 +55,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public final class Interface extends Application
 {
@@ -247,10 +250,10 @@ public final class Interface extends Application
 			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00. 
 		});
 		grid.add(cancel, 5,0); // add the button to the right of the user name. 
-                
-                
-                
-		
+		Platform.setImplicitExit(false);
+		primaryStage.setOnCloseRequest((WindowEvent event) -> {
+			event.consume();
+		});
 		Scene primaryScene = new Scene(grid, 800, 600); // create the scene at 800x600
 		primaryStage.setScene(primaryScene);
 		
@@ -630,10 +633,5 @@ public final class Interface extends Application
 	public static void main(String[] args)
 	{
 		Application.launch(args);
-	}
-	@Override
-	public void stop()
-	{
-		
 	}
 }
