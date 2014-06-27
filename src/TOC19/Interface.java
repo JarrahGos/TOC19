@@ -36,11 +36,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.SplitPane;
@@ -110,36 +112,60 @@ public final class Interface extends Application
 		Button enterBarCode = new Button("OK"); // button linked to action on input text field.
     	grid.add(enterBarCode, 2,0); // add to the direct right of the input text field
 		
+		
+		// create the lists for the checkout. 
+		
+		SplitPane checkoutOut = new SplitPane();
+		checkoutOut.setPrefHeight(100);
+		ListView<String> itemList = new ListView<>();
+		ObservableList<String> items = FXCollections.observableArrayList();
+		items.setAll(workingUser.getCheckOutNames());
+		itemList.setItems(items);
+		ListView<String> priceList = new ListView<>();
+		ObservableList<String> prices = FXCollections.observableArrayList();
+		prices.setAll("Add Person", "Remove Person", "List People", "Lock People Out", "Save Person Database");
+		priceList.setItems(prices);
+		checkoutOut.getItems().addAll(itemList, priceList);
+		checkoutOut.setDividerPositions(0.8f);
+		for(Node node: priceList.lookupAll(".scroll-bar")) {
+			if (node instanceof ScrollBar) {
+				ScrollBar bar = (ScrollBar) node;
+				bar.valueProperty().addListener((ObservableValue<? extends Number> value, Number oldValue, Number newValue) -> {
+					System.out.println(bar.getOrientation() + " " + newValue);	
+				});
+			}
+		}
+		grid.add(checkoutOut, 0,1,6,7);
                // work checkout output
-		Text nameData = new Text(workingUser.getCheckOutNames()); // the data which will be output by the checkout
-		nameData.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-		nameDataOut = new ScrollPane(nameData); // create a scroll pane to handle the data. 
-		nameDataOut.setPrefViewportHeight(400);
-		nameDataOut.setPrefViewportWidth(550);
-		nameDataOut.setVbarPolicy(ScrollBarPolicy.NEVER); // ensure that there is a scroll bar.
-		grid.add(nameDataOut, 0,1,4,7); // place front and centre. 
-		// Do the same with the price
-		Text priceData = new Text(workingUser.getCheckOutPrices());
-		priceData.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-		priceDataOut = new ScrollPane(priceData); // create a scroll pane to handle the data. 
-		priceDataOut.setPrefViewportHeight(400); // was 400
-		priceDataOut.setPrefViewportWidth(100);
-		priceDataOut.setVbarPolicy(ScrollBarPolicy.ALWAYS); // ensure that there is a scroll bar.
-		grid.add(priceDataOut, 4,1,2,7); // place front and centre. 
+//		Text nameData = new Text(workingUser.getCheckOutNames()); // the data which will be output by the checkout
+//		nameData.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//		nameDataOut = new ScrollPane(nameData); // create a scroll pane to handle the data. 
+//		nameDataOut.setPrefViewportHeight(400);
+//		nameDataOut.setPrefViewportWidth(550);
+//		nameDataOut.setVbarPolicy(ScrollBarPolicy.NEVER); // ensure that there is a scroll bar.
+//		grid.add(nameDataOut, 0,1,4,7); // place front and centre. 
+//		// Do the same with the price
+//		Text priceData = new Text(workingUser.getCheckOutPrices());
+//		priceData.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//		priceDataOut = new ScrollPane(priceData); // create a scroll pane to handle the data. 
+//		priceDataOut.setPrefViewportHeight(400); // was 400
+//		priceDataOut.setPrefViewportWidth(100);
+//		priceDataOut.setVbarPolicy(ScrollBarPolicy.ALWAYS); // ensure that there is a scroll bar.
+//		grid.add(priceDataOut, 4,1,2,7); // place front and centre. 
 		
 		// listen for changes to the scroll bar value
-		DoubleProperty vPosition = new SimpleDoubleProperty();
-			vPosition.bind(priceDataOut.vvalueProperty());
-			vPosition.addListener(new ChangeListener() {
-				@Override
-				public void changed(ObservableValue arg0, Object arg1, Object arg2) {
-//					 nameDataOut.setVvalue((double) arg2);
-					nameDataOut.setVvalue(priceDataOut.getVvalue()); // this is going in the right direction, but does not work. 
+//		DoubleProperty vPosition = new SimpleDoubleProperty();
+//			vPosition.bind(priceDataOut.vvalueProperty());
+//			vPosition.addListener(new ChangeListener() {
+//				@Override
+//				public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+////					 nameDataOut.setVvalue((double) arg2);
+//					nameDataOut.setVvalue(priceDataOut.getVvalue()); // this is going in the right direction, but does not work. 
+//			
+//				}
+//			});
+			
 
-				}
-			});
-			
-			
 
         //listen on enter product barcode button
 		enterBarCode.setOnAction((ActionEvent e) -> {
@@ -161,10 +187,10 @@ public final class Interface extends Application
 									System.out.println("logging Out");
 									grid.getChildren().remove(userLabel); // make it look like no user is logged in
 									inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate. 
-									nameData.setText(workingUser.getCheckOutNames()); // clear the data of the checkout. 
-									priceData.setText(workingUser.getCheckOutPrices());
-									nameDataOut = new ScrollPane(nameData); // clear the scroll pane output. 
-									priceDataOut = new ScrollPane(priceData);
+//									nameData.setText(workingUser.getCheckOutNames()); // clear the data of the checkout. 
+//									priceData.setText(workingUser.getCheckOutPrices());
+//									nameDataOut = new ScrollPane(nameData); // clear the scroll pane output. 
+//									priceDataOut = new ScrollPane(priceData);
 									total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00. 
 								}
 								catch (InterruptedException e) {
@@ -194,10 +220,14 @@ public final class Interface extends Application
 				else {
 					boolean correct = productEntered(input.getText());
 					if (correct) {
-						nameData.setText(workingUser.getCheckOutNames());
-						nameDataOut = new ScrollPane(nameData);
-						priceData.setText(workingUser.getCheckOutPrices());
-						priceDataOut = new ScrollPane(priceData);
+//						nameData.setText(workingUser.getCheckOutNames());
+//						nameDataOut = new ScrollPane(nameData);
+//						priceData.setText(workingUser.getCheckOutPrices());
+//						priceDataOut = new ScrollPane(priceData);
+						items.setAll(workingUser.getCheckOutNames());
+						itemList.setItems(items);
+						prices.setAll(workingUser.getCheckOutPrices());
+						priceList.setItems(prices);
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
 					}
@@ -230,10 +260,14 @@ public final class Interface extends Application
 				else {
 					boolean correct = productEntered(input.getText());
 					if (correct) {
-						nameData.setText(workingUser.getCheckOutNames());
-						nameDataOut = new ScrollPane(nameData);
-						priceData.setText(workingUser.getCheckOutPrices());
-						priceDataOut = new ScrollPane(priceData);
+//						nameData.setText(workingUser.getCheckOutNames());
+//						nameDataOut = new ScrollPane(nameData);
+//						priceData.setText(workingUser.getCheckOutPrices());
+//						priceDataOut = new ScrollPane(priceData);
+						items.setAll(workingUser.getCheckOutNames());
+						itemList.setItems(items);
+						prices.setAll(workingUser.getCheckOutPrices());
+						priceList.setItems(prices);
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
 					}
@@ -260,10 +294,14 @@ public final class Interface extends Application
 			inputLabel.setText("Enter your PMKeyS"); // Set the input label to something better for user login. 
 			total.setText(String.valueOf(workingUser.getPrice())); //set total to the working users price, which after logout is 0.00
 			input.clear(); // clear the input ready for a PMKeyS
-			nameData.setText(workingUser.getCheckOutNames()); // clear the data of the scroll pane, as the checkout will be clear. 
-			priceData.setText(workingUser.getCheckOutPrices());
-			nameDataOut = new ScrollPane(nameData); // replace the now clear scroll pane. 
-			priceDataOut = new ScrollPane(nameData);
+//			nameData.setText(workingUser.getCheckOutNames()); // clear the data of the scroll pane, as the checkout will be clear. 
+//			priceData.setText(workingUser.getCheckOutPrices());
+//			nameDataOut = new ScrollPane(nameData); // replace the now clear scroll pane. 
+//			priceDataOut = new ScrollPane(nameData);
+			items.setAll(workingUser.getCheckOutNames());
+			itemList.setItems(items);
+			prices.setAll(workingUser.getCheckOutPrices());
+			priceList.setItems(prices);
 		});
         grid.add(purchase, 5,8); // add the button to the bottum right corner, next to the total price. 
                 
@@ -272,10 +310,14 @@ public final class Interface extends Application
 			workingUser.logOut(); // set user number to -1 and delete any checkout made. 
 			grid.getChildren().remove(userLabel); // make it look like no user is logged in
 			inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate. 
-			nameData.setText(workingUser.getCheckOutNames()); // clear the data of the checkout. 
-			priceData.setText(workingUser.getCheckOutPrices());
-			nameDataOut = new ScrollPane(nameData); // clear the scroll pane output. 
-			priceDataOut = new ScrollPane(priceData);
+//			nameData.setText(workingUser.getCheckOutNames()); // clear the data of the checkout. 
+//			priceData.setText(workingUser.getCheckOutPrices());
+//			nameDataOut = new ScrollPane(nameData); // clear the scroll pane output. 
+//			priceDataOut = new ScrollPane(priceData);
+			items.setAll(workingUser.getCheckOutNames());
+			itemList.setItems(items);
+			prices.setAll(workingUser.getCheckOutPrices());
+			priceList.setItems(prices);
 			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00. 
 		});
 		grid.add(cancel, 5,0); // add the button to the right of the user name. 
