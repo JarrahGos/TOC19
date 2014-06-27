@@ -127,14 +127,24 @@ public final class Interface extends Application
 		priceList.setItems(prices);
 		checkoutOut.getItems().addAll(itemList, priceList);
 		checkoutOut.setDividerPositions(0.8f);
-		for(Node node: priceList.lookupAll(".scroll-bar")) {
-			if (node instanceof ScrollBar) {
-				ScrollBar bar = (ScrollBar) node;
-				bar.valueProperty().addListener((ObservableValue<? extends Number> value, Number oldValue, Number newValue) -> {
-					System.out.println(bar.getOrientation() + " " + newValue);	
-				});
-			}
-		}
+		itemList.setSelectionModel(priceList.getSelectionModel());
+		itemList.getSelectionModel().selectedItemProperty().addListener(
+            (ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
+				priceList.scrollTo(itemList.getSelectionModel().getSelectedIndex());
+		});
+		priceList.getSelectionModel().selectedItemProperty().addListener(
+            (ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
+				itemList.scrollTo(priceList.getSelectionModel().getSelectedIndex());
+		});
+				
+//		for(Node node: priceList.lookupAll(".scroll-bar")) {
+//			if (node instanceof ScrollBar) {
+//				ScrollBar bar = (ScrollBar) node;
+//				bar.valueProperty().addListener((ObservableValue<? extends Number> value, Number oldValue, Number newValue) -> {
+//					System.out.println(bar.getOrientation() + " " + newValue);	
+//				});
+//			}
+//		}
 		grid.add(checkoutOut, 0,1,6,7);
                // work checkout output
 //		Text nameData = new Text(workingUser.getCheckOutNames()); // the data which will be output by the checkout
