@@ -168,11 +168,11 @@ public class WorkingUser {
 	{
 		return checkOuts.getCheckOut(1);
 	}
-	public final String getCheckOutNames()
+	public final String[] getCheckOutNames()
 	{
 		return checkOuts.getCheckOutNames();
 	}
-	public final String getCheckOutPrices()
+	public final String[] getCheckOutPrices()
 	{
 		return checkOuts.getCheckOutPrices();
 	}

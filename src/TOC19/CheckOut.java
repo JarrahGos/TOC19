@@ -96,21 +96,21 @@ public final class CheckOut
 //		}
 		return output.toString();
 	}
-	public final String getCheckOutNames()
+	public final String[] getCheckOutNames()
 	{
-		StringBuilder output = new StringBuilder();
+		String[] output = new String[logicalSize];
 		for (int i = 0; i < logicalSize; i++) {
-			output.append(products[i].getDataName());
+			output[i] = (products[i].getDataName());
 		}
-		return output.toString();
+		return output;
 	}
-	public final String getCheckOutPrices()
+	public final String[] getCheckOutPrices()
 	{
-		StringBuilder output = new StringBuilder();
+		String[] output = new String[logicalSize];
 		for (int i = 0; i < logicalSize; i++) {
-			output.append(products[i].getDataPrice());
+			output[i] = (products[i].getDataPrice());
 		}
-		return output.toString();
+		return output;
 	}
 	public final long getPrice()
 	{
