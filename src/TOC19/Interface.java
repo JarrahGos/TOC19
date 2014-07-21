@@ -65,8 +65,8 @@ public final class Interface extends Application
 	private final WorkingUser workingUser; // Place for all data to go through
 	private ScrollPane nameDataOut; // output of product data in the interface. 
 	private ScrollPane priceDataOut; // output the price of the product.
-	private static int horizontalSize = 800;
-	private static int verticalSize = 600;
+	private static int horizontalSize = 1024;
+	private static int verticalSize = 576;
 
 	private int logicalSize;
 //	Timer timeOut = new Timer(60000000, new actionListener());
@@ -105,14 +105,14 @@ public final class Interface extends Application
 		// create label and text field for totalOutput
 		Text totalLabel = new Text("				Total:");
 		totalLabel.setTextAlignment(TextAlignment.RIGHT);
-		grid.add(totalLabel, 3,8); // place at the bottum right, before total and purchase. 
+		grid.add(totalLabel, 2,8); // place at the bottum right, before total and purchase. 
 		TextField total = new TextField(String.valueOf("$" + workingUser.getPrice())); // create a textfield with the price of the currant checkout. 
 		total.setEditable(false); // stop the user thinking they can change the total price. 
-		grid.add(total, 4,8); // add to the right of total label. 
+		grid.add(total, 3,8); // add to the right of total label. 
 				
 		// create button to enter data from input
 		Button enterBarCode = new Button("OK"); // button linked to action on input text field.
-    	grid.add(enterBarCode, 2,0); // add to the direct right of the input text field
+    	grid.add(enterBarCode, 2,0, 2,1); // add to the direct right of the input text field
 		
 		
 		// create the lists for the checkout. 
@@ -147,7 +147,7 @@ public final class Interface extends Application
 //				});
 //			}
 //		}
-		grid.add(checkoutOut, 0,1,6,7);
+		grid.add(checkoutOut, 0,1,7,7);
                // work checkout output
 //		Text nameData = new Text(workingUser.getCheckOutNames()); // the data which will be output by the checkout
 //		nameData.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -217,7 +217,7 @@ public final class Interface extends Application
 						userLabel.setText(workingUser.userName()); // find out the name of those who dare log on. 
 						inputLabel.setText("Enter Barcode"); // change the label to suit the next action. 
 						grid.getChildren().remove(userLabel); // remove any error labels which may have appeared. 
-						grid.add(userLabel, 4,0); // add the new user label
+						grid.add(userLabel, 3,0); // add the new user label
 						// the above two are done as we do not know whether a user label exists there. Adding two things to the same place causes an exception. 
 						input.clear(); // clear the PMKeyS from the input ready for product bar codes. 
 						
@@ -226,7 +226,7 @@ public final class Interface extends Application
 						input.clear(); // there was an error with the PMKeyS, get ready for another. 
 						userLabel.setText("Error"); // tell the user there was a problem. Maybe this could be done better. 
 						grid.getChildren().remove(userLabel); // Remove a userlabel, as above. 
-						grid.add(userLabel, 4,0); // add it again, as above. 
+						grid.add(userLabel, 3,0); // add it again, as above. 
 					}
 				}
 				else {
@@ -258,14 +258,14 @@ public final class Interface extends Application
 						userLabel.setText(workingUser.userName());
 						inputLabel.setText("Enter Barcode");
 						grid.getChildren().remove(userLabel);
-						grid.add(userLabel, 4,0);
+						grid.add(userLabel, 3,0);
 						input.clear();
 					}
 					else {
 						input.clear();
 						userLabel.setText("error");
 						grid.getChildren().remove(userLabel);
-						grid.add(userLabel, 4,0);
+						grid.add(userLabel, 3,0);
 						input.clear();
 					}
 				}
@@ -315,7 +315,7 @@ public final class Interface extends Application
 			prices.setAll(workingUser.getCheckOutPrices());
 			priceList.setItems(prices);
 		});
-        grid.add(purchase, 5,8); // add the button to the bottum right corner, next to the total price. 
+        grid.add(purchase, 4,8, 2,1); // add the button to the bottum right corner, next to the total price. 
                 
 		Button cancel = new Button("Cancel");
 		cancel.setOnAction((ActionEvent e) -> {
@@ -332,7 +332,7 @@ public final class Interface extends Application
 			priceList.setItems(prices);
 			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00. 
 		});
-		grid.add(cancel, 5,0); // add the button to the right of the user name. 
+		grid.add(cancel, 4,0, 2,1); // add the button to the right of the user name. 
 		Platform.setImplicitExit(false);
 		primaryStage.setOnCloseRequest((WindowEvent event) -> {
 			event.consume();
@@ -715,11 +715,11 @@ public final class Interface extends Application
 	}
 	public static void main(String[] args)
 	{
-		for(int i = args.length; i > 0; i--) {
-			if(args[i].equals("-w") && i!= args.length) {
+		for(int i = args.length-1; i > 0; i--) {
+			if(args[i].equals("-w") && i!= args.length-1) {
 				horizontalSize = Integer.parseInt(args[i+1]);
 			}
-			else if(args[i].equals("-h") && i != args.length) {
+			else if(args[i].equals("-h") && i != args.length-1) {
 				verticalSize = Integer.parseInt(args[i+1]);
 			}
 		}
