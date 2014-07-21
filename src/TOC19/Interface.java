@@ -65,6 +65,8 @@ public final class Interface extends Application
 	private final WorkingUser workingUser; // Place for all data to go through
 	private ScrollPane nameDataOut; // output of product data in the interface. 
 	private ScrollPane priceDataOut; // output the price of the product.
+	private static int horizontalSize = 800;
+	private static int verticalSize = 600;
 
 	private int logicalSize;
 //	Timer timeOut = new Timer(60000000, new actionListener());
@@ -116,14 +118,14 @@ public final class Interface extends Application
 		// create the lists for the checkout. 
 		
 		SplitPane checkoutOut = new SplitPane();
-		checkoutOut.setPrefHeight(100);
+		checkoutOut.setPrefHeight(500);
 		ListView<String> itemList = new ListView<>();
 		ObservableList<String> items = FXCollections.observableArrayList();
 		items.setAll(workingUser.getCheckOutNames());
 		itemList.setItems(items);
 		ListView<String> priceList = new ListView<>();
 		ObservableList<String> prices = FXCollections.observableArrayList();
-		prices.setAll("Add Person", "Remove Person", "List People", "Lock People Out", "Save Person Database");
+		prices.setAll(workingUser.getCheckOutPrices());
 		priceList.setItems(prices);
 		checkoutOut.getItems().addAll(itemList, priceList);
 		checkoutOut.setDividerPositions(0.8f);
@@ -335,7 +337,7 @@ public final class Interface extends Application
 		primaryStage.setOnCloseRequest((WindowEvent event) -> {
 			event.consume();
 		});
-		Scene primaryScene = new Scene(grid, 800, 600); // create the scene at 800x600
+		Scene primaryScene = new Scene(grid, horizontalSize, verticalSize); // create the scene at 800x600
 		primaryStage.setScene(primaryScene);
 		
 		primaryStage.show();
@@ -367,7 +369,7 @@ public final class Interface extends Application
 				error.setText("Password incorrect");
 				PW.setText("");
 				grid.getChildren().remove(error);
-				grid.add(error, 2,0);
+				grid.add(error, 1,2);
 			}
 			else {
 				enterAdminMode(passwordStage);
@@ -706,13 +708,21 @@ public final class Interface extends Application
 					System.exit(0);
 				}
 		});
-		Scene adminScene = new Scene(split, 800, 600);
+		Scene adminScene = new Scene(split, horizontalSize, verticalSize);
 		adminStage.setScene(adminScene);
 		adminStage.show();
                 
 	}
 	public static void main(String[] args)
 	{
+		for(int i = args.length; i > 0; i--) {
+			if(args[i].equals("-w") && i!= args.length) {
+				horizontalSize = Integer.parseInt(args[i+1]);
+			}
+			else if(args[i].equals("-h") && i != args.length) {
+				verticalSize = Integer.parseInt(args[i+1]);
+			}
+		}
 		Application.launch(args);
 	}
 }
