@@ -45,7 +45,7 @@ public final class Person
 	public final void setData(String name, int barCode, boolean extCanBuy) // redundant method which has been left in case persons are edited in some way which would require this to be used.
 	{
 		/**
-		Class Song: Method setData
+		Class Person: Method setData
 		Precondition: Augments String name, String artist, double totalCostRunning, double time are input
 		Postcondition: the person that this method was invoked with now has been stored.
 		*/
@@ -57,7 +57,7 @@ public final class Person
 	public final String getData() // output the person data as a string
 	{
 		/**
-		Class Song: Method getData
+		Class Person: Method getData
 		Procondition: setData has been run for invoking person or the person constructor outlined above has been run
 		Postcondition: The data that has been entered for the invoking person will be returned. 
 		*/
@@ -75,7 +75,7 @@ public final class Person
 		public final String getDataUser(Boolean html) // output the person data as a string
 	{
 		/**
-		Class Song: Method getData
+		Class Person: Method getData
 		Procondition: setData has been run for invoking person or the person constructor outlined above has been run
 		Postcondition: The data that has been entered for the invoking person will be returned. 
 		*/
@@ -100,7 +100,7 @@ public final class Person
 	public final String getName() // return the name of the person
 	{
 		/**
-		Class Song: Method getData
+		Class Person: Method getData
 		Precondition: setData has been run for invoking person
 		Post condition: the method will return a string contianing the name.
 		*/
@@ -110,7 +110,7 @@ public final class Person
 	public final long getBarCode() // return the barcode assoiated with the person
 	{
 		 /**
-		 Class Song: Method getBarCode
+		 Class Person: Method getBarCode
 		 Precondition: SetData has been run for the invoking person
 		 Psotcondition: The method will return an int containing the barcode of the item. 
 		 */
@@ -119,7 +119,7 @@ public final class Person
 	public final double totalCostRunning() // retung the size of the person. 
 	{
 		/**
-		Class Song: Method totalCostRunning
+		Class Person: Method totalCostRunning
 		Precondition: setData has been run for the invoking person
 		Postcondition: this method will return the price of the invoking person.
 		*/
@@ -129,7 +129,7 @@ public final class Person
 	public final double totalCostWeek() // retung the size of the person. 
 	{
 		/**
-		Class Song: Method totalCostRunning
+		Class Person: Method totalCostRunning
 		Precondition: setData has been run for the invoking person
 		Postcondition: this method will return the price of the invoking person.
 		*/
