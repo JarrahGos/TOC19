@@ -51,21 +51,17 @@ public final class PersonDatabase {
 		 * Class PersonDatabase: Method setDatabase Precondition: augments int personNo, String name, String artist, double size, double duration are input Postcondition: Data for the currant working
 		 * person in this database will be set.
 		 */
-		int test = 0; // using test because something keeps changing my i...
+		int test = 1; // using test because something keeps changing my i...
 		if (!personExists(name, barCode)) { // check whether the person already exists
 			allPersons[logicalSize] = new Person(name, barCode, running, week, canBuy); // pass off the work to the constructor: "make it so."
 			logicalSize++; // We have a new person, Now we have something to show for it.
-			test = 1;
+			test = 0;
 			writeOutDatabase("personDatabase.txt");
 		}
 		if (logicalSize >= allPersons.length) { // of the database is getting to big for it's array, something has to budge
 			allPersons = resizeDatabase(true, allPersons); // This will make the array budge, I can't leave that to the user, they never do.
 		}
-		if (test == 1) {
-			return 0; // tell the program that everyithng went well so that it can inform the user
-		} else {
-			return 1; // Something went wrong, probably that user trying to add two persons with the same name and artist. Now I have to tell them off.
-		}
+		return test;
 	}
 
 	public final String getDatabase(int sort) {
@@ -85,7 +81,7 @@ public final class PersonDatabase {
 		return output.toString(); // send the calling program one large string containing the ingredients of all the persons in the database
 	}
 
-	public final String personsUnder(long price, int sort) {
+	public final String personsUnder(long price, int sort) { // this is not in the C++ version
 		/**
 		 * Class PersonDatabase: Method personsUnder Precondition: setDatabase has been run, paremeters time and sort type have been passed as double and int respectively Postcondition: the user will
 		 * be given a list of all of the persons under the specified time in the order requested.
