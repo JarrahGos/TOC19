@@ -37,7 +37,7 @@ public class SQLInterface {
 			System.out.println("error connecting to DB, check the settings" + e.toString());
 		}
 	}
-	public final String SQLread(String columnName, String table, String where) 
+	public final String SQLRead(String table,String columnName, String where) 
 	{
 		String result = "";
 		ResultSet rs = null;
@@ -57,11 +57,21 @@ public class SQLInterface {
 		}
 		return result;
 	}
-	public final void SQLSend(String table, String set, String where)
+	public final void SQLSet(String table, String set, String where)
 	{
 		try {
 			Statement request = db.createStatement();
 			request.executeQuery("UPDATE " + table + " SET " + set + " WHERE " + where);
+		}
+		catch (java.sql.SQLException e) {
+			System.out.println("Unable to write to database.\n" + e.toString());
+		}
+	}
+	public final void SQLDelete(String table, String where)
+	{
+		try {
+			Statement request = db.createStatement();
+			request.executeQuery("UPDATE " + table + " DELETE " + " WHERE " + where);
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to write to database.\n" + e.toString());
