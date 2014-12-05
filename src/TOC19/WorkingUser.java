@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import java.io.FileNotFoundException;
 
 /***
 *    TOC19 is a simple program to run TOC payments within a small group. 
@@ -37,7 +38,8 @@ public class WorkingUser {
 	private CheckOut checkOuts;
 	private static int userNumber;
 	
-	public WorkingUser() {
+	public WorkingUser() throws FileNotFoundException
+	{
 		productDatabase = new ProductDatabase();
 		personDatabase = new PersonDatabase();
 		checkOuts = new CheckOut();

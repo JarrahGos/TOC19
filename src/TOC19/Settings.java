@@ -61,7 +61,7 @@ public class Settings {
 		output[2] = properties.getProperty("password");
 		return output;
 	}
-	public final String[] AdminSettings() throws FileNotFoundException
+	public final String[] adminSettings() throws FileNotFoundException
 	{
 		if (inputStream != null) {
 			try {

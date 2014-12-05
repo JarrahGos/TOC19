@@ -24,9 +24,7 @@
  */
 
 import TOC19.SQLInterface;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import TOC19.Settings;
 
 public final class PersonDatabase {
@@ -39,7 +37,7 @@ public final class PersonDatabase {
 	public PersonDatabase() throws FileNotFoundException
 	{
 		logicalSize = 0;
-		String[] settings = config.SQLInterfaceSettings();
+		String[] settings = config.adminSettings();
 		admin.setBarCode(Long.parseLong(settings[0]));
 		admin.setName(settings[1]);
 	}
@@ -63,20 +61,32 @@ public final class PersonDatabase {
 		return sql.SQLRead("person", "", "barcode='" + Integer.toString(barcode) + "'");
 	}
 
-	public final String getPersonUser(int personNo, boolean html) {  // move this to SQL
+	public final String getPersonUser(int barCode, boolean html) {  
 		/**
 		 * Class PersonDatabase: Method getPerson Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4 Postconditions: the user will see the details of their 
 		 *							chosen
 		 * person output.
 		 */
 
-		if(personNo == -1 || personNo == -2) return "admin";
-		else if(personNo < logicalSize) { // check that the person exists
-			return allPersons[personNo].getDataUser(html); // now that we know that it does, send it to the interface
-		} else {
-			return "the person that you have identified does not exist"; // We cannot find the person that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
-			//PEBKAC: It is possible to commit no errors and still lose. That is not a weakness. That is life. --CAPTAIN PICARD
+		if(barCode == 7000000) return "admin";
+		
+		StringBuilder output = new StringBuilder();
+		if(html) {
+			output.append(sql.SQLRead("person", "name", "barcode='" + barCode + "'"));
+			output.append("<br>	Current Bill Total: $");
+			output.append(Double.parseDouble(sql.SQLRead("person", "priceBill", "barcode='" + barCode + "'"))/100);
 		}
+		else {
+			output.append(sql.SQLRead("person", "name", "barcode='" + barCode + "'"));
+			output.append("\n	Running Cost: $");
+			output.append(Double.parseDouble(sql.SQLRead("person", "priceYear", "barcode='" + barCode + "'"))/100);
+			output.append("\n	Current Bill Total: $");
+			output.append(Double.parseDouble(sql.SQLRead("person", "priceBill", "barcode='" + barCode + "'"))/100);
+		}
+		return output.toString();
+		// now that we know that it does, send it to the interface
+		
+			//PEBKAC: It is possible to commit no errors and still lose. That is not a weakness. That is life. --CAPTAIN PICARD
 
 	}
 
@@ -109,17 +119,15 @@ public final class PersonDatabase {
 		return Double.parseDouble(sql.SQLRead("person", "pricebill", "barcode='"+extBarCode + "'"));
 	}
 	public final boolean personExists(String extPersonName) {
-		if(sql.SQLRead("products", "name", "name='" + extPersonName + "'") != null) { // not sure whether this will actually return null if the product does not exist. Check. 
-				return true; 
-			} 
-	    return false;
+		// not sure whether this will actually return null if the product does not exist. Check.
+		
+	    return sql.SQLRead("products", "name", "name='" + extPersonName + "'") != null;
 	}
 
 	public final boolean personExists(long extBarCode) {
-		if(sql.SQLRead("products", "name", "name='" + Long.toString(extBarCode) + "'") != null) { // not sure whether this will actually return null if the product does not exist. Check. 
-				return true; 
-			} 
-	    return false;
+		// not sure whether this will actually return null if the product does not exist. Check.
+		
+	    return sql.SQLRead("products", "name", "name='" + Long.toString(extBarCode) + "'") != null;
 	}
 
 	public final int adminWriteOutDatabase(String path) {
