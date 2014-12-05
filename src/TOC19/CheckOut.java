@@ -61,7 +61,7 @@ public final class CheckOut
 //		++logicalSize;
 //		return 0;
 //	}
-	public final int addProduct(String name, long price, int barCode)
+	public final int addProduct(String name, long price, long barCode)
 	{
 		/** 
 		Class CheckOut: Method addProduct

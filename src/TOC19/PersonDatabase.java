@@ -37,19 +37,22 @@ public final class PersonDatabase {
 	public PersonDatabase() throws FileNotFoundException
 	{
 		logicalSize = 0;
-		String[] settings = config.adminSettings();
+		String[] settings = null;
+		config.adminSettings();
 		admin.setBarCode(Long.parseLong(settings[0]));
 		admin.setName(settings[1]);
 	}
 
-//	public final int setDatabasePerson(int personNo, String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
-
+	public final void setDatabasePerson(String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
+	{
+		sql.SQLInsert("person", "(" + name + ", " + running + ", " + week + ", " + barCode + ", " + canBuy + ")");
+	}
 	public final String getDatabase(int sort) {
 		/**
 		 * Class PersonDatabase: Method getDatabase Precondition: setDatabase has been run Postcondition: the user will be see an output of the persons in the database.
 		 */
 
-		return sql.SQLReadSet("person", "", "").toString();
+		return sql.SQLReadSet("person", "", "", "").toString();
 	}
 
 	public final String getPerson(int barcode) {
@@ -58,10 +61,10 @@ public final class PersonDatabase {
 		 * person output.
 		 */
 
-		return sql.SQLRead("person", "", "barcode='" + Integer.toString(barcode) + "'");
+		return sql.SQLRead("person", "", "barcode", Integer.toString(barcode));
 	}
 
-	public final String getPersonUser(int barCode, boolean html) {  
+	public final String getPersonUser(long barCode, boolean html) {  
 		/**
 		 * Class PersonDatabase: Method getPerson Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4 Postconditions: the user will see the details of their 
 		 *							chosen
@@ -72,16 +75,16 @@ public final class PersonDatabase {
 		
 		StringBuilder output = new StringBuilder();
 		if(html) {
-			output.append(sql.SQLRead("person", "name", "barcode='" + barCode + "'"));
+			output.append(sql.SQLRead("person", "name", "barcode", Long.toString(barCode)));
 			output.append("<br>	Current Bill Total: $");
-			output.append(Double.parseDouble(sql.SQLRead("person", "priceBill", "barcode='" + barCode + "'"))/100);
+			output.append(Double.parseDouble(sql.SQLRead("person", "priceBill", "barcode", Long.toString(barCode)))/100);
 		}
 		else {
-			output.append(sql.SQLRead("person", "name", "barcode='" + barCode + "'"));
+			output.append(sql.SQLRead("person", "name", "barcode", Long.toString(barCode)));
 			output.append("\n	Running Cost: $");
-			output.append(Double.parseDouble(sql.SQLRead("person", "priceYear", "barcode='" + barCode + "'"))/100);
+			output.append(Double.parseDouble(sql.SQLRead("person", "priceYear", "barcode",Long.toString(barCode)))/100);
 			output.append("\n	Current Bill Total: $");
-			output.append(Double.parseDouble(sql.SQLRead("person", "priceBill", "barcode='" + barCode + "'"))/100);
+			output.append(Double.parseDouble(sql.SQLRead("person", "priceBill", "barcode", Long.toString(barCode)))/100);
 		}
 		return output.toString();
 		// now that we know that it does, send it to the interface
@@ -103,31 +106,31 @@ public final class PersonDatabase {
 		 * Class PersonDatabase: Method getPersonName Preconditions: setDatabase has been run for the invoking person Postconditions: the person name will be returned
 		 */
 
-		return sql.SQLRead("person", "name", "barcode='"+barCode + "'");
+		return sql.SQLRead("person", "name", "barcode", Long.toString(barCode));
 	}
-	public final double getPersonPriceYear(int extBarCode) {
+	public final double getPersonPriceYear(long extBarCode) {
 		/**
 		 * Class PersonDatabase: Method getPersonSize Preconditions: setDatabase has been run for the invoking person Postconditions: the size of the invoking person will be returned as a double
 		 */
-		return Double.parseDouble(sql.SQLRead("person", "priceYear", "barcode='"+extBarCode + "'"));
+		return Double.parseDouble(sql.SQLRead("person", "priceYear", "barcode", Long.toString(extBarCode)));
 	}
 
-	public final double getPersonPriceWeek(int extBarCode) {
+	public final double getPersonPriceWeek(long extBarCode) {
 		/**
 		 * Class PersonDatabase: Method getPersonSize Preconditions: setDatabase has been run for the invoking person Postconditions: the size of the invoking person will be returned as a double
 		 */
-		return Double.parseDouble(sql.SQLRead("person", "pricebill", "barcode='"+extBarCode + "'"));
+		return Double.parseDouble(sql.SQLRead("person", "pricebill", "barcode", Long.toString(extBarCode)));
 	}
 	public final boolean personExists(String extPersonName) {
 		// not sure whether this will actually return null if the product does not exist. Check.
 		
-	    return sql.SQLRead("products", "name", "name='" + extPersonName + "'") != null;
+	    return sql.SQLRead("products", "name", "name", extPersonName) != null;
 	}
 
 	public final boolean personExists(long extBarCode) {
 		// not sure whether this will actually return null if the product does not exist. Check.
 		
-	    return sql.SQLRead("products", "name", "name='" + Long.toString(extBarCode) + "'") != null;
+	    return sql.SQLRead("products", "name", "barcode", Long.toString(extBarCode)) != null;
 	}
 
 	public final int adminWriteOutDatabase(String path) {
@@ -142,24 +145,29 @@ public final class PersonDatabase {
 
 	public final void addCost(long barCode, long cost) {
 		long price;
-		price = Integer.parseInt(sql.SQLRead("person", "priceBill", "barcode='" + barCode + "'")) + cost; 
-		sql.SQLSet("person", "priceBill='" + price + "'", "barCode='" + barCode + "'");
-		price = Integer.parseInt(sql.SQLRead("person", "priceYear", "barcode='" + barCode + "'")) + cost;
-		sql.SQLSet("person", "priceYear='" + price + "'", "barCode='" + barCode + "'");
+		price = Integer.parseInt(sql.SQLRead("person", "priceBill", "barcode", Long.toString(barCode))) + cost; 
+		sql.SQLSet("person", "priceBill='" + price + "'", "barcode", Long.toString(barCode));
+		price = Integer.parseInt(sql.SQLRead("person", "priceYear", "barcode", Long.toString(barCode))) + cost;
+		sql.SQLSet("person", "priceYear='" + price + "'", "barCode", Long.toString(barCode));
 	}
 
 	public final void resetBills() {
-		sql.SQLSet("person", "priceBill='0'", ""); // not sure whether this should be "" or "*"
+		sql.SQLSet("person", "priceBill='0'", "", ""); // not sure whether this should be "" or "*"
 	}
 	public final void setAdminPassword(String extPassword) {
 		admin.setName(extPassword); // a read and write file should be added to this. Maybe write that into the JSON config? (thas is, if I make one)
 	}
-	public final boolean personCanBuy(int barCode)
+	public final boolean personCanBuy(long barCode)
 	{
-		return Boolean.parseBoolean(sql.SQLRead("person", "canBuy", "barcode='" + barCode + "'"));
+		return Boolean.parseBoolean(sql.SQLRead("person", "canBuy", "barcode", Long.toString(barCode)));
 	}
-	public final void setPersonCanBuy(int barCode, boolean canBuy)
+	public final void setPersonCanBuy(long barCode, boolean canBuy)
 	{
-		sql.SQLSet("person", "canBuy='" + canBuy + "'", "barcode='" + barCode + "'");
+		sql.SQLSet("person", "canBuy='" + canBuy + "'", "barcode", Long.toString(barCode));
 	}
+	public final String[] getUserNames()
+	{
+		return sql.SQLReadSet("person", "name", "", "");
+	}
+	
 }

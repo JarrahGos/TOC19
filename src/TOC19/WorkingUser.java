@@ -46,23 +46,23 @@ public class WorkingUser {
 
 		userNumber = -1;
 	}
-	public final void addDatabases()
-	{
-		int error = productDatabase.readDatabase("productDatabase.txt"); // read in the product database
-		if(error == -1) { // tell the user there was an error reading the above
-			System.out.println("There was an error reading the productDatabase");
-		}
-		else { // tell the user the above went swimingly. 
-			System.out.printf("I have imported %d products\n", error);
-		}
-		error = personDatabase.readDatabase("personDatabase.txt"); // as above for the person database
-		if(error == -1) {
-			System.out.println("There was an error reading the personDatabase");
-		}
-		else {
-			System.out.printf("I have imported %d people\n", error);
-		}
-	}
+//	public final void addDatabases()
+//	{
+//		int error = productDatabase.readDatabase("productDatabase.txt"); // read in the product database
+//		if(error == -1) { // tell the user there was an error reading the above
+//			System.out.println("There was an error reading the productDatabase");
+//		}
+//		else { // tell the user the above went swimingly. 
+//			System.out.printf("I have imported %d products\n", error);
+//		}
+//		error = personDatabase.readDatabase("personDatabase.txt"); // as above for the person database
+//		if(error == -1) {
+//			System.out.println("There was an error reading the personDatabase");
+//		}
+//		else {
+//			System.out.printf("I have imported %d people\n", error);
+//		}
+//	}
 	public final void getPMKeyS(String input) 
     {
         boolean correct = false;
@@ -175,7 +175,7 @@ public class WorkingUser {
 	{
 		personDatabase.addCost(userNumber, checkOuts.getPrice());// add the bill to the persons account
 //		checkOuts.productBought(); // This no longer works as checkouts does not have access to the database. 
-		productDatabase.productBought(checkouts.productsBought());
+		productDatabase.productBought(checkOuts.productBought());
 //		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
 //		personDatabase.writeOutDatabase("personDatabase.txt");
 		checkOuts = new CheckOut(); // ensure checkout clear
@@ -195,7 +195,8 @@ public class WorkingUser {
 	}
 	public final String userName()
 	{
-		return userNumber == -1 ? "error" : PersonDatabase.getPersonName(userNumber);
+		if(userNumber == -1) return "error";
+		else return personDatabase.getPersonName(userNumber);
 	}
 	public final boolean addToCart(String input) 
 	{
@@ -207,19 +208,20 @@ public class WorkingUser {
 		else if((input == null ) || ("".equals(input) )) {
 			return false; 
 		}
-		int productNumber = productDatabase.binarySearch(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
+//		int productNumber = productDatabase.binarySearch(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
 		int checkProduct; // create this for use below
-		if(productNumber != -1) {
-			tempInput = productDatabase.getProduct(productNumber);
+//		if(productNumber != -1) {
+//			tempInput = productDatabase.getProduct(productNumber);
 			checkProduct = checkOuts.productEqualTo(tempBarCode); // check that the product was not entered into the database before. 
 	//																					//If it was, just add the quantity to the one in the database
 			if(checkProduct != -1) {
 				checkOuts.addQuantity(checkProduct, 1);
 			}
-			else checkOuts.addProduct(productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
-			return true;
-		}
-		return false;
+			else {
+				checkOuts.addProduct(productDatabase.getProductName(Long.toString(tempBarCode)), (long)productDatabase.getProductPrice(Long.toString(tempBarCode))*100, tempBarCode);  
+				return true;
+			}
+			return false;
 	}
 	public final int userNumber()
 	{
@@ -232,11 +234,11 @@ public class WorkingUser {
 	}
 	public final void addPersonToDatabase(String name, long PMKeyS)
 	{
-		personDatabase.setDatabasePerson(personDatabase.emptyPerson(), name, 0,0, PMKeyS, true);
+		personDatabase.setDatabasePerson(name, 0,0, PMKeyS, true);
 	}
 	public final void addProductToDatabase(String name, long barCode, long price)
 	{
-		productDatabase.setDatabaseProduct(productDatabase.emptyProduct(), name, price, barCode);
+		productDatabase.setDatabaseProduct(barCode, name, price);
 	}
 	public final void adminWriteOutDatabase(String type) {
 		switch(type) {
@@ -255,13 +257,9 @@ public class WorkingUser {
 	{
 		productDatabase.delProduct(index);
 	}		
-	public final long getProductBarCode(int index)
+	public final double getProductPrice(long barCode)
 	{
-		return productDatabase.getBarCode(index);
-	}
-	public final double getProductPrice(int index)
-	{
-		return productDatabase.getProductPrice(index);
+		return productDatabase.getProductPrice(Long.toString(barCode));
 	}
 	public final int getProductNumber(int index)
 	{

@@ -38,9 +38,11 @@ public final class ProductDatabase
 	}
 	
 	
-//	public final int setDatabaseProduct(int barCode, String name, long price, long barCode) // take the products data and pass it to the products constructor
+	public final void setDatabaseProduct(long barCode, String name, long price) // take the products data and pass it to the products constructor
+	{
+		sql.SQLInsert("product", "(" + name + ", " + + barCode + ", " + price + ")");
+	}
 
-//	}
 	public final String getDatabase(int sort) 
 	{
 		/**
@@ -122,7 +124,7 @@ public final class ProductDatabase
 	public final String[] getProductNames() {
 		return sql.SQLReadSet("product", "name", "");
 	}
-	public final void productsBought(String[][] itemNumbers)
+	public final void productBought(String[][] itemNumbers)
 	{
 		for (String[] itemNumber : itemNumbers) {
 			int number = 0;

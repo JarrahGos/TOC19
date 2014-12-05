@@ -90,7 +90,7 @@ public final class Interface extends Application
 	{
 		// create the layout
 		primaryStage.setTitle("TOC19"); // set the window title. 
-		workingUser.addDatabases(); // import the user and product data
+//		workingUser.addDatabases(); // import the user and product data
 		GridPane grid = new GridPane(); // create the layout manager
 //	    grid.setGridLinesVisible(true); // used for debugging object placement
 		grid.setAlignment(Pos.CENTER); 

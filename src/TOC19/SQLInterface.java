@@ -34,6 +34,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import TOC19.Settings;
 import java.io.FileNotFoundException;
@@ -55,16 +56,20 @@ public class SQLInterface {
 			db = DriverManager.getConnection(URL, user, password);
 		}
 		catch (java.sql.SQLException e){
-			System.out.println("error connecting to DB, check the settings" + e.toString());
+			System.out.println("error connecting to DB, check the settings\n" + e.toString());
 		}
 	}
-	public final String SQLRead(String table,String columnName, String where) 
+	public final String SQLRead(String table,String columnName, String where, String equals) 
 	{
 		String result = "";
 		ResultSet rs = null;
 		try {
-			Statement request = db.createStatement();
-			rs = request.executeQuery("SELECT " + columnName + " FROM " + table + " WHERE " + where);
+			PreparedStatement request = db.prepareStatement("SELECT ? FROM ? WHERE ?=?");
+			request.setString(1, columnName);
+			request.setString(2, table);
+			request.setString(3, where);
+			request.setString(4, equals);
+			rs = request.executeQuery();
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to read database.\n" + e.toString());
@@ -78,13 +83,18 @@ public class SQLInterface {
 		}
 		return result;
 	}
-	public final String[] SQLReadSet(String table, String columnName, String where)
+	public final String[] SQLReadSet(String table, String columnName, String where, String equals)
 	{
 		String[] result = null;
 		ResultSet rs = null;
 		try {
-			Statement request = db.createStatement();
-			rs = request.executeQuery("SELECT " + columnName + " FROM " + table + " WHERE " + where);
+			PreparedStatement request = db.prepareStatement("SELECT ? FROM ? WHERE ?=?");
+			request.setString(1, columnName);
+			request.setString(2, table);
+			request.setString(3, where);
+			request.setString(4, equals);
+			rs = request.executeQuery();
+			rs = request.executeQuery();
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to read database.\n" + e.toString());
@@ -101,11 +111,15 @@ public class SQLInterface {
 		}
 		return result;
 	}
-	public final void SQLSet(String table, String set, String where)
+	public final void SQLSet(String table, String set, String where, String equals)
 	{
 		try {
-			Statement request = db.createStatement();
-			request.executeQuery("UPDATE " + table + " SET " + set + " WHERE " + where);
+			PreparedStatement request = db.prepareStatement("UPDATE ? SET ? WHERE ?=?");
+			request.setString(1, table);
+			request.setString(2, set);
+			request.setString(3, where);
+			request.setString(4, equals);
+			request.executeQuery();
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to write to database.\n" + e.toString());
@@ -136,4 +150,17 @@ public class SQLInterface {
 			return false;
 		}
 	}
+	public final void SQLInsert(String table, String values)
+	{
+		try {
+			PreparedStatement request = db.prepareStatement("INSERT INTO ? VALUES ? ");
+			request.setString(1, table);
+			request.setString(2, values);
+			request.executeQuery();
+		}
+		catch (java.sql.SQLException e) {
+			System.out.println("Unable to write out your new values to table  " + table + "\n" + e.toString());
+		}
+	}
+	
 }
