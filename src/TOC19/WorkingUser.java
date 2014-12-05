@@ -158,7 +158,8 @@ public class WorkingUser {
 	public final void buyProducts()
 	{
 		personDatabase.addCost(userNumber, checkOuts.getPrice());// add the bill to the persons account
-		checkOuts.productBought(); // clear the quantities and checkout
+//		checkOuts.productBought(); // This no longer works as checkouts does not have access to the database. 
+		productDatabase.productBought(checkouts.productsBought());
 //		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
 //		personDatabase.writeOutDatabase("personDatabase.txt");
 		checkOuts = new CheckOut(); // ensure checkout clear

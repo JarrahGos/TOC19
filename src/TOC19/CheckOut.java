@@ -31,35 +31,36 @@ public final class CheckOut
 	private Product[] products;
 	private Product[] resized; // used for creating larger databases. 
 	private int[] quantities;
-//	private String output;
+	private String output;
 	private int logicalSize;
 	private long totalPrice;
+	private TOC19.SQLInterface sql;
 
 	public CheckOut()
 	{
 		// Initalise the needed variables
 //		output = "";
-	    products = new Product[4];
+//	    products = new Product[4];
             quantities = new int[4];
-	    logicalSize = 0;
+//	    logicalSize = 0;
 	    totalPrice = 0;
 	}
 	    
-	public final int addProduct(Product item, int quantity)
-	{
-		if(logicalSize == products.length) {
-			products = resizeCheckOut(true, products);
-			quantities = resizeQuantities(true, quantities);
-		}
-        item.setName(item.getName());
-        item.setPrice(item.productPrice());
-		item.setQuantity(quantity);
-		products[logicalSize] = item;
-		quantities[logicalSize] = quantity;
-		totalPrice += item.productPrice()*quantity;
-		++logicalSize;
-		return 0;
-	}
+//	public final int addProduct(Product item, int quantity)
+//	{
+//		if(logicalSize == products.length) {
+//			products = resizeCheckOut(true, products);
+//			quantities = resizeQuantities(true, quantities);
+//		}
+//        item.setName(item.getName());
+//        item.setPrice(item.productPrice());
+//		item.setQuantity(quantity);
+//		products[logicalSize] = item;
+//		quantities[logicalSize] = quantity;
+//		totalPrice += item.productPrice()*quantity;
+//		++logicalSize;
+//		return 0;
+//	}
 	public final int addProduct(String name, long price, int barCode)
 	{
 		/** 
@@ -319,13 +320,14 @@ public final class CheckOut
 						break;
 		}
 	}
-	public final void productBought()
+	public final String[][] productBought()
 	{
+		String[][] itemsNumbers = new String[logicalSize][2];
 		for(int i = logicalSize -1; i > 0; i--) {
-			for (int z = 0; z < quantities[i]; z++) {
-				products[i].decrementNumber();
-			}
+			itemsNumbers[i][0] = products[i].getName();
+			itemsNumbers[i][1] = Integer.toString(quantities[i]);
 		}
+		return itemsNumbers;
 	}
 	public final void addQuantity(int productNo, int add)
 	{

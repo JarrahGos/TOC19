@@ -80,15 +80,16 @@ public final class ProductDatabase
 		// this should convert the whole table to a string. 
 //		this.sortBy(sort); // find the sorting method that they asked for and use it to sort the database.
 	
-		StringBuilder output = new StringBuilder(); // this should be rebuilt to use SQLReadSet
-		for(int i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
-			if(allProducts[i] != null) {
-				output.append(String.format("\nProduct %d:\n",1+i));
-				output.append(allProducts[i].getData());
-			}
-		}
+//		StringBuilder output = new StringBuilder(); // this should be rebuilt to use SQLReadSet
+//		for(int i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
+//			if(allProducts[i] != null) {
+//				output.append(String.format("\nProduct %d:\n",1+i));
+//				output.append(allProducts[i].getData());
+//			}
+//		}
 //		sortBy(3); // binary search
-		return output.toString(); // send the calling program one large string containing the ingredients of all the products in the database
+//		return output.toString(); // send the calling program one large string containing the ingredients of all the products in the database
+		return sql.SQLReadSet("product", "", "").toString();
 	}
 	
 //	public final String productsUnder(long price, int sort)
@@ -123,7 +124,7 @@ public final class ProductDatabase
 		Postconditions: the user will see the details of their chosen product output.
 		*/
 
-		return sql.SQLRead("products", "barcode", Integer.toString(barCode));
+		return sql.SQLRead("products", "", "barcode='" + Integer.toString(barCode) + "'");
 
 	}
 	public final void delProduct(int barCode)
@@ -134,7 +135,7 @@ public final class ProductDatabase
 		Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
 		*/ 
 		
-		sql.SQLDelete("product", Integer.toString(barCode));
+		sql.SQLDelete("product", "barcode='" + Integer.toString(barCode) + "'");
 //		if(barCode < logicalSize) { //check that the product the user doesn't want anymore actually exists in the first place.
 //			for (int i = barCode; i < logicalSize; i++) { // move all products back one place. The first move will overwrite the now unwanted product
 //				allProducts[i] = allProducts[i+1]; // I really hope that they didn't have any desire to see this one agian. It's already in the bin. 
@@ -158,7 +159,7 @@ public final class ProductDatabase
 		*/
 //		if(barCode < logicalSize) { // check that the desired product exists
 //			return allProducts[barCode].getName(); // now that we know it does, give it to the interface
-			return sql.SQLRead("product", "name", "barcode="+barCode);
+			return sql.SQLRead("product", "name", "barcode='"+barCode + "'");
 //		}
 //		else {
 //			return "error"; // nope, the product does not exist. Most likely PICNIC
@@ -175,27 +176,27 @@ public final class ProductDatabase
 //		*/
 //		if(barCode < logicalSize) { // to understand its workings, see getProductName. it works the same but this returns a double
 //			return allProducts[barCode].productPrice();
-			return Double.parseDouble(sql.SQLRead("product", "price", "barcode="+extBarCode));
+			return Double.parseDouble(sql.SQLRead("product", "price", "barcode='"+extBarCode + "'"));
 //		}
 //		else return 0;
 //	
 	}
-	public final long getBarCode(int barCode)
-	{
-		/** 
-		Class ProductDatabase: Method getProductBarCode
-		Precondition: setDatabase has been run for the invoking product
-		Postcondition: the duration of the invoking product will be returned as a double
-		*/
-//		if(barCode < logicalSize) { // to understand its workings, see getProductName. it works the same but this returns a double
-//			return allProducts[barCode].getBarCode();
-		return Long.parseLong(sql.SQLRead("product", "barcode", "barcode="+barCode));
-//		}
-//		else {
-//			return 0;
-//		}
-	
-	}
+//	public final long getBarCode(int barCode)
+//	{
+//		/** 
+//		Class ProductDatabase: Method getProductBarCode
+//		Precondition: setDatabase has been run for the invoking product
+//		Postcondition: the duration of the invoking product will be returned as a double
+//		*/
+////		if(barCode < logicalSize) { // to understand its workings, see getProductName. it works the same but this returns a double
+////			return allProducts[barCode].getBarCode();
+//		return Long.parseLong(sql.SQLRead("product", "barcode", "barcode="+barCode));
+////		}
+////		else {
+////			return 0;
+////		}
+//	
+//	}
 //	public final int emptyProduct()
 //	{
 //		/**
@@ -214,7 +215,7 @@ public final class ProductDatabase
 	{
 	    
 	    for(int i = 0; i < logicalSize; i++) { //loop until a product that matches the artist and name specified
-			if(sql.SQLRead("products", "name", extProductName) != null) { // not sure whether this will actually return null if the product does not exist. Check. 
+			if(sql.SQLRead("products", "name", "name='" + extProductName + "'") != null) { // not sure whether this will actually return null if the product does not exist. Check. 
 				return true; // when one is found, send true back to the caller
 			} // change this to check whether nothing is returned. 
 	    }
@@ -479,12 +480,12 @@ public final class ProductDatabase
 //	}
 	public final int getNumber(int barCode)
 	{
-		return Integer.parseInt(sql.SQLRead("products", "number", Integer.toString(barCode)));
+		return Integer.parseInt(sql.SQLRead("products", "number", "barcode='" + Integer.toString(barCode) + "'"));
 	}
 	public final void setNumber(int barCode, int number)
 	{
 //		allProducts[barCode].setNumber(number);
-		sql.SQLSet("product", "" + number, "barcode=" + barCode);
+		sql.SQLSet("product", "" + number, "barcode='" + barCode + "'");
 	}
 //	public final Product getProductRef(int barCode)
 //	{
@@ -509,4 +510,13 @@ public final class ProductDatabase
 	public final String[] getProductNames() {
 		return sql.SQLReadSet("product", "name", "");
 	}
+	public final void productsBought(String[][] itemNumbers)
+	{
+		for (String[] itemNumber : itemNumbers) {
+			int number = 0;
+			number = Integer.parseInt(sql.SQLRead("product", "number", "name='" + itemNumber[0] + "'"));
+			sql.SQLSet("product", "number='" + itemNumber[1] + "'", "name='" + itemNumber[0] + "'");
+		}
+	}
+	
 }
