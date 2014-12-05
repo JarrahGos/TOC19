@@ -82,6 +82,18 @@ public class Settings {
 	}
 	public final void adminSetPassword(String passwd) throws FileNotFoundException
 	{	
+		if (inputStream != null) {
+			try {
+				properties.load(inputStream);
+			}
+			catch(IOException e) {
+				System.out.print("property file '" + propFileName + "' not found in the classpath");
+			}
+		} 
+		else {
+			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+		}
+		
 		FileOutputStream output = null;
 		try {
 			properties.setProperty("adminPassword", passwd);
