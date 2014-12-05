@@ -6,15 +6,29 @@ import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/***
+*    TOC19 is a simple program to run TOC payments within a small group. 
+*    Copyright (C) 2014  Jarrah Gosbell
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
-/**
- *
- * @author jarrah
+/*
+ * Author: Jarrah Gosbell
+ * Student Number: z5012558
+ * Class: PersonDatabase
+ * Description: This program will allow for the input and retreval of the person database and will set the limits of the database.
  */
 public class WorkingUser {
 	

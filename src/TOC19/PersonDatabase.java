@@ -27,15 +27,21 @@ import TOC19.SQLInterface;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import TOC19.Settings;
 
 public final class PersonDatabase {
 
 	private static Person admin;
 	private static int logicalSize;
 	private SQLInterface sql;
+	private Settings config;
 
-	public PersonDatabase() {
+	public PersonDatabase() throws FileNotFoundException
+	{
 		logicalSize = 0;
+		String[] settings = config.SQLInterfaceSettings();
+		admin.setBarCode(Long.parseLong(settings[0]));
+		admin.setName(settings[1]);
 	}
 
 //	public final int setDatabasePerson(int personNo, String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor

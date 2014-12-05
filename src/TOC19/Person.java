@@ -157,4 +157,8 @@ public final class Person
 	{
 		canBuy = extCanBuy;
 	}
+	public final void setBarCode(long extBarCode)
+	{
+		barCode = extBarCode;
+	}
 }
