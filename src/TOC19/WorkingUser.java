@@ -159,8 +159,8 @@ public class WorkingUser {
 	{
 		personDatabase.addCost(userNumber, checkOuts.getPrice());// add the bill to the persons account
 		checkOuts.productBought(); // clear the quantities and checkout
-		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
-		personDatabase.writeOutDatabase("personDatabase.txt");
+//		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
+//		personDatabase.writeOutDatabase("personDatabase.txt");
 		checkOuts = new CheckOut(); // ensure checkout clear
         userNumber = -1;
 	}

@@ -57,6 +57,29 @@ public class SQLInterface {
 		}
 		return result;
 	}
+	public final String[] SQLReadSet(String table, String columnName, String where)
+	{
+		String[] result = null;
+		ResultSet rs = null;
+		try {
+			Statement request = db.createStatement();
+			rs = request.executeQuery("SELECT " + columnName + " FROM " + table + " WHERE " + where);
+		}
+		catch (java.sql.SQLException e) {
+			System.out.println("Unable to read database.\n" + e.toString());
+		}
+		try {
+			if(rs != null){
+				for(int i = 0; rs.next(); i++) {
+					result[i] = rs.getString(1);
+				}
+			}
+		}
+		catch (java.sql.SQLException e) {
+			System.out.println("could not read string from result" + e.toString());
+		}
+		return result;
+	}
 	public final void SQLSet(String table, String set, String where)
 	{
 		try {
@@ -75,6 +98,21 @@ public class SQLInterface {
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to write to database.\n" + e.toString());
+		}
+	}
+	public final boolean SQLOutputCSV(String table, String file)
+	{
+		try {
+			Statement request = db.createStatement();
+			request.executeQuery("SELECT a,b,a+b INTO OUTFILE '" + file + "'" +   
+									"FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'" +
+									"LINES TERMINATED BY '\n'" +
+									"FROM " + table);
+			return true;
+		}
+		catch (java.sql.SQLException e) {
+			System.out.println("Unable to write out table  " + table + " to csv.\n" + e.toString());
+			return false;
 		}
 	}
 }
