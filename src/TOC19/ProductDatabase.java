@@ -78,15 +78,16 @@ public final class ProductDatabase
 		Postcondition: the user will be see an output of the products in the database. 
 		*/
 		// this should convert the whole table to a string. 
-		this.sortBy(sort); // find the sorting method that they asked for and use it to sort the database.
-		StringBuilder output = new StringBuilder();
+//		this.sortBy(sort); // find the sorting method that they asked for and use it to sort the database.
+	
+		StringBuilder output = new StringBuilder(); // this should be rebuilt to use SQLReadSet
 		for(int i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
 			if(allProducts[i] != null) {
 				output.append(String.format("\nProduct %d:\n",1+i));
 				output.append(allProducts[i].getData());
 			}
 		}
-		sortBy(3); // binary search
+//		sortBy(3); // binary search
 		return output.toString(); // send the calling program one large string containing the ingredients of all the products in the database
 	}
 	
@@ -379,30 +380,35 @@ public final class ProductDatabase
 //			sortBy(3); // binary search
 //			return 0; // let the program and thus the user know that everything is shiny. 
 //	}
+//	public final int adminWriteOutDatabase(String path) 
+//	{
+////		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
+//		PrintWriter outfile = null;
+//		try {
+//			File file = new File(path);
+//			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
+//		}
+//		catch(FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
+//			if (outfile != null)outfile.close();
+//			return 1;
+//		}
+//			outfile.println("ProductDatabase File"); // print the file header
+//			for(int b = 0; b < logicalSize; b++) { // repeatedly print the data of the products in the database to the file. 
+//				outfile.println("-------------------------------------");
+//				outfile.println("Product Name: " + sql.SQLRead("products", "name", );
+//				outfile.println("Product Price: " + (double)sql.SQLRead("products", "price", )/100);
+//				outfile.println("Product Bar Code: " + sql.SQLRead("products", "barCode", );;
+//				outfile.println("Stock Count: " + sql.SQLRead("products", "number", ););
+//				
+//			}
+//			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
+////			quickSortByBarCode(0, logicalSize-1);
+//			return 0; // let the program and thus the user know that everything is shiny. 
+//	}
+	
 	public final int adminWriteOutDatabase(String path) 
 	{
-//		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
-		PrintWriter outfile = null;
-		try {
-			File file = new File(path);
-			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
-		}
-		catch(FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			if (outfile != null)outfile.close();
-			return 1;
-		}
-			outfile.println("ProductDatabase File"); // print the file header
-			for(int b = 0; b < logicalSize; b++) { // repeatedly print the data of the products in the database to the file. 
-				outfile.println("-------------------------------------");
-				outfile.println("Product Name: " + sql.SQLRead("products", "name", );
-				outfile.println("Product Price: " + (double)sql.SQLRead("products", "price", )/100);
-				outfile.println("Product Bar Code: " + sql.SQLRead("products", "barCode", );;
-				outfile.println("Stock Count: " + sql.SQLRead("products", "number", ););
-				
-			}
-			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
-//			quickSortByBarCode(0, logicalSize-1);
-			return 0; // let the program and thus the user know that everything is shiny. 
+		return sql.SQLOutputCSV("product", path) ? 0 : 1;
 	}
 //	public final int readDatabase(String path) 
 //	{
@@ -501,10 +507,6 @@ public final class ProductDatabase
 //		return -1;
 //	}
 	public final String[] getProductNames() {
-		String[] output = new String[logicalSize];
-		for(int i = 0; i < logicalSize; i++) {
-			output[i] = sql.SQLRead("products", "name", );
-		}
-		return output;
+		return sql.SQLReadSet("product", "name", "");
 	}
 }
