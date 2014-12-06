@@ -100,13 +100,28 @@ public final class PersonDatabase {
 		 */
 		sql.SQLDelete("person", "barcode", Long.toString(barCode));
 	}
-
+	public final void delPerson(String name) {
+		/**
+		 * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
+		 * failure of this will be given by a 0 or 1 returned respectively.
+		 */
+		sql.SQLDelete("person", "name", name);
+	}
 	public final String getPersonName(long barCode) {
 		/**
 		 * Class PersonDatabase: Method getPersonName Preconditions: setDatabase has been run for the invoking person Postconditions: the person name will be returned
 		 */
 
 		return sql.SQLRead("person", "name", "barcode", Long.toString(barCode));
+	}
+	public final String getPersonBarCode(String name) 
+	{
+		/**
+		Class ProductDatabase: Method getProductName
+		Preconditions: setDatabase has been run for the invoking product
+		Postconditions: the product name will be returned
+		*/
+			return sql.SQLRead("person", "name", "name", name);
 	}
 	public final double getPersonPriceYear(long extBarCode) {
 		/**
@@ -167,9 +182,17 @@ public final class PersonDatabase {
 	{
 		return Boolean.parseBoolean(sql.SQLRead("person", "canBuy", "barcode", Long.toString(barCode)));
 	}
+	public final boolean personCanBuy(String name)
+	{
+		return Boolean.parseBoolean(sql.SQLRead("person", "canBuy", "name", name));
+	}
 	public final void setPersonCanBuy(long barCode, boolean canBuy)
 	{
 		sql.SQLSet("person", "canBuy", Boolean.toString(canBuy) + "'", "barcode", Long.toString(barCode));
+	}
+	public final void setPersonCanBuy(String name, boolean canBuy)
+	{
+		sql.SQLSet("person", "canBuy", Boolean.toString(canBuy) + "'", "name", name);
 	}
 	public final String[] getUserNames()
 	{

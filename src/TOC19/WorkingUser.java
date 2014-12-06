@@ -255,10 +255,18 @@ public class WorkingUser {
 	{
 		personDatabase.delPerson(barCode);
 	}
+	public final void removePerson(String name)
+	{
+		personDatabase.delPerson(name);
+	}
 	public final void removeProduct(long barCode)
 	{
 		productDatabase.delProduct(barCode);
 	}		
+	public final void removeProduct(String name)
+	{
+		productDatabase.delProduct(name);
+	}
 	public final double getProductPrice(long barCode)
 	{
 		return productDatabase.getProductPrice(Long.toString(barCode));
@@ -267,16 +275,44 @@ public class WorkingUser {
 	{
 		return productDatabase.getNumber(barCode);
 	}
+	public final int getProductNumber(String name)
+	{
+		return productDatabase.getNumber(name);
+	}
+	public final long getProductBarCode(String name)
+	{
+		return Long.parseLong(productDatabase.getProductBarCode(name));
+	}
+	public final long getPersonBarCode(String name)
+	{
+		return Long.parseLong(personDatabase.getPersonBarCode(name));
+	}
 	public final void setNumberOfProducts(long barCode, int numberOfProducts)
 	{
 		productDatabase.setNumber(barCode, numberOfProducts);
+	}
+	public final void setNumberOfProducts(String name, int numberOfProducts)
+	{
+		productDatabase.setNumber(name, numberOfProducts);
 	}
 	public final boolean userCanBuy(long barCode)
 	{
 		return personDatabase.personCanBuy(barCode);
 	}
+	public final boolean userCanBuy(String name)
+	{
+		return personDatabase.personCanBuy(name);
+	}
 	public final void setUserCanBuy(long barCode, boolean canBuy)
 	{
 		personDatabase.setPersonCanBuy(barCode, canBuy);
+	}
+	public final void setUserCanBuy(String name, boolean canBuy)
+	{
+		personDatabase.setPersonCanBuy(name, canBuy);
+	}
+	public final long userNumber()
+	{
+		return pmKeyS;
 	}
 }

@@ -220,8 +220,8 @@ public final class Interface extends Application
 						});
 						thread.setDaemon(true);
 						thread.setPriority(Thread.MIN_PRIORITY);
-						thread.start();
-						thread.interrupt();
+						thread.start(); // start the thread
+						thread.interrupt(); // then interrupt it. No fucking wonder this doesn't work. 
 						userLabel.setText(workingUser.userName()); // find out the name of those who dare log on. 
 						inputLabel.setText("Enter Barcode"); // change the label to suit the next action. 
 						grid.getChildren().remove(userLabel); // remove any error labels which may have appeared. 
@@ -470,8 +470,8 @@ public final class Interface extends Application
 					personList.setItems(persons);
 					grid.add(personList,0,0);
 					remove.setOnAction((ActionEvent e) -> {
-						int index = personList.getSelectionModel().getSelectedIndex();
-						workingUser.removePerson(index);
+						String name = personList.getSelectionModel().getSelectedItem();
+						workingUser.removePerson(name); // this needs to be their pmkeys.
 						persons.setAll(workingUser.getUserNames());
 					});
 					
@@ -504,7 +504,7 @@ public final class Interface extends Application
 					grid.add(canBuy, 1,0);
 					personList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
-						if(workingUser.userCanBuy(personList.getSelectionModel().getSelectedIndex())) {
+						if(workingUser.userCanBuy(personList.getSelectionModel().getSelectedItem())) {
 							canBuy.getSelectionModel().select(0);
 						}
 						else canBuy.getSelectionModel().select(1);
@@ -512,7 +512,7 @@ public final class Interface extends Application
 					canBuy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number> () {
 						@Override
 						public void changed(ObservableValue ov, Number value, Number newValue) {
-							workingUser.setUserCanBuy(personList.getSelectionModel().getSelectedIndex(), canBuy.getSelectionModel().getSelectedIndex() == 0);
+							workingUser.setUserCanBuy(personList.getSelectionModel().getSelectedItem(), canBuy.getSelectionModel().getSelectedIndex() == 0);
 						}
 					});
 				}
@@ -557,8 +557,8 @@ public final class Interface extends Application
 					productList.setItems(product);
 					grid.add(productList,0,0);
 					remove.setOnAction((ActionEvent e) -> {
-						int index = productList.getSelectionModel().getSelectedIndex();
-						workingUser.removeProduct(index);
+						String name = productList.getSelectionModel().getSelectedItem();
+						workingUser.removeProduct(name);
 						product.setAll(workingUser.getProductNames());
 					});
 					grid.add(remove, 1,0);
@@ -587,9 +587,9 @@ public final class Interface extends Application
 					productList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
 						nameEntry.setText(selectedProduct);
-						String BC = Long.toString(workingUser.getProductBarCode(productList.getSelectionModel().getSelectedIndex()));
+						String BC = Long.toString(workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem())); // think abouth wether the conversion to string can be done in working user
 						barCodeEntry.setText(BC);
-						String price = Double.toString(workingUser.getProductPrice(productList.getSelectionModel().getSelectedIndex()));
+						String price = Double.toString(workingUser.getProductPrice(Long.parseLong(BC)));
 						priceEntry.setText(price);
 					});
 					nameEntry.setOnAction((ActionEvent e) -> {
@@ -623,13 +623,13 @@ public final class Interface extends Application
 					
 					productList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
-						String numberOfProduct = Integer.toString(workingUser.getProductNumber(productList.getSelectionModel().getSelectedIndex()));
+						String numberOfProduct = Integer.toString(workingUser.getProductNumber(productList.getSelectionModel().getSelectedItem()));
 						numberEntry.setText(numberOfProduct);
 						numberEntry.requestFocus();
 						
 					});
 					numberEntry.setOnAction((ActionEvent e) -> {
-						workingUser.setNumberOfProducts(productList.getSelectionModel().getSelectedIndex(), Integer.parseInt(numberEntry.getText()));
+						workingUser.setNumberOfProducts(productList.getSelectionModel().getSelectedItem(), Integer.parseInt(numberEntry.getText()));
 						productList.getSelectionModel().select(productList.getSelectionModel().getSelectedIndex() + 1);
 						numberEntry.requestFocus();
 					});

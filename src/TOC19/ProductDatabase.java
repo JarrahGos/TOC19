@@ -77,6 +77,13 @@ public final class ProductDatabase
 		sql.SQLDelete("product", "barcode",Long.toString(barCode));
 
 	}
+	public final void delProduct(String name) {
+		/**
+		 * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
+		 * failure of this will be given by a 0 or 1 returned respectively.
+		 */
+		sql.SQLDelete("product", "name", name);
+	}
 	public final String getProductName(String barCode) 
 	{
 		/**
@@ -85,6 +92,15 @@ public final class ProductDatabase
 		Postconditions: the product name will be returned
 		*/
 			return sql.SQLRead("product", "name", "barcode", barCode);
+	}
+	public final String getProductBarCode(String name) 
+	{
+		/**
+		Class ProductDatabase: Method getProductName
+		Preconditions: setDatabase has been run for the invoking product
+		Postconditions: the product name will be returned
+		*/
+			return sql.SQLRead("product", "name", "name", name);
 	}
 
 	public final double getProductPrice(String extBarCode)
@@ -116,10 +132,19 @@ public final class ProductDatabase
 	{
 		return Integer.parseInt(sql.SQLRead("products", "number", "barcode", Long.toString(barCode)));
 	}
+	public final int getNumber(String name)
+	{
+		return Integer.parseInt(sql.SQLRead("products", "number", "name", name));
+	}
 	public final void setNumber(long barCode, int number)
 	{
 //		allProducts[barCode].setNumber(number);
 		sql.SQLSet("product", "number", Integer.toString(number), "barcode", Long.toString(barCode));
+	}
+	public final void setNumber(String name, int number)
+	{
+//		allProducts[barCode].setNumber(number);
+		sql.SQLSet("product", "number", Integer.toString(number), "name", name);
 	}
 	public final String[] getProductNames() {
 		return sql.SQLReadSet("product", "name", "", "");
