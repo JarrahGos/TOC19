@@ -111,25 +111,29 @@ public class SQLInterface {
 		}
 		return result;
 	}
-	public final void SQLSet(String table, String set, String where, String equals)
+	public final void SQLSet(String table, String setWhat, String setTo, String where, String equals)
 	{
 		try {
-			PreparedStatement request = db.prepareStatement("UPDATE ? SET ? WHERE ?=?");
+			PreparedStatement request = db.prepareStatement("UPDATE ? SET ?=? WHERE ?=?");
 			request.setString(1, table);
-			request.setString(2, set);
-			request.setString(3, where);
-			request.setString(4, equals);
+			request.setString(2, setWhat);
+			request.setString(3, setTo);
+			request.setString(4, where);
+			request.setString(5, equals);
 			request.executeQuery();
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to write to database.\n" + e.toString());
 		}
 	}
-	public final void SQLDelete(String table, String where)
+	public final void SQLDelete(String table, String where, String equals)
 	{
 		try {
-			Statement request = db.createStatement();
-			request.executeQuery("UPDATE " + table + " DELETE " + " WHERE " + where);
+			PreparedStatement request = db.prepareStatement("UPDATE ? DELETE ? WHERE ?=?");
+			request.setString(1, table);
+			request.setString(2, where);
+			request.setString(3, equals);
+			request.executeQuery();
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to write to database.\n" + e.toString());

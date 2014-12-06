@@ -52,7 +52,7 @@ public final class ProductDatabase
 		*/
 		// this should convert the whole table to a string. 
 
-		return sql.SQLReadSet("product", "", "").toString();
+		return sql.SQLReadSet("product", "", "", "").toString();
 	}
 	
 	public final String getProduct(int barCode) 
@@ -63,10 +63,10 @@ public final class ProductDatabase
 		Postconditions: the user will see the details of their chosen product output.
 		*/
 
-		return sql.SQLRead("products", "", "barcode='" + Integer.toString(barCode) + "'");
+		return sql.SQLRead("products", "", "barcode", Integer.toString(barCode));
 
 	}
-	public final void delProduct(int barCode)
+	public final void delProduct(long barCode)
 	{
 		/**
 		Class ProductDatabase: Method delProduct
@@ -74,7 +74,7 @@ public final class ProductDatabase
 		Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
 		*/ 
 		
-		sql.SQLDelete("product", "barcode='" + Integer.toString(barCode) + "'");
+		sql.SQLDelete("product", "barcode",Long.toString(barCode));
 
 	}
 	public final String getProductName(String barCode) 
@@ -84,7 +84,7 @@ public final class ProductDatabase
 		Preconditions: setDatabase has been run for the invoking product
 		Postconditions: the product name will be returned
 		*/
-			return sql.SQLRead("product", "name", "barcode='"+barCode + "'");
+			return sql.SQLRead("product", "name", "barcode", barCode);
 	}
 
 	public final double getProductPrice(String extBarCode)
@@ -94,13 +94,13 @@ public final class ProductDatabase
 		Preconditions: setDatabase has been run for the invoking product
 		Postconditions: the size of the invoking product will be returned as a double
 		*/
-			return Double.parseDouble(sql.SQLRead("product", "price", "barcode='"+extBarCode + "'"));
+			return Double.parseDouble(sql.SQLRead("product", "price", "barcode", extBarCode));
 	}
 	public final boolean productExists(String extProductName)
 	{
 	    
 	    for(int i = 0; i < logicalSize; i++) { //loop until a product that matches the artist and name specified
-			if(sql.SQLRead("products", "name", "name='" + extProductName + "'") != null) { // not sure whether this will actually return null if the product does not exist. Check. 
+			if(sql.SQLRead("products", "name", "name", extProductName) != null) { // not sure whether this will actually return null if the product does not exist. Check. 
 				return true; // when one is found, send true back to the caller
 			} // change this to check whether nothing is returned. 
 	    }
@@ -112,24 +112,25 @@ public final class ProductDatabase
 	{
 		return sql.SQLOutputCSV("product", path) ? 0 : 1;
 	}
-	public final int getNumber(int barCode)
+	public final int getNumber(long barCode)
 	{
-		return Integer.parseInt(sql.SQLRead("products", "number", "barcode='" + Integer.toString(barCode) + "'"));
+		return Integer.parseInt(sql.SQLRead("products", "number", "barcode", Long.toString(barCode)));
 	}
-	public final void setNumber(int barCode, int number)
+	public final void setNumber(long barCode, int number)
 	{
 //		allProducts[barCode].setNumber(number);
-		sql.SQLSet("product", "" + number, "barcode='" + barCode + "'");
+		sql.SQLSet("product", "number", Integer.toString(number), "barcode", Long.toString(barCode));
 	}
 	public final String[] getProductNames() {
-		return sql.SQLReadSet("product", "name", "");
+		return sql.SQLReadSet("product", "name", "", "");
 	}
 	public final void productBought(String[][] itemNumbers)
 	{
 		for (String[] itemNumber : itemNumbers) {
-			int number = 0;
-			number = Integer.parseInt(sql.SQLRead("product", "number", "name='" + itemNumber[0] + "'"));
-			sql.SQLSet("product", "number='" + itemNumber[1] + "'", "name='" + itemNumber[0] + "'");
+			int number;
+			number = Integer.parseInt(sql.SQLRead("product", "number", "name", itemNumber[0]));
+			number -= Long.parseLong(itemNumber[1]);
+			sql.SQLSet("product", "number", Integer.toString(number), "name", itemNumber[0]);
 		}
 	}
 	

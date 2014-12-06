@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import java.io.FileNotFoundException;
+import TOC19.Settings;
 
 /***
 *    TOC19 is a simple program to run TOC payments within a small group. 
@@ -36,7 +37,8 @@ public class WorkingUser {
 	private ProductDatabase productDatabase;
 	private PersonDatabase personDatabase;
 	private CheckOut checkOuts;
-	private static int userNumber;
+	private	static long pmKeyS;
+	private Settings config;
 	
 	public WorkingUser() throws FileNotFoundException
 	{
@@ -44,7 +46,7 @@ public class WorkingUser {
 		personDatabase = new PersonDatabase();
 		checkOuts = new CheckOut();
 
-		userNumber = -1;
+		pmKeyS = -1;
 	}
 //	public final void addDatabases()
 //	{
@@ -70,11 +72,11 @@ public class WorkingUser {
 			input = input.substring(1);
 		}
 		if(input == null || input.equals("") || !isLong(input) || (input.length() != 7 && input.length() != 5 && input.length() != 6) || !personDatabase.personExists(Long.parseLong(input))) { // checks for valid numbers in the PMKeyS
-			userNumber =  -1;
+			pmKeyS =  -1;
 		}
 		else {
 			correct = true;
-			userNumber =  personDatabase.findPerson(Long.parseLong(input));
+			pmKeyS =  personDatabase.findPerson(Long.parseLong(input));
 		}
     }
 	public final String[] getUserNames() {
@@ -168,18 +170,18 @@ public class WorkingUser {
 	}
         public final void logOut()
         {
-            userNumber = -1;
+            pmKeyS = -1;
             checkOuts = new CheckOut();
         }
 	public final void buyProducts()
 	{
-		personDatabase.addCost(userNumber, checkOuts.getPrice());// add the bill to the persons account
+		personDatabase.addCost(pmKeyS, checkOuts.getPrice());// add the bill to the persons account
 //		checkOuts.productBought(); // This no longer works as checkouts does not have access to the database. 
 		productDatabase.productBought(checkOuts.productBought());
 //		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
 //		personDatabase.writeOutDatabase("personDatabase.txt");
 		checkOuts = new CheckOut(); // ensure checkout clear
-        userNumber = -1;
+        pmKeyS = -1;
 	}
 	public final String getCheckOut()
 	{
@@ -195,8 +197,8 @@ public class WorkingUser {
 	}
 	public final String userName()
 	{
-		if(userNumber == -1) return "error";
-		else return personDatabase.getPersonName(userNumber);
+		if(pmKeyS == -1) return "error";
+		else return personDatabase.getPersonName(pmKeyS);
 	}
 	public final boolean addToCart(String input) 
 	{
@@ -223,10 +225,10 @@ public class WorkingUser {
 			}
 			return false;
 	}
-	public final int userNumber()
-	{
-		return userNumber;
-	}
+//	public final int pmKeyS()
+//	{
+//		return pmKeyS;
+//	}
 	public final double getPrice()
 	{
 		long price = checkOuts.getPrice();
@@ -242,39 +244,39 @@ public class WorkingUser {
 	}
 	public final void adminWriteOutDatabase(String type) {
 		switch(type) {
-			case("Person"):personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
+			case("Person"):personDatabase.adminWriteOutDatabase("adminPersonDatabase.csv");
 							break;
-			case("Product"):productDatabase.adminWriteOutDatabase("adminProductDatabase.txt");
+			case("Product"):productDatabase.adminWriteOutDatabase("adminProductDatabase.csv");
 							break;
-			default:personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
+			default:personDatabase.adminWriteOutDatabase("adminPersonDatabase.csv");
 		}
 	}
-	public final void removePerson(int index)
+	public final void removePerson(long barCode)
 	{
-		personDatabase.delPerson(index);
+		personDatabase.delPerson(barCode);
 	}
-	public final void removeProduct(int index)
+	public final void removeProduct(long barCode)
 	{
-		productDatabase.delProduct(index);
+		productDatabase.delProduct(barCode);
 	}		
 	public final double getProductPrice(long barCode)
 	{
 		return productDatabase.getProductPrice(Long.toString(barCode));
 	}
-	public final int getProductNumber(int index)
+	public final int getProductNumber(long barCode)
 	{
-		return productDatabase.getNumber(index);
+		return productDatabase.getNumber(barCode);
 	}
-	public final void setNumberOfProducts(int index, int numberOfProducts)
+	public final void setNumberOfProducts(long barCode, int numberOfProducts)
 	{
-		productDatabase.setNumber(index, numberOfProducts);
+		productDatabase.setNumber(barCode, numberOfProducts);
 	}
-	public final boolean userCanBuy(int index)
+	public final boolean userCanBuy(long barCode)
 	{
-		return personDatabase.personCanBuy(index);
+		return personDatabase.personCanBuy(barCode);
 	}
-	public final void setUserCanBuy(int index, boolean canBuy)
+	public final void setUserCanBuy(long barCode, boolean canBuy)
 	{
-		personDatabase.setPersonCanBuy(index, canBuy);
+		personDatabase.setPersonCanBuy(barCode, canBuy);
 	}
 }

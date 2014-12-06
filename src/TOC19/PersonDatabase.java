@@ -55,13 +55,13 @@ public final class PersonDatabase {
 		return sql.SQLReadSet("person", "", "", "").toString();
 	}
 
-	public final String getPerson(int barcode) {
+	public final String getPerson(long barCode) {
 		/**
 		 * Class PersonDatabase: Method getPerson Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4 Postconditions: the user will see the details of their chosen
 		 * person output.
 		 */
 
-		return sql.SQLRead("person", "", "barcode", Integer.toString(barcode));
+		return sql.SQLRead("person", "", "barcode", Long.toString(barCode));
 	}
 
 	public final String getPersonUser(long barCode, boolean html) {  
@@ -93,15 +93,15 @@ public final class PersonDatabase {
 
 	}
 
-	public final void delPerson(int barCode) {
+	public final void delPerson(long barCode) {
 		/**
 		 * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
 		 * failure of this will be given by a 0 or 1 returned respectively.
 		 */
-		sql.SQLDelete("person", "barcode='" + Integer.toString(barCode) + "'");
+		sql.SQLDelete("person", "barcode", Long.toString(barCode));
 	}
 
-	public final String getPersonName(int barCode) {
+	public final String getPersonName(long barCode) {
 		/**
 		 * Class PersonDatabase: Method getPersonName Preconditions: setDatabase has been run for the invoking person Postconditions: the person name will be returned
 		 */
@@ -136,26 +136,32 @@ public final class PersonDatabase {
 	public final int adminWriteOutDatabase(String path) {
 		return sql.SQLOutputCSV("person", path) ? 0 : 1;
 	}
-	public final int findPerson(long barCode) {
+	public final long findPerson(long barCode) {
 		if (7000000 == barCode) {
 			return -2;
 		}
-		else return -1;
+		else return Long.parseLong(sql.SQLRead("person", "barcode", "barcode", Long.toString(barCode))); // if this does not return a user, this should return -1
 	}
 
 	public final void addCost(long barCode, long cost) {
 		long price;
 		price = Integer.parseInt(sql.SQLRead("person", "priceBill", "barcode", Long.toString(barCode))) + cost; 
-		sql.SQLSet("person", "priceBill='" + price + "'", "barcode", Long.toString(barCode));
+		sql.SQLSet("person", "priceBill", Long.toString(price) + "'", "barcode", Long.toString(barCode));
 		price = Integer.parseInt(sql.SQLRead("person", "priceYear", "barcode", Long.toString(barCode))) + cost;
-		sql.SQLSet("person", "priceYear='" + price + "'", "barCode", Long.toString(barCode));
+		sql.SQLSet("person", "priceYear", Long.toString(price) + "'", "barCode", Long.toString(barCode));
 	}
 
 	public final void resetBills() {
-		sql.SQLSet("person", "priceBill='0'", "", ""); // not sure whether this should be "" or "*"
+		sql.SQLSet("person", "priceBill", "0", "", ""); // not sure whether this should be "" or "*"
 	}
 	public final void setAdminPassword(String extPassword) {
 		admin.setName(extPassword); // a read and write file should be added to this. Maybe write that into the JSON config? (thas is, if I make one)
+		try {
+			config.adminSetPassword(extPassword); 
+		}
+		catch (FileNotFoundException e) {
+			System.out.print("could not save the new admin password. Use the old one\n" + e.toString());
+		}
 	}
 	public final boolean personCanBuy(long barCode)
 	{
@@ -163,7 +169,7 @@ public final class PersonDatabase {
 	}
 	public final void setPersonCanBuy(long barCode, boolean canBuy)
 	{
-		sql.SQLSet("person", "canBuy='" + canBuy + "'", "barcode", Long.toString(barCode));
+		sql.SQLSet("person", "canBuy", Boolean.toString(canBuy) + "'", "barcode", Long.toString(barCode));
 	}
 	public final String[] getUserNames()
 	{
