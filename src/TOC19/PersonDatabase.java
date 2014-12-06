@@ -29,16 +29,19 @@ import TOC19.Settings;
 
 public final class PersonDatabase {
 
-	private static Person admin;
+	private static Person admin = new Person();
 	private static int logicalSize;
 	private SQLInterface sql;
-	private Settings config;
+	private Settings config = new Settings();
 
 	public PersonDatabase() throws FileNotFoundException
 	{
 		logicalSize = 0;
-		String[] settings = null;
-		config.adminSettings();
+		String[] settings = config.adminSettings();
+		System.out.println("\n\n\n\n" + settings[0] + "\n" + settings[1] + "\n\n\n\n\n\n\n\n\n\n");
+		
+		
+		System.out.println();
 		admin.setBarCode(Long.parseLong(settings[0]));
 		admin.setName(settings[1]);
 	}

@@ -70,7 +70,7 @@ public final class Interface extends Application
 	private static int horizontalSize = 1024;
 	private static int verticalSize = 576;
 	private final int textSize;
-	Settings config;
+	Settings config = new Settings();
 
 	private int logicalSize;
 //	Timer timeOut = new Timer(60000000, new actionListener());
@@ -81,7 +81,7 @@ public final class Interface extends Application
 		String[] settings = config.InterfaceSettings();
 		horizontalSize = Integer.parseInt(settings[0]);
 		verticalSize = Integer.parseInt(settings[1]);
-		textSize = Integer.parseInt(settings[3]);
+		textSize = Integer.parseInt(settings[2]);
 		//initalize the variables created above
 		
 	}	
