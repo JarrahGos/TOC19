@@ -35,41 +35,49 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import TOC19.Settings;
 import java.io.FileNotFoundException;
 
 
 public class SQLInterface {
-	private String URL = "jdbc:mysql//localhost:3306/toc"; // these will be initialised from the file. 
+	private String URL = "jdbc:mariadb//localhost:3306/toc"; // these will be initialised from the file. 
 	private String user = "jarrah"; // when sure it works, remove these. 
 	private String password = "password";
-	private Connection db = null;  
-	private Settings config;
-	public SQLInterface(String extuser, String extpassword) throws FileNotFoundException
+	private Connection db;  
+	private Settings config = new Settings();
+	public SQLInterface() throws FileNotFoundException
 	{
+		try {
+			Class.forName("org.mariadb.jdbc.Driver").newInstance(); 
+		}
+		catch (ClassNotFoundException e) {
+			System.out.println("could not find driver class\n" + e.toString());
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+			System.out.println("could not create instance\n" + e.toString());
+		}
 		String[] settings = config.SQLInterfaceSettings();
 		URL = settings[0];
 		user = settings[1];
 		password = settings[2];
 		try {
 			db = DriverManager.getConnection(URL, user, password);
+			System.out.println("\n\n\n\n\n\n\n DB Connected \n\n\n\n\n\n\n\n\n\n");
 		}
 		catch (java.sql.SQLException e){
 			System.out.println("error connecting to DB, check the settings\n" + e.toString());
+			System.out.println(URL + "\n" + user + "\n" + password);
 		}
+		System.out.println(db == null ? "null" : db.toString());
 	}
-	public final String SQLRead(String table,String columnName, String where, String equals) 
+	public final String SQLRead(String table,String columnName, String where) 
 	{
 		String result = "";
 		ResultSet rs = null;
 		try {
-			PreparedStatement request = db.prepareStatement("SELECT ? FROM ? WHERE ?=?");
-			request.setString(1, columnName);
-			request.setString(2, table);
-			request.setString(3, where);
-			request.setString(4, equals);
-			rs = request.executeQuery();
+			Statement request = db.createStatement();
+			rs = request.executeQuery("SELECT " + columnName + " FROM " + table + " WHERE " + where);
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to read database.\n" + e.toString());
@@ -83,18 +91,13 @@ public class SQLInterface {
 		}
 		return result;
 	}
-	public final String[] SQLReadSet(String table, String columnName, String where, String equals)
+	public final String[] SQLReadSet(String table, String columnName, String where)
 	{
 		String[] result = null;
 		ResultSet rs = null;
 		try {
-			PreparedStatement request = db.prepareStatement("SELECT ? FROM ? WHERE ?=?");
-			request.setString(1, columnName);
-			request.setString(2, table);
-			request.setString(3, where);
-			request.setString(4, equals);
-			rs = request.executeQuery();
-			rs = request.executeQuery();
+			Statement request = db.createStatement();
+			rs = request.executeQuery("SELECT " + columnName + " FROM " + table + " WHERE " + where);
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to read database.\n" + e.toString());
@@ -111,29 +114,21 @@ public class SQLInterface {
 		}
 		return result;
 	}
-	public final void SQLSet(String table, String setWhat, String setTo, String where, String equals)
+	public final void SQLSet(String table, String set, String where)
 	{
 		try {
-			PreparedStatement request = db.prepareStatement("UPDATE ? SET ?=? WHERE ?=?");
-			request.setString(1, table);
-			request.setString(2, setWhat);
-			request.setString(3, setTo);
-			request.setString(4, where);
-			request.setString(5, equals);
-			request.executeQuery();
+			Statement request = db.createStatement();
+			request.executeQuery("UPDATE " + table + " SET " + set + " WHERE " + where);
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to write to database.\n" + e.toString());
 		}
 	}
-	public final void SQLDelete(String table, String where, String equals)
+	public final void SQLDelete(String table, String where)
 	{
 		try {
-			PreparedStatement request = db.prepareStatement("UPDATE ? DELETE ? WHERE ?=?");
-			request.setString(1, table);
-			request.setString(2, where);
-			request.setString(3, equals);
-			request.executeQuery();
+			Statement request = db.createStatement();
+			request.executeQuery("UPDATE " + table + " DELETE " + " WHERE " + where);
 		}
 		catch (java.sql.SQLException e) {
 			System.out.println("Unable to write to database.\n" + e.toString());
@@ -154,16 +149,14 @@ public class SQLInterface {
 			return false;
 		}
 	}
-	public final void SQLInsert(String table, String values)
+	public final void SQLInsert(String table, String values) // make a field for the column required
 	{
 		try {
-			PreparedStatement request = db.prepareStatement("INSERT INTO ? VALUES ? ");
-			request.setString(1, table);
-			request.setString(2, values);
-			request.executeQuery();
+			Statement request = db.createStatement();
+			request.executeUpdate("INSERT INTO " + table + " VALUES " + values + ";");
 		}
 		catch (java.sql.SQLException e) {
-			System.out.println("Unable to write out your new values to table  " + table + "\n" + e.toString());
+			System.out.println("Unable to write to database.\n" + e.toString());
 		}
 	}
 	

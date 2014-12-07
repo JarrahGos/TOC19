@@ -38,17 +38,18 @@ public final class PersonDatabase {
 	{
 		logicalSize = 0;
 		String[] settings = config.adminSettings();
-		System.out.println("\n\n\n\n" + settings[0] + "\n" + settings[1] + "\n\n\n\n\n\n\n\n\n\n");
-		
-		
-		System.out.println();
+		sql = new SQLInterface();
+		System.out.println(sql.toString());
 		admin.setBarCode(Long.parseLong(settings[0]));
 		admin.setName(settings[1]);
 	}
 
 	public final void setDatabasePerson(String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
 	{
-		sql.SQLInsert("person", "(" + name + ", " + running + ", " + week + ", " + barCode + ", " + canBuy + ")");
+		int canbuy;
+		if(canBuy) canbuy = 1;
+		else canbuy = 0;
+		sql.SQLInsert("person", "('" + barCode + "', '" + name + "', '" + running + "', '" + week + "', '" + canbuy + "')");
 	}
 	public final String getDatabase(int sort) {
 		/**
@@ -114,7 +115,7 @@ public final class PersonDatabase {
 		/**
 		 * Class PersonDatabase: Method getPersonName Preconditions: setDatabase has been run for the invoking person Postconditions: the person name will be returned
 		 */
-
+		if(barCode == -2) return admin.getName();
 		return sql.SQLRead("person", "name", "barcode", Long.toString(barCode));
 	}
 	public final String getPersonBarCode(String name) 

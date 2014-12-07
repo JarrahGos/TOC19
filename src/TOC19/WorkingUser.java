@@ -38,7 +38,7 @@ public class WorkingUser {
 	private PersonDatabase personDatabase;
 	private CheckOut checkOuts;
 	private	static long pmKeyS;
-	private Settings config;
+	private Settings config = new Settings();
 	
 	public WorkingUser() throws FileNotFoundException
 	{

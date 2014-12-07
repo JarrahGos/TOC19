@@ -112,7 +112,7 @@ public class Settings {
 			}
 		}
 	}
-	public final String[] InterfaceSettings() throws FileNotFoundException
+	public final String[] interfaceSettings() throws FileNotFoundException
 	{
 		if (inputStream != null) {
 			try {

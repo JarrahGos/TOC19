@@ -26,25 +26,19 @@
 // GUI Inports
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
@@ -70,15 +64,16 @@ public final class Interface extends Application
 	private static int horizontalSize = 1024;
 	private static int verticalSize = 576;
 	private final int textSize;
-	Settings config = new Settings();
+	Settings config;
 
 	private int logicalSize;
 //	Timer timeOut = new Timer(60000000, new actionListener());
 		
 	public Interface() throws IOException
 	{
+		this.config = new Settings();
 		workingUser = new WorkingUser();
-		String[] settings = config.InterfaceSettings();
+		String[] settings = config.interfaceSettings();
 		horizontalSize = Integer.parseInt(settings[0]);
 		verticalSize = Integer.parseInt(settings[1]);
 		textSize = Integer.parseInt(settings[2]);

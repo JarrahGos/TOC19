@@ -23,9 +23,6 @@
 * Description: This program will allow for the input and retreval of the product database and will set the limits of the database.
 */
 import TOC19.SQLInterface;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 
 public final class ProductDatabase
 {
