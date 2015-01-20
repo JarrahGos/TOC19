@@ -35,6 +35,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Scanner;
+import TOC19.Settings;
 
 public final class PersonDatabase {
 
@@ -45,11 +46,15 @@ public final class PersonDatabase {
 //	private File file;
 //	private PrintWriter outfile;
 	private Scanner readOutFile;
+	private Settings config = new Settings();
 
-	public PersonDatabase() {
+	public PersonDatabase() throws FileNotFoundException {
 		allPersons = new Person[45];
 		logicalSize = 0;
 //		output = "";
+		String[] settings = config.adminSettings();
+		admin.setBarCode(Long.parseLong(settings[0]);
+		admin.setName(settings[1]);
 	}
 
 	public final int setDatabasePerson(int personNo, String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
