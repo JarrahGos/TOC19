@@ -1,3 +1,5 @@
+package TOC19;
+
 /***
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
@@ -25,6 +27,11 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -372,33 +379,48 @@ public final class PersonDatabase {
 		}
 	}
 
-	public final int writeOutDatabase(String path) {
-		this.quickSortByName(0, logicalSize - 1); // ensure that the database is sorted.
-		PrintWriter outfile = null;
-		try {
-			File file = new File(path);
-			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
-		} catch (FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			if (outfile != null) outfile.close();
-			return 1;
-		}
-		outfile.println("PersonDatabase File"); // print the file header
-		outfile.println("---------------------------------------------");
-		outfile.println("7000000"); // print out the admin barcode
-		outfile.println(admin.getName()); // print out the admin password. // Stored and read as name
-		for (int b = 0; b < logicalSize; b++) { // repeatedly print the data of the persons in the database to the file. 
-			outfile.println("------------------------------------------");
-			outfile.println(allPersons[b].getBarCode());
-			outfile.println(allPersons[b].getName());
-			outfile.println(allPersons[b].totalCostRunning());
-			outfile.println(allPersons[b].totalCostWeek());
-			outfile.println(allPersons[b].canBuy());
-
-		}
-		sortBy(3); // binary search
-		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
-		return 0; // let the program and thus the user know that everything is shiny. 
-	}
+        public final int writeOutDatabasePerson(Person persOut) {
+            try {
+                FileOutputStream personOut = new FileOutputStream(persOut.getName());
+                ObjectOutputStream out = new ObjectOutputStream(personOut);
+                out.writeObject(persOut);
+                out.close();
+                personOut.close();
+                // create a call to the linux ln -s command to create a simlink with the users barcode in it
+            }
+            catch (IOException e) {
+                System.out.println(e);
+                return 1;
+            }
+            return 0;
+        }
+//	public final int writeOutDatabase(String path) {
+//		this.quickSortByName(0, logicalSize - 1); // ensure that the database is sorted.
+//		PrintWriter outfile = null;
+//		try {
+//			File file = new File(path);
+//			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
+//		} catch (FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
+//			if (outfile != null) outfile.close();
+//			return 1;
+//		}
+//		outfile.println("PersonDatabase File"); // print the file header
+//		outfile.println("---------------------------------------------");
+//		outfile.println("7000000"); // print out the admin barcode
+//		outfile.println(admin.getName()); // print out the admin password. // Stored and read as name
+//		for (int b = 0; b < logicalSize; b++) { // repeatedly print the data of the persons in the database to the file. 
+//			outfile.println("------------------------------------------");
+//			outfile.println(allPersons[b].getBarCode());
+//			outfile.println(allPersons[b].getName());
+//			outfile.println(allPersons[b].totalCostRunning());
+//			outfile.println(allPersons[b].totalCostWeek());
+//			outfile.println(allPersons[b].canBuy());
+//
+//		}
+//		sortBy(3); // binary search
+//		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
+//		return 0; // let the program and thus the user know that everything is shiny. 
+//	}
 
 	public final int adminWriteOutDatabase(String path) {
 		this.quickSortByName(0, logicalSize - 1); // ensure that the database is sorted.
@@ -427,45 +449,59 @@ public final class PersonDatabase {
 		sortBy(3); // binary search
 		return 0; // let the program and thus the user know that everything is shiny. 
 	}
-
-	public final int readDatabase(String path) {
-		String tempName, tempInput;
-		long tempTotalCostRunning, tempTotalCostWeek;
-		double doubleCosts;
-		int tempBarCode;
-		int count = 0;
-		boolean tempCanBuy;
-		int z;
-		try {
-			File file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
-			readOutFile = new Scanner(file); // create the scanner 
-			readOutFile.nextLine(); // exclude the header of the file
-			readOutFile.nextLine(); // exclude dashes
-			tempInput = readOutFile.nextLine();
-			tempBarCode = Integer.parseInt(tempInput);
-			tempName = readOutFile.nextLine();
-			admin = new Person(tempName, tempBarCode, 0, 0, true);
-			for (z = 0; readOutFile.hasNext(); z++) { // until all of the lines have been read, I want to read the lines.
-				readOutFile.nextLine(); // someone decided to put a redundant line in each person of the file, this throws it away.
-				tempInput = readOutFile.nextLine();
-				tempBarCode = Integer.parseInt(tempInput);
-				tempName = readOutFile.nextLine();
-				doubleCosts = Double.parseDouble(readOutFile.nextLine());
-				tempTotalCostRunning = (long)(doubleCosts*100);
-				doubleCosts = Double.parseDouble(readOutFile.nextLine());
-				tempTotalCostWeek = (long)(doubleCosts*100);
-				tempInput = readOutFile.nextLine();
-				tempCanBuy = Boolean.parseBoolean(tempInput);
-				count += this.setDatabasePerson(z, tempName, tempTotalCostRunning, tempTotalCostWeek, tempBarCode, tempCanBuy); // send the big pile of lines that we just read to the person constructor. 
-			}
-			readOutFile.close(); // clean up by closing the file
-			sortBy(3);
-			return z - count; // tell the program how many persons we just got. If it's more than a thousand, I hope the sort doesn't take too long. 
-		} catch (FileNotFoundException e) {
-			readOutFile.close(); // Well, if something goes wrong, someone should find out. 
-			return -1; // this is what we use to tell them that something we didn't expect happened. Like the user assuring me that the file exists.
-		}
-	}
+        public final Person readDatabasePerson(long barcode){
+            Person importing = null;
+            try {
+                FileInputStream personIn = new FileInputStream(String.valueOf(barcode));
+                ObjectInputStream in = new ObjectInputStream(personIn);
+                importing = (Person)in.readObject();
+                in.close();
+                personIn.close();
+            }
+            catch (IOException e) {
+                System.out.println(e);
+                return null;
+            }
+            return importing;
+        }
+//	public final int readDatabase(String path) {
+//		String tempName, tempInput;
+//		long tempTotalCostRunning, tempTotalCostWeek;
+//		double doubleCosts;
+//		int tempBarCode;
+//		int count = 0;
+//		boolean tempCanBuy;
+//		int z;
+//		try {
+//			File file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
+//			readOutFile = new Scanner(file); // create the scanner 
+//			readOutFile.nextLine(); // exclude the header of the file
+//			readOutFile.nextLine(); // exclude dashes
+//			tempInput = readOutFile.nextLine();
+//			tempBarCode = Integer.parseInt(tempInput);
+//			tempName = readOutFile.nextLine();
+//			admin = new Person(tempName, tempBarCode, 0, 0, true);
+//			for (z = 0; readOutFile.hasNext(); z++) { // until all of the lines have been read, I want to read the lines.
+//				readOutFile.nextLine(); // someone decided to put a redundant line in each person of the file, this throws it away.
+//				tempInput = readOutFile.nextLine();
+//				tempBarCode = Integer.parseInt(tempInput);
+//				tempName = readOutFile.nextLine();
+//				doubleCosts = Double.parseDouble(readOutFile.nextLine());
+//				tempTotalCostRunning = (long)(doubleCosts*100);
+//				doubleCosts = Double.parseDouble(readOutFile.nextLine());
+//				tempTotalCostWeek = (long)(doubleCosts*100);
+//				tempInput = readOutFile.nextLine();
+//				tempCanBuy = Boolean.parseBoolean(tempInput);
+//				count += this.setDatabasePerson(z, tempName, tempTotalCostRunning, tempTotalCostWeek, tempBarCode, tempCanBuy); // send the big pile of lines that we just read to the person constructor. 
+//			}
+//			readOutFile.close(); // clean up by closing the file
+//			sortBy(3);
+//			return z - count; // tell the program how many persons we just got. If it's more than a thousand, I hope the sort doesn't take too long. 
+//		} catch (FileNotFoundException e) {
+//			readOutFile.close(); // Well, if something goes wrong, someone should find out. 
+//			return -1; // this is what we use to tell them that something we didn't expect happened. Like the user assuring me that the file exists.
+//		}
+//	}
 
 	public final void sortBy(int sort) {
 		switch (sort) { // Rather than place this switch every time the sort is used, Call this.

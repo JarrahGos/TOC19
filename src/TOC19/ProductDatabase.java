@@ -1,3 +1,5 @@
+package TOC19;
+
 /****
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
@@ -23,7 +25,12 @@
 * Description: This program will allow for the input and retreval of the product database and will set the limits of the database.
 */
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -352,32 +359,46 @@ public final class ProductDatabase
 			quickSortByBarCode(pivot+1, right);
 		}
 	}
-
-	public final int writeOutDatabase(String path) 
-	{
-		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
-		PrintWriter outfile = null;
-		try {
-			File file = new File(path);
-			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
-		}
-		catch(FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			if (outfile != null)outfile.close();
-			return 1;
-		}
-			outfile.println("ProductDatabase File"); // print the file header
-			for(int b = 0; b < logicalSize; b++) { // repeatedly print the data of the products in the database to the file. 
-				outfile.println("-------------------------------------");
-				outfile.println(allProducts[b].getName());
-				outfile.println((double)allProducts[b].productPrice()/100);
-				outfile.println(allProducts[b].getBarCode());
-				outfile.println(allProducts[b].getNumber());
-				
-			}
-			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
-			sortBy(3); // binary search
-			return 0; // let the program and thus the user know that everything is shiny. 
-	}
+         public final int writeOutDatabaseProduct(product productOut) {
+            try {
+                FileOutputStream productOut = new FileOutputStream(productOut.getName());
+                ObjectOutputStream out = new ObjectOutputStream(productOut);
+                out.writeObject(productOut);
+                out.close();
+                productOut.close();
+                // create a call to the linux ln -s command to create a simlink with the users barcode in it
+            }
+            catch (IOException e) {
+                System.out.println(e);
+                return 1;
+            }
+            return 0;
+        }
+//	public final int writeOutDatabase(String path) 
+//	{
+//		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
+//		PrintWriter outfile = null;
+//		try {
+//			File file = new File(path);
+//			outfile = new PrintWriter(file); // attempt to open the file that has been created. 
+//		}
+//		catch(FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
+//			if (outfile != null)outfile.close();
+//			return 1;
+//		}
+//			outfile.println("ProductDatabase File"); // print the file header
+//			for(int b = 0; b < logicalSize; b++) { // repeatedly print the data of the products in the database to the file. 
+//				outfile.println("-------------------------------------");
+//				outfile.println(allProducts[b].getName());
+//				outfile.println((double)allProducts[b].productPrice()/100);
+//				outfile.println(allProducts[b].getBarCode());
+//				outfile.println(allProducts[b].getNumber());
+//				
+//			}
+//			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive 
+//			sortBy(3); // binary search
+//			return 0; // let the program and thus the user know that everything is shiny. 
+//	}
 	public final int adminWriteOutDatabase(String path) 
 	{
 		this.quickSortByName(0, logicalSize-1); // ensure that the database is sorted.
@@ -403,49 +424,64 @@ public final class ProductDatabase
 			quickSortByBarCode(0, logicalSize-1);
 			return 0; // let the program and thus the user know that everything is shiny. 
 	}
-	public final int readDatabase(String path) 
-	{
-		String tempName, tempInput;
-		long tempProductPrice;
-		double doubleProductPrice;
-		long tempBarCode;
-		int tempNumberOfProduct;
-		boolean negative = false;
-		int count = 0;
-		int z;
-		Scanner readOutFile = null; 
-		try {
-			File file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
-			readOutFile = new Scanner(file); // create the scanner 
-			readOutFile.nextLine(); // header
-			for(z = 0; readOutFile.hasNext(); z++) { // until all of the lines have been read, I want to read the lines.
-				readOutFile.nextLine(); // someone decided to put a redundant line in each product of the file, this throws it away.
-				tempName = readOutFile.nextLine();
-				doubleProductPrice = Double.parseDouble(readOutFile.nextLine());
-				tempProductPrice = (long)(doubleProductPrice*100);
-				tempBarCode = Long.parseLong(readOutFile.nextLine());
-				tempInput = readOutFile.nextLine();
-				if('-' == tempInput.charAt(0)) {
-					tempInput = tempInput.substring(1);
-					negative = true;
-				}
-				tempNumberOfProduct = Integer.parseInt(tempInput);
-				if(negative) {
-					tempNumberOfProduct *= -1;
-					negative = false;
-				}
-				count += this.setDatabaseProduct(z, tempName, tempProductPrice, tempBarCode); // send the big pile of lines that we just read to the product constructor. 
-				allProducts[z].setNumber(tempNumberOfProduct);
-			}
-			readOutFile.close(); // clean up by closing the file
-			quickSortByBarCode(0,logicalSize-1);
-			return z - count; // tell the program how many products we just got. If it's more than a thousand, I hope the sort doesn't take too long. 
-		}
-		catch(FileNotFoundException e) {
-			if (readOutFile != null) readOutFile.close(); // Well, if something goes wrong, someone should find out. 
-			return -1; // this is what we use to tell them that something we didn't expect happened. Like the user assuring me that the file exists.
-		}
-	}
+         public final Product readDatabaseProduct(long barcode){
+            Product importing = null;
+            try {
+                FileInputStream productIn = new FileInputStream(String.valueOf(barcode));
+                ObjectInputStream in = new ObjectInputStream(productIn);
+                importing = (Product)in.readObject();
+                in.close();
+                productIn.close();
+            }
+            catch (IOException e) {
+                System.out.println(e);
+                return null;
+            }
+            return importing;
+        }
+//	public final int readDatabase(String path) 
+//	{
+//		String tempName, tempInput;
+//		long tempProductPrice;
+//		double doubleProductPrice;
+//		long tempBarCode;
+//		int tempNumberOfProduct;
+//		boolean negative = false;
+//		int count = 0;
+//		int z;
+//		Scanner readOutFile = null; 
+//		try {
+//			File file = new File(path); // if this fails, chances are the user hit 2 and imput a file that doesn't exist. 
+//			readOutFile = new Scanner(file); // create the scanner 
+//			readOutFile.nextLine(); // header
+//			for(z = 0; readOutFile.hasNext(); z++) { // until all of the lines have been read, I want to read the lines.
+//				readOutFile.nextLine(); // someone decided to put a redundant line in each product of the file, this throws it away.
+//				tempName = readOutFile.nextLine();
+//				doubleProductPrice = Double.parseDouble(readOutFile.nextLine());
+//				tempProductPrice = (long)(doubleProductPrice*100);
+//				tempBarCode = Long.parseLong(readOutFile.nextLine());
+//				tempInput = readOutFile.nextLine();
+//				if('-' == tempInput.charAt(0)) {
+//					tempInput = tempInput.substring(1);
+//					negative = true;
+//				}
+//				tempNumberOfProduct = Integer.parseInt(tempInput);
+//				if(negative) {
+//					tempNumberOfProduct *= -1;
+//					negative = false;
+//				}
+//				count += this.setDatabaseProduct(z, tempName, tempProductPrice, tempBarCode); // send the big pile of lines that we just read to the product constructor. 
+//				allProducts[z].setNumber(tempNumberOfProduct);
+//			}
+//			readOutFile.close(); // clean up by closing the file
+//			quickSortByBarCode(0,logicalSize-1);
+//			return z - count; // tell the program how many products we just got. If it's more than a thousand, I hope the sort doesn't take too long. 
+//		}
+//		catch(FileNotFoundException e) {
+//			if (readOutFile != null) readOutFile.close(); // Well, if something goes wrong, someone should find out. 
+//			return -1; // this is what we use to tell them that something we didn't expect happened. Like the user assuring me that the file exists.
+//		}
+//	}
 	public final void sortBy(int sort)
 	{
 		switch(sort) { // Rather than place this switch every time the sort is used, Call this.
