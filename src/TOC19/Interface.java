@@ -59,6 +59,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import TOC19.Settings;
 
 public final class Interface extends Application
 {
@@ -68,13 +69,20 @@ public final class Interface extends Application
 	private ScrollPane priceDataOut; // output the price of the product.
 	private static int horizontalSize = 1024;
 	private static int verticalSize = 576;
+	private final int textSize;
+	Settings config;
 
 	private int logicalSize;
 //	Timer timeOut = new Timer(60000000, new actionListener());
 		
-	public Interface() 
+	public Interface() throws IOException
 	{
+		this.config = new Settings();
 		workingUser = new WorkingUser();
+		String[] settings = config.interfaceSettings();
+		horizontalSize = Integer.parseInt(settings[0]);
+		verticalSize = Integer.parseInt(settings[1]);
+		textSize = Integer.parseInt(settings[2]);
 		//initalize the variables created above
 		
 	}	
@@ -94,7 +102,7 @@ public final class Interface extends Application
 		// create the thread which will be used for logging the user out after a given time. 
 		// create label for input
 		Text inputLabel = new Text("Enter your PMKeyS");
-		inputLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		inputLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, textSize));
 		grid.add(inputLabel, 0,0); // place in top left hand corner
 
 		// create input textfield
