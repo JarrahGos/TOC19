@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -391,9 +390,15 @@ public final class PersonDatabase {
                 out.writeObject(persOut);
                 out.close();
                 personOut.close();
-                // create a call to the linux ln -s command to create a simlink with the users barcode in it
+                // create a simlink to the person to allow the program to search for either username or barcode
+                String command = "ln -s " + persOut.getName() + " " + persOut.getBarcode().toString();
+                Process p;
+                p = Runtime.getRuntime().exec(command);
+                p.waitFor();
+                p.destroy();
+
             }
-            catch (IOException e) {
+            catch (Exception e) {
                 System.out.println(e);
                 return 1;
             }
@@ -458,6 +463,21 @@ public final class PersonDatabase {
             Person importing = null;
             try {
                 FileInputStream personIn = new FileInputStream(String.valueOf(barcode));
+                ObjectInputStream in = new ObjectInputStream(personIn);
+                importing = (Person)in.readObject();
+                in.close();
+                personIn.close();
+            }
+            catch (IOException e) {
+                System.out.println(e);
+                return null;
+            }
+            return importing;
+        }
+         public final Person readDatabasePerson(String name){
+            Person importing = null;
+            try {
+                FileInputStream personIn = new FileInputStream(name);
                 ObjectInputStream in = new ObjectInputStream(personIn);
                 importing = (Person)in.readObject();
                 in.close();
@@ -547,7 +567,7 @@ public final class PersonDatabase {
 			allPersons[i].resetWeekCost();
 		}
 	}
-	public final void setAdminPassword(String extPassword) {
+	public final void setAdminPassword(String extPassword) { // move this over to use the new settings function
 		admin.setName(extPassword);
 	}
 	public final int binarySearch(long extBarCode)

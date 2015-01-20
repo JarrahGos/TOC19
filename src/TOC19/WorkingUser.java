@@ -21,14 +21,14 @@ public class WorkingUser {
 	private ProductDatabase productDatabase;
 	private PersonDatabase personDatabase;
 	private CheckOut checkOuts;
-	private static int userNumber;
+	private static Person user;
 	
 	public WorkingUser() {
 		productDatabase = new ProductDatabase();
 		personDatabase = new PersonDatabase();
 		checkOuts = new CheckOut();
 
-		userNumber = -1;
+		user = null;
 	}
 	public final void addDatabases()
 	{
@@ -54,11 +54,11 @@ public class WorkingUser {
 			input = input.substring(1);
 		}
 		if(input == null || input.equals("") || !isLong(input) || (input.length() != 7 && input.length() != 5 && input.length() != 6) || !personDatabase.personExists(Long.parseLong(input))) { // checks for valid numbers in the PMKeyS
-			userNumber =  -1;
+			user =  null;
 		}
 		else {
 			correct = true;
-			userNumber =  personDatabase.findPerson(Long.parseLong(input));
+			user =  personDatabase.readDatabasePerson(Long.parseLong(input));
 		}
     }
 	public final String[] getUserNames() {
@@ -152,17 +152,18 @@ public class WorkingUser {
 	}
         public final void logOut()
         {
-            userNumber = -1;
+            user = null;
             checkOuts = new CheckOut();
         }
 	public final void buyProducts()
 	{
-		personDatabase.addCost(userNumber, checkOuts.getPrice());// add the bill to the persons account
+            user.addprice(checkouts.getPrice);
+//		personDatabase.addCost(user, checkOuts.getPrice());// add the bill to the persons account
 		checkOuts.productBought(); // clear the quantities and checkout
-		productDatabase.writeOutDatabase("productDatabase.txt"); // write out the databases. 
-		personDatabase.writeOutDatabase("personDatabase.txt");
+		productDatabase.writeOutDatabase("productDatabase.txt"); // rejig this to use the new system.
+		personDatabase.writeOutDatabasePerson(user);
 		checkOuts = new CheckOut(); // ensure checkout clear
-        userNumber = -1;
+        user = null;
 	}
 	public final String getCheckOut()
 	{
@@ -178,7 +179,7 @@ public class WorkingUser {
 	}
 	public final String userName()
 	{
-		return userNumber == -1 ? "error" : PersonDatabase.getPersonName(userNumber);
+		return user == null ? "error" : user.getName();
 	}
 	public final boolean addToCart(String input) 
 	{
@@ -204,9 +205,9 @@ public class WorkingUser {
 		}
 		return false;
 	}
-	public final int userNumber()
+	public final int user() // this no longer makes much sense
 	{
-		return userNumber;
+		return user;
 	}
 	public final double getPrice()
 	{
@@ -254,12 +255,12 @@ public class WorkingUser {
 	{
 		productDatabase.setNumber(index, numberOfProducts);
 	}
-	public final boolean userCanBuy(int index)
+	public final boolean userCanBuy()
 	{
-		return personDatabase.personCanBuy(index);
+		return user.canBuy(); //not sure whether this will do the requested job. 
 	}
-	public final void setUserCanBuy(int index, boolean canBuy)
+	public final void setUserCanBuy(boolean canBuy) // should come with a name or barcode
 	{
-		personDatabase.setPersonCanBuy(index, canBuy);
+		user.setCanBuy(canBuy); // this will not work. needs to be altered in interface
 	}
 }

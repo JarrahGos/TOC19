@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -61,7 +60,7 @@ public final class ProductDatabase
 		Postcondition: Data for the currant working product in this database will be set. 
 		*/
 		int test = 0; // using test because something keeps changing my i...
-		if(!productExists( name)) { // check whether the product already exists
+		if(!productExists( name)) { // alter this to check whether a file with the name name/barcode exists
 		    allProducts[logicalSize] = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
 		    logicalSize++; // We have a new product, Now we have something to show for it.
 			test = 1;
@@ -359,16 +358,22 @@ public final class ProductDatabase
 			quickSortByBarCode(pivot+1, right);
 		}
 	}
-         public final int writeOutDatabaseProduct(product productOut) {
+         public final int writeOutDatabaseProduct(Product productOut) {
             try {
-                FileOutputStream productOut = new FileOutputStream(productOut.getName());
-                ObjectOutputStream out = new ObjectOutputStream(productOut);
+                FileOutputStream prodOut = new FileOutputStream(productOut.getName());
+                ObjectOutputStream out = new ObjectOutputStream(prodOut);
                 out.writeObject(productOut);
                 out.close();
                 productOut.close();
-                // create a call to the linux ln -s command to create a simlink with the users barcode in it
+                 // create a simlink to the person to allow the program to search for either username or barcode
+                String command = "ln -s " + productOut.getName() + " " + productOut.getBarcode().toString();
+                Process p;
+                p = Runtime.getRuntime().exec(command);
+                p.waitFor();
+                p.destroy();
+
             }
-            catch (IOException e) {
+            catch (Exception e) {
                 System.out.println(e);
                 return 1;
             }
@@ -428,6 +433,21 @@ public final class ProductDatabase
             Product importing = null;
             try {
                 FileInputStream productIn = new FileInputStream(String.valueOf(barcode));
+                ObjectInputStream in = new ObjectInputStream(productIn);
+                importing = (Product)in.readObject();
+                in.close();
+                productIn.close();
+            }
+            catch (IOException e) {
+                System.out.println(e);
+                return null;
+            }
+            return importing;
+        }
+         public final Product readDatabaseProduct(String name){
+            Product importing = null;
+            try {
+                FileInputStream productIn = new FileInputStream(name);
                 ObjectInputStream in = new ObjectInputStream(productIn);
                 importing = (Product)in.readObject();
                 in.close();
