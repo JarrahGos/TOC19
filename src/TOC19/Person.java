@@ -1,3 +1,5 @@
+package TOC19;
+
 /***
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
@@ -23,7 +25,7 @@
 * Description: This program will allow for the input and retreval of persons in the person database.
 */
 
-public final class Person
+public final class Person implements java.io.Serializable
 {
 
 	// create the variables that are needed in order of use
