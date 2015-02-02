@@ -159,4 +159,7 @@ public final class Person implements java.io.Serializable
 	{
 		canBuy = extCanBuy;
 	}
+	public final void setBarCode(long extBarCode) {
+		barCode = extBarCode;
+	}
 }

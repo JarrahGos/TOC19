@@ -1,6 +1,8 @@
 package TOC19;
 
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.ScrollPane;
@@ -23,34 +25,20 @@ public class WorkingUser {
 	private CheckOut checkOuts;
 	private static Person user;
 	
-	public WorkingUser() {
+	public WorkingUser() throws FileNotFoundException {
 		productDatabase = new ProductDatabase();
 		personDatabase = new PersonDatabase();
 		checkOuts = new CheckOut();
 
 		user = null;
 	}
-	public final void addDatabases()
+	public final void addDatabases() //TODO: this is redundant, remove it.
 	{
-		int error = productDatabase.readDatabase("productDatabase.txt"); // read in the product database
-		if(error == -1) { // tell the user there was an error reading the above
-			System.out.println("There was an error reading the productDatabase");
-		}
-		else { // tell the user the above went swimingly. 
-			System.out.printf("I have imported %d products\n", error);
-		}
-		error = personDatabase.readDatabase("personDatabase.txt"); // as above for the person database
-		if(error == -1) {
-			System.out.println("There was an error reading the personDatabase");
-		}
-		else {
-			System.out.printf("I have imported %d people\n", error);
-		}
 	}
 	public final void getPMKeyS(String input) 
     {
         boolean correct = false;
-		if(( input != null && !input.equals("")) && (input.charAt(0) == 'c' || input.charAt(0) == 'n' || input.charAt(0) == 'C' || input.charAt(0) == 'N')) {
+		if(( input != null && !input.equals("")) && (!input.matches("[0-9]+"))) {
 			input = input.substring(1);
 		}
 		if(input == null || input.equals("") || !isLong(input) || (input.length() != 7 && input.length() != 5 && input.length() != 6) || !personDatabase.personExists(Long.parseLong(input))) { // checks for valid numbers in the PMKeyS
@@ -94,7 +82,7 @@ public class WorkingUser {
 	public final void setAdminPassword(String PW)
 	{
 		personDatabase.setAdminPassword(PW);
-	}
+	} //TODO: make this work with Settings.java
 	public final boolean isInteger(String s) 
 	{
 		if(s == null) return false;
@@ -157,10 +145,10 @@ public class WorkingUser {
         }
 	public final void buyProducts()
 	{
-            user.addprice(checkouts.getPrice);
+            user.addPrice(checkOuts.getPrice());
 //		personDatabase.addCost(user, checkOuts.getPrice());// add the bill to the persons account
 		checkOuts.productBought(); // clear the quantities and checkout
-		productDatabase.writeOutDatabase("productDatabase.txt"); // rejig this to use the new system.
+		productDatabase.writeOutDatabase("productDatabase.txt"); //TODO: rejig this to use the new system.
 		personDatabase.writeOutDatabasePerson(user);
 		checkOuts = new CheckOut(); // ensure checkout clear
         user = null;
@@ -205,10 +193,6 @@ public class WorkingUser {
 		}
 		return false;
 	}
-	public final int user() // this no longer makes much sense
-	{
-		return user;
-	}
 	public final double getPrice()
 	{
 		long price = checkOuts.getPrice();
@@ -231,12 +215,10 @@ public class WorkingUser {
 			default:personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
 		}
 	}
-	public final void removePerson(int index)
-	{
+	public final void removePerson(int index) throws IOException, InterruptedException {
 		personDatabase.delPerson(index);
 	}
-	public final void removeProduct(int index)
-	{
+	public final void removeProduct(int index) throws IOException, InterruptedException {
 		productDatabase.delProduct(index);
 	}		
 	public final long getProductBarCode(int index)
@@ -259,8 +241,16 @@ public class WorkingUser {
 	{
 		return user.canBuy(); //not sure whether this will do the requested job. 
 	}
-	public final void setUserCanBuy(boolean canBuy) // should come with a name or barcode
+	public final void setUserCanBuy(long userNumber, boolean canBuy)
 	{
-		user.setCanBuy(canBuy); // this will not work. needs to be altered in interface
+		personDatabase.setPersonCanBuy(userNumber, canBuy); //TODO: this will not work. needs to be altered in interface
+	}
+	public final void setUserCanBuy(String userName, boolean canBuy)
+	{
+		personDatabase.setPersonCanBuy(userName, canBuy); //TODO: this will not work. needs to be altered in interface
+	}
+	public final boolean userLoggedIn()
+	{
+		return user != null;
 	}
 }

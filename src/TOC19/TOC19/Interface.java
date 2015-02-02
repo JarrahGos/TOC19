@@ -61,6 +61,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import TOC19.Settings;
 
+import java.io.IOException;
+
 public final class Interface extends Application
 {
 	// Create the necessary instance variables.
@@ -190,12 +192,12 @@ public final class Interface extends Application
 
         //listen on enter product barcode button
 		enterBarCode.setOnAction((ActionEvent e) -> {
-				if(workingUser.userNumber() == -1) { // treat the input as a PMKeyS
+				if(!workingUser.userLoggedIn()) { // treat the input as a PMKeyS
 					PMKeySEntered(input.getText()); // take the text, do user logon stuff with it. 
 			
 			
 			
-					if(workingUser.userNumber() != -1) {
+					if(workingUser.userLoggedIn()) {
 						Thread thread = new Thread(new Runnable()
 						{
 
@@ -258,12 +260,12 @@ public final class Interface extends Application
 		});
 		input.setOnKeyPressed((KeyEvent ke) -> { // the following allows the user to hit enter rather than OK. Works exactly the same as hitting OK. 
 			if (ke.getCode().equals(KeyCode.ENTER)) {
-				if(workingUser.userNumber() == -1) {
+				if(!workingUser.userLoggedIn()) {
 					PMKeySEntered(input.getText());
 			
 			
 			
-					if(workingUser.userNumber() != -1) {
+					if(workingUser.userLoggedIn()) {
 						userLabel.setText(workingUser.userName());
 						inputLabel.setText("Enter Barcode");
 						grid.getChildren().remove(userLabel);
@@ -472,7 +474,13 @@ public final class Interface extends Application
 					grid.add(personList,0,0);
 					remove.setOnAction((ActionEvent e) -> {
 						int index = personList.getSelectionModel().getSelectedIndex();
-						workingUser.removePerson(index);
+						try {
+							workingUser.removePerson(index);
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 						persons.setAll(workingUser.getUserNames());
 					});
 					
@@ -559,7 +567,13 @@ public final class Interface extends Application
 					grid.add(productList,0,0);
 					remove.setOnAction((ActionEvent e) -> {
 						int index = productList.getSelectionModel().getSelectedIndex();
-						workingUser.removeProduct(index);
+						try {
+							workingUser.removeProduct(index);
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 						product.setAll(workingUser.getProductNames());
 					});
 					grid.add(remove, 1,0);
