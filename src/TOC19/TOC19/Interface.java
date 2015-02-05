@@ -25,30 +25,18 @@ package TOC19;
 * Description: This program will allow the user to interact with the program, creating, deleting and modifying products and checkOuts.
 */
 // GUI Inports
+
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -59,7 +47,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import TOC19.Settings;
 
 import java.io.IOException;
 
@@ -513,7 +500,7 @@ public final class Interface extends Application
 					grid.add(canBuy, 1,0);
 					personList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
-						if(workingUser.userCanBuy(personList.getSelectionModel().getSelectedIndex())) {
+						if(workingUser.userCanBuyAdmin(personList.getSelectionModel().getSelectedItem())) {
 							canBuy.getSelectionModel().select(0);
 						}
 						else canBuy.getSelectionModel().select(1);
@@ -521,7 +508,7 @@ public final class Interface extends Application
 					canBuy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number> () {
 						@Override
 						public void changed(ObservableValue ov, Number value, Number newValue) {
-							workingUser.setUserCanBuy(personList.getSelectionModel().getSelectedIndex(), canBuy.getSelectionModel().getSelectedIndex() == 0);
+							workingUser.setUserCanBuy(personList.getSelectionModel().getSelectedItem(), canBuy.getSelectionModel().getSelectedIndex() == 0);
 						}
 					});
 				}

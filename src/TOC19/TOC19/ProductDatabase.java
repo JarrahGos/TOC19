@@ -25,8 +25,6 @@ package TOC19;
 * Description: This program will allow for the input and retreval of the product database and will set the limits of the database.
 */
 import java.io.*;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public final class ProductDatabase
 {
@@ -46,7 +44,7 @@ public final class ProductDatabase
 	}
 	
 	
-	public final void setDatabaseProduct(int productNo, String name, long price, long barCode) // take the products data and pass it to the products constructor
+	public final void setDatabaseProduct(String name, long price, long barCode) // take the products data and pass it to the products constructor
 	{
 		/**
 		Class ProductDatabase: Method setDatabase
@@ -54,37 +52,22 @@ public final class ProductDatabase
 		Postcondition: Data for the currant working product in this database will be set. 
 		*/
 		Product newProduct;
-		if(!productExists( name)) { // alter this to check whether a file with the name name/barcode exists
+		if(!productExists(name, barCode)) { // alter this to check whether a file with the name name/barcode exists
 			newProduct = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
 			logicalSize++; // We have a new product, Now we have something to show for it.
 			writeOutDatabaseProduct(newProduct);
 		}
 
 	}
-	public final String getDatabase(int sort) throws IOException, InterruptedException {
+	public final String getDatabase(int sort) throws IOException {
 		/**
 		Class ProductDatabase: Method getDatabase
 		Precondition: setDatabase has been run
 		Postcondition: the user will be see an output of the products in the database. 
 		*/
-		Process p;
-		p = Runtime.getRuntime().exec("ls"); //TODO: change this to use java file list
-		p.waitFor();
-
-		BufferedReader reader =
-				new BufferedReader(new InputStreamReader(p.getInputStream()));
-		String[] lines; //TODO: initialise this to the number of people we have
-		String line = "";
-		int x;
-		for (x = 0;(line = reader.readLine())!= null; x++) {
-			lines[x] = line;
-		}
-		Product[] database = new Product[x/2];
-		for (int i = 0; i <=x; i++) {
-			if (!lines[i].matches("[0-9]+")) { //TODO: make this work with the .ser extention
-				database[i] = readDatabaseProduct(lines[i]);
-			}
-		}
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		Product[] database = readDatabase(list);
 		StringBuilder output = new StringBuilder();
 		for(int i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
 			if(allProducts[i] != null) {
@@ -119,12 +102,23 @@ public final class ProductDatabase
 		Preconditions: setDatabase has been run, productNo is an integer paremeter
 		Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
 		*/
+		File toDel = new File(String.valueOf(productNo));
 		Product del = readDatabaseProduct(productNo);
-		String command = "rm " + productNo + ".ser" + "&& rm " + del.getName() + ".ser";
-		Process p;
-		p = Runtime.getRuntime().exec(command);
-		p.waitFor();
-		p.destroy();
+		File toDelLn = new File(del.getName());
+		toDel.delete();
+		toDelLn.delete();
+	}
+	public final void delProduct(String name) throws IOException, InterruptedException {
+		/**
+		 Class ProductDatabase: Method delProduct
+		 Preconditions: setDatabase has been run, productNo is an integer paremeter
+		 Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
+		 */
+		File toDelLn = new File(name);
+		Product del = readDatabaseProduct(name);
+		File toDel = new File(String.valueOf(del.getBarCode()));
+		toDel.delete();
+		toDelLn.delete();
 	}
 	public final String getProductName(long productNo)
 	{
@@ -173,14 +167,13 @@ public final class ProductDatabase
 		}
 	
 	}
-	public final boolean productExists(String extProductName) //TODO: make work using java file list
+	public final boolean productExists(String extProductName, Long extBarCode)
 	{
-	    
-	    for(int i = 0; i < logicalSize; i++) { //loop until a product that matches the artist and name specified
-			if(allProducts[i] != null && allProducts[i].getName().equals(extProductName)) {
-				return true; // when one is found, send true back to the caller
-			}
-	    }
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		for(File file : list) {
+			if(file.getName().equals(extProductName) || file.getName().equals(extBarCode.toString())) return true;
+		}
 	    return false; // if you are running this, no product was found and therefore it is logical to conclude none exist.
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
@@ -205,27 +198,32 @@ public final class ProductDatabase
             }
             return 0;
         }
-	public final int adminWriteOutDatabase(String path) throws IOException, InterruptedException {
-		PrintWriter outfile = null;
-		double total = 0;
-		Process p;
-		p = Runtime.getRuntime().exec("ls"); //TODO: change this to use java file list
-		p.waitFor();
+	public final void writeOutDatabase(Product[] productsOut) {
+		for (Product productOut : productsOut) {
+			try {
+				FileOutputStream prodOut = new FileOutputStream(productOut.getName());
+				ObjectOutputStream out = new ObjectOutputStream(prodOut);
+				out.writeObject(productOut);
+				out.close();
+				prodOut.close();
+				// create a simlink to the person to allow the program to search for either username or barcode
+				String command = "ln -s " + productOut.getName() + " " + (productOut.getBarCode());
+				Process p;
+				p = Runtime.getRuntime().exec(command);
+				p.waitFor();
+				p.destroy();
 
-		BufferedReader reader =
-				new BufferedReader(new InputStreamReader(p.getInputStream()));
-		String[] lines; //TODO: initialise this to the number of people we have
-		String line = "";
-		int x;
-		for (x = 0;(line = reader.readLine())!= null; x++) {
-			lines[x] = line;
-		}
-		Product[] database = new Product[x/2];
-		for (int i = 0; i <=x; i++) {
-			if (!lines[i].matches("[0-9]+")) { //TODO: make this work with the .ser extention
-				database[i] = readDatabaseProduct((lines[i]));
+			} catch (Exception e) {
+				System.out.println(e);
 			}
 		}
+	}
+	public final int adminWriteOutDatabase(String path) throws IOException {
+		PrintWriter outfile = null;
+		double total = 0;
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		Product[] database = readDatabase(list);
 		try {
 			File file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created.
@@ -277,11 +275,35 @@ public final class ProductDatabase
 			}
 			 return importing;
         }
-
-
-	public final boolean productExists(int number)
-	{
-		return (number < logicalSize);
+	public final Product[] readDatabase(File[] databaseList){
+		Product[] importing = new Product[databaseList.length];
+		for(File product : databaseList) {
+			Product inProd = null;
+			try {
+				FileInputStream productIn = new FileInputStream(product);
+				ObjectInputStream in = new ObjectInputStream(productIn);
+				inProd = (Product) in.readObject();
+				in.close();
+				productIn.close();
+			} catch (IOException e) {
+				System.out.println(e);
+				return null;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			int i = 0;
+			boolean alreadyExists = false;
+			for(Product prod : importing) {
+				if (inProd.getBarCode() == prod.getBarCode()) {
+					alreadyExists = true;
+					break;
+				}
+				else i++;
+			}
+			if(!alreadyExists)
+				importing[i] = inProd;
+		}
+		return importing;
 	}
 	public final int getNumber(int productNo)
 	{
@@ -291,7 +313,7 @@ public final class ProductDatabase
 	{
 		allProducts[productNo].setNumber(number);
 	}
-	public final Product getProductRef(int productNo)
+	public final Product getProductRef(long productNo)
 	{
 		return allProducts[productNo];       
     }

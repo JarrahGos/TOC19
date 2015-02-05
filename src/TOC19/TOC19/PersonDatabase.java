@@ -26,9 +26,7 @@ package TOC19;
  */
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
-import TOC19.Settings;
 
 public final class PersonDatabase {
 
@@ -50,7 +48,7 @@ public final class PersonDatabase {
 		admin.setName(settings[1]);
 	}
 
-	public final void setDatabasePerson(int personNo, String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
+	public final void setDatabasePerson(String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
 	{
 		/**
 		 * Class PersonDatabase: Method setDatabase Precondition: augments int personNo, String name, String artist, double size, double duration are input Postcondition: Data for the currant working
@@ -64,30 +62,15 @@ public final class PersonDatabase {
 		}
 	}
 
-	public final String getDatabase(int sort) throws IOException, InterruptedException {
+	public final String getDatabase(int sort) throws IOException {
 		/**
 		 * Class PersonDatabase: Method getDatabase Precondition: setDatabase has been run Postcondition: the user will be see an output of the persons in the database.
 		 */
-		Process p;
-		p = Runtime.getRuntime().exec("ls"); //TODO: change this to use java file list
-		p.waitFor();
-
-		BufferedReader reader =
-				new BufferedReader(new InputStreamReader(p.getInputStream()));
-		String[] lines; //TODO: initialise this to the number of people we have
-		String line = "";
-		int x;
-		for (x = 0;(line = reader.readLine())!= null; x++) {
-			lines[x] = line;
-		}
-		Person[] database = new Person[x/2];
-		for (int i = 0; i <=x; i++) {
-			if (!lines[i].matches("[0-9]+")) { //TODO: make this work with the .ser extention
-				database[i] = readDatabasePerson((lines[i]));
-			}
-		}
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		Person[] database = readDatabase(list);
 		StringBuilder output = new StringBuilder();
-		for (int i = 0; i < x/2; i++) { // loop until the all of the databases data has been output
+		for (int i = 0; i < database.length; i++) { // loop until the all of the databases data has been output
 			if (database[i] != null) {
 				output.append(String.format("\nPerson %d:\n", 1 + i));
 				output.append(database[i].getData());
@@ -159,10 +142,13 @@ public final class PersonDatabase {
 		}
 
 	}
-	public final String[] getUserNames() { //TODO: make this use the files in the dir
+	public final String[] getUserNames() {
 		String[] output = new String[logicalSize];
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		Person[] database = readDatabase(list);
 		for(int i = 0; i < logicalSize; i++) {
-			output[i] = allPersons[i].getName();
+			output[i] = database[i].getName();
 		}
 		return output;
 	}
@@ -203,16 +189,24 @@ public final class PersonDatabase {
 		}
 
 	}
-	public final boolean personExists(String extPersonName, long extBarCode) { //TODO: using java file, check that the barcode is a file.
-		for (int i = 0; i < logicalSize; i++) { //loop until a person that matches the artist and name specified
-			if (allPersons[i] != null && allPersons[i].getName().equals(extPersonName) && allPersons[i].getBarCode() == extBarCode) {
-				return true; // when one is found, send true back to the caller
-			}
+	public final boolean personExists(String extPersonName, long extBarCode) {
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		for(File file : list) {
+			if(file.getName().equals(extPersonName) || file.getName().equals(String.valueOf(extBarCode))) return true;
 		}
 		return false; // if you are running this, no person was found and therefore it is logical to conclude none exist.
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
-
+	public final boolean personExists(long extBarCode) {
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		for(File file : list) {
+			if(file.getName().equals(String.valueOf(extBarCode))) return true;
+		}
+		return false; // if you are running this, no person was found and therefore it is logical to conclude none exist.
+		// similar to Kiri-Kin-Tha's first law of metaphysics.
+	}
 
 	public final int writeOutDatabasePerson(Person persOut) {
             try {
@@ -235,28 +229,12 @@ public final class PersonDatabase {
             }
             return 0;
         }
-	//TODO: make sure all pathes comming into this have the CSV extention
-	public final int adminWriteOutDatabase(String path) throws IOException, InterruptedException { //TODO: make this work. See getDatabase for info
+	public final int adminWriteOutDatabase(String path) throws IOException {
 		PrintWriter outfile = null;
 		double total = 0;
-		Process p;
-		p = Runtime.getRuntime().exec("ls"); //TODO: change this to use java file list
-		p.waitFor();
-
-		BufferedReader reader =
-				new BufferedReader(new InputStreamReader(p.getInputStream()));
-		String[] lines; //TODO: initialise this to the number of people we have
-		String line = "";
-		int x;
-		for (x = 0;(line = reader.readLine())!= null; x++) {
-			lines[x] = line;
-		}
-		Person[] database = new Person[x/2];
-		for (int i = 0; i <=x; i++) {
-			if (!lines[i].matches("[0-9]+")) { //TODO: make this work with the .ser extention
-				database[i] = readDatabasePerson((lines[i]));
-			}
-		}
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		Person[] database = readDatabase(list);
 		try {
 			File file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created.
@@ -307,7 +285,36 @@ public final class PersonDatabase {
 			 }
 			 return importing;
 		 }
-
+	public final Person[] readDatabase(File[] databaseList){
+		Person[] importing = new Person[databaseList.length];
+		for(File person : databaseList) {
+			Person inPers = null;
+			try {
+				FileInputStream personIn = new FileInputStream(person);
+				ObjectInputStream in = new ObjectInputStream(personIn);
+				inPers = (Person) in.readObject();
+				in.close();
+				personIn.close();
+			} catch (IOException e) {
+				System.out.println(e);
+				return null;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			int i = 0;
+			boolean alreadyExists = false;
+			for(Person pers : importing) {
+				if (inPers.getBarCode() == pers.getBarCode()) {
+					alreadyExists = true;
+					break;
+				}
+				else i++;
+			}
+			if(!alreadyExists)
+				importing[i] = inPers;
+		}
+		return importing;
+	}
 	public final void addCost(int personNo, long cost) {
 		allPersons[personNo].addPrice(cost);
 	}
@@ -317,8 +324,13 @@ public final class PersonDatabase {
 			allPersons[i].resetWeekCost();
 		}
 	}
-	public final void setAdminPassword(String extPassword) { //TODO: move this over to use the new settings function
+	public final void setAdminPassword(String extPassword) {
 		admin.setName(extPassword);
+		try {
+			config.adminSetPassword(extPassword);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final void setPersonCanBuy(long personNumber, boolean canBuy)

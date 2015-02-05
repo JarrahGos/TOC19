@@ -1,12 +1,13 @@
 package TOC19;
 
 
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -32,12 +33,8 @@ public class WorkingUser {
 
 		user = null;
 	}
-	public final void addDatabases() //TODO: this is redundant, remove it.
-	{
-	}
-	public final void getPMKeyS(String input) 
+	public final void getPMKeyS(String input)
     {
-        boolean correct = false;
 		if(( input != null && !input.equals("")) && (!input.matches("[0-9]+"))) {
 			input = input.substring(1);
 		}
@@ -45,7 +42,6 @@ public class WorkingUser {
 			user =  null;
 		}
 		else {
-			correct = true;
 			user =  personDatabase.readDatabasePerson(Long.parseLong(input));
 		}
     }
@@ -82,7 +78,7 @@ public class WorkingUser {
 	public final void setAdminPassword(String PW)
 	{
 		personDatabase.setAdminPassword(PW);
-	} //TODO: make this work with Settings.java
+	}
 	public final boolean isInteger(String s) 
 	{
 		if(s == null) return false;
@@ -119,8 +115,7 @@ public class WorkingUser {
 		}
 		return true;
 	}
-	public ScrollPane printDatabase(String type)
-	{
+	public ScrollPane printDatabase(String type) throws IOException {
 		TextArea textArea;
 		switch(type) {
 			case("Product"):textArea = new TextArea(productDatabase.getDatabase(3));
@@ -147,8 +142,8 @@ public class WorkingUser {
 	{
             user.addPrice(checkOuts.getPrice());
 //		personDatabase.addCost(user, checkOuts.getPrice());// add the bill to the persons account
-		checkOuts.productBought(); // clear the quantities and checkout
-		productDatabase.writeOutDatabase("productDatabase.txt"); //TODO: rejig this to use the new system.
+		Product[] purchased = checkOuts.productBought(); // clear the quantities and checkout
+		productDatabase.writeOutDatabase(purchased);
 		personDatabase.writeOutDatabasePerson(user);
 		checkOuts = new CheckOut(); // ensure checkout clear
         user = null;
@@ -172,23 +167,15 @@ public class WorkingUser {
 	public final boolean addToCart(String input) 
 	{
 		long tempBarCode = -1; 
-		String tempInput;
 		if(input != null && !input.equals("") && isLong(input)) {
 			tempBarCode = Long.parseLong(input); // disallows the user from entering nothing or clicking cancel. 
 		}
 		else if((input == null ) || ("".equals(input) )) {
 			return false; 
 		}
-		int productNumber = productDatabase.binarySearch(tempBarCode); // Now that we have done the error checking, convert the barcode to a position in the database
-		int checkProduct; // create this for use below
-		if(productNumber != -1) {
-			tempInput = productDatabase.getProduct(productNumber);
-			checkProduct = checkOuts.productEqualTo(tempBarCode); // check that the product was not entered into the database before. 
-	//																					//If it was, just add the quantity to the one in the database
-			if(checkProduct != -1) {
-				checkOuts.addQuantity(checkProduct, 1);
-			}
-			else checkOuts.addProduct(productDatabase.getProductRef(productNumber), 1); //otherwise, add the product as normal. 
+		Product adding = productDatabase.getProductRef(tempBarCode);
+		if(adding != null) {
+			checkOuts.addProduct(adding, 1); //otherwise, add the product as normal.
 			return true;
 		}
 		return false;
@@ -200,19 +187,19 @@ public class WorkingUser {
 	}
 	public final void addPersonToDatabase(String name, long PMKeyS)
 	{
-		personDatabase.setDatabasePerson(personDatabase.emptyPerson(), name, 0,0, PMKeyS, true);
+		personDatabase.setDatabasePerson(name, 0,0, PMKeyS, true);
 	}
 	public final void addProductToDatabase(String name, long barCode, long price)
 	{
-		productDatabase.setDatabaseProduct(productDatabase.emptyProduct(), name, price, barCode);
+		productDatabase.setDatabaseProduct(name, price, barCode);
 	}
-	public final void adminWriteOutDatabase(String type) {
+	public final void adminWriteOutDatabase(String type) throws IOException, InterruptedException {
 		switch(type) {
-			case("Person"):personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
+			case("Person"):personDatabase.adminWriteOutDatabase("adminPersonDatabase.csv");
 							break;
-			case("Product"):productDatabase.adminWriteOutDatabase("adminProductDatabase.txt");
+			case("Product"):productDatabase.adminWriteOutDatabase("adminProductDatabase.csv");
 							break;
-			default:personDatabase.adminWriteOutDatabase("adminPersonDatabase.txt");
+			default:personDatabase.adminWriteOutDatabase("adminPersonDatabase.csv");
 		}
 	}
 	public final void removePerson(int index) throws IOException, InterruptedException {
@@ -241,13 +228,14 @@ public class WorkingUser {
 	{
 		return user.canBuy(); //not sure whether this will do the requested job. 
 	}
-	public final void setUserCanBuy(long userNumber, boolean canBuy)
+	public final boolean userCanBuyAdmin(String name)
 	{
-		personDatabase.setPersonCanBuy(userNumber, canBuy); //TODO: this will not work. needs to be altered in interface
+		Person usr = personDatabase.readDatabasePerson(name);
+		return usr.canBuy();
 	}
-	public final void setUserCanBuy(String userName, boolean canBuy)
+		public final void setUserCanBuy(String userName, boolean canBuy)
 	{
-		personDatabase.setPersonCanBuy(userName, canBuy); //TODO: this will not work. needs to be altered in interface
+		personDatabase.setPersonCanBuy(userName, canBuy);
 	}
 	public final boolean userLoggedIn()
 	{
