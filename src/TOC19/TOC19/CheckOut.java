@@ -70,7 +70,6 @@ public final class CheckOut
 			quantities[i] += quantity;
 		}
 		totalPrice += item.productPrice()*quantity;
-		return 0;
 	}
 	public final int addProduct(String name, long price, int barCode)
 	{

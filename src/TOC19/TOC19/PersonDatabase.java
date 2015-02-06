@@ -30,7 +30,7 @@ import java.util.Scanner;
 
 public final class PersonDatabase {
 
-	private static TOC19.Person[] allPersons;
+//	private static TOC19.Person[] allPersons;
 	private static TOC19.Person admin;
 	private static int logicalSize;
 //	private String output;
@@ -40,12 +40,16 @@ public final class PersonDatabase {
 	private Settings config = new Settings();
 
 	public PersonDatabase() throws FileNotFoundException {
-		allPersons = new Person[45];
 		logicalSize = 0;
 //		output = "";
-		String[] settings = config.adminSettings();
-		admin.setBarCode(Long.parseLong(settings[0]));
-		admin.setName(settings[1]);
+		String settings = config.adminSettings();
+		System.out.println(settings);
+	//	for(String string : settings) {
+			if (settings != null) System.out.println(settings);
+			else System.out.print("null");
+	//	}
+	//	admin.setBarCode(Long.parseLong(settings[0]));
+		admin = new Person(settings, 0, 0, 0, false);
 	}
 
 	public final void setDatabasePerson(String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
@@ -165,16 +169,13 @@ public final class PersonDatabase {
 
 	}
 
-	public final double getPersonPriceWeek(int personNo) {
+	public final double getPersonPriceWeek(long personNo) {
 		/**
 		 * Class PersonDatabase: Method getPersonSize Preconditions: setDatabase has been run for the invoking person Postconditions: the size of the invoking person will be returned as a double
 		 */
-		if (personNo < logicalSize) { // to understand its workings, see getPersonName. it works the same but this returns a double
-			return allPersons[personNo].totalCostWeek();
-		} else {
-			return 0;
-		}
-
+		Person getting = readDatabasePerson(personNo);
+		if(getting != null) return getting.totalCostWeek();
+		else return 0;
 	}
 
 	public final long getBarCode(int personNo) {
@@ -315,13 +316,19 @@ public final class PersonDatabase {
 		}
 		return importing;
 	}
-	public final void addCost(int personNo, long cost) {
-		allPersons[personNo].addPrice(cost);
+	public final void addCost(long personNo, long cost) {
+		Person adding = readDatabasePerson(personNo);
+		adding.addPrice(cost);
+		writeOutDatabasePerson(adding);
 	}
 
 	public final void resetBills() {
-		for (int i = logicalSize -1; i > 0; i--) {
-			allPersons[i].resetWeekCost();
+		File root = new File ("./");
+		File[] list = root.listFiles();
+		Person[] database = readDatabase(list);
+		for (Person person : database) {
+			person.resetWeekCost();
+			writeOutDatabasePerson(person);
 		}
 	}
 	public final void setAdminPassword(String extPassword) {

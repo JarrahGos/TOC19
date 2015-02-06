@@ -6,9 +6,9 @@
 package TOC19;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileOutputStream;
 import java.util.Properties;
 
 /***
@@ -41,7 +41,7 @@ public class Settings {
 	private String propFileName = "TOC19.properties";
 	private InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 	
-	public final String[] SQLInterfaceSettings() throws FileNotFoundException
+	public final String adminSettings() throws FileNotFoundException
 	{
 		if (inputStream != null) {
 			try {
@@ -55,29 +55,9 @@ public class Settings {
 			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
 		}
 		
-		String[] output = new String[3];
-		output[0] = properties.getProperty("URL");
-		output[1] = properties.getProperty("user");
-		output[2] = properties.getProperty("password");
-		return output;
-	}
-	public final String[] adminSettings() throws FileNotFoundException
-	{
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			}
-			catch(IOException e) {
-				System.out.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		} 
-		else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
-		
-		String[] output = new String[2];
-		output[0] = properties.getProperty("adminBarcode");
-		output[1] = properties.getProperty("adminPassword");
+		String output;
+	//	output[0] = properties.getProperty("adminBarcode");
+		output = properties.getProperty("adminPassword");
 		return output;
 	}
 	public final void adminSetPassword(String passwd) throws FileNotFoundException

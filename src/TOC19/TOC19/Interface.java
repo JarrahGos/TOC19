@@ -66,7 +66,7 @@ public final class Interface extends Application
 		
 	public Interface() throws IOException
 	{
-		this.config = new Settings();
+		config = new Settings();
 		workingUser = new WorkingUser();
 		String[] settings = config.interfaceSettings();
 		horizontalSize = Integer.parseInt(settings[0]);
@@ -80,7 +80,6 @@ public final class Interface extends Application
 	{
 		// create the layout
 		primaryStage.setTitle("TOC19"); // set the window title. 
-		workingUser.addDatabases(); // import the user and product data
 		GridPane grid = new GridPane(); // create the layout manager
 //	    grid.setGridLinesVisible(true); // used for debugging object placement
 		grid.setAlignment(Pos.CENTER); 
@@ -474,7 +473,12 @@ public final class Interface extends Application
 				}
 				else if(selectedOption.equals("List People")) {
 					grid.getChildren().clear();
-					ScrollPane users = workingUser.printDatabase("Person");
+					ScrollPane users = null;
+					try {
+						users = workingUser.printDatabase("Person");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					grid.add(users, 0,0);
 				}
 				else if(selectedOption.equals("Save Person Database")) {
@@ -484,7 +488,13 @@ public final class Interface extends Application
 					grid.add(saveLabel, 0,0);
 					grid.add(save, 0,1);
 					save.setOnAction((ActionEvent e) -> {
-						workingUser.adminWriteOutDatabase("Person");
+						try {
+							workingUser.adminWriteOutDatabase("Person");
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 						saveLabel.setText("saved");
 					});
 				}
@@ -640,7 +650,12 @@ public final class Interface extends Application
 				}
 				else if(selectedOption.equals("List Products")) {
 					grid.getChildren().clear();
-					ScrollPane productList = workingUser.printDatabase("Product");
+					ScrollPane productList = null;
+					try {
+						productList = workingUser.printDatabase("Product");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					grid.add(productList, 0,0);
 				}
 				else if(selectedOption.equals("Save Product Database")) {
@@ -650,7 +665,13 @@ public final class Interface extends Application
 					grid.add(saveLabel, 0,0);
 					grid.add(save, 0,1);
 					save.setOnAction((ActionEvent e) -> {
-						workingUser.adminWriteOutDatabase("Product");
+						try {
+							workingUser.adminWriteOutDatabase("Product");
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 						saveLabel.setText("saved");
 					});
 				}
@@ -662,7 +683,13 @@ public final class Interface extends Application
 					grid.add(saveLabel, 0,0,2,1);
 					grid.add(save, 1,1);
 					save.setOnAction((ActionEvent e) -> {
-						workingUser.adminWriteOutDatabase("Person");
+						try {
+							workingUser.adminWriteOutDatabase("Person");
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 						saveLabel.setText("saved");
 					});
 				}

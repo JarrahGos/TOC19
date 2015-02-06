@@ -315,7 +315,7 @@ public final class ProductDatabase
 	}
 	public final Product getProductRef(long productNo)
 	{
-		return allProducts[productNo];       
+		return readDatabaseProduct(productNo);
     }
 	public final String[] getProductNames() {
 		String[] output = new String[logicalSize];
