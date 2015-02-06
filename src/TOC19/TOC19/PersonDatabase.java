@@ -26,6 +26,9 @@ package TOC19;
  */
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public final class PersonDatabase {
@@ -38,6 +41,7 @@ public final class PersonDatabase {
 //	private PrintWriter outfile;
 	private Scanner readOutFile;
 	private Settings config = new Settings();
+	private String databaseLocation;
 
 	public PersonDatabase() throws FileNotFoundException {
 		logicalSize = 0;
@@ -50,6 +54,11 @@ public final class PersonDatabase {
 	//	}
 	//	admin.setBarCode(Long.parseLong(settings[0]));
 		admin = new Person(settings, 0, 0, 0, false);
+		try {
+			databaseLocation = config.personSettings();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final void setDatabasePerson(String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
@@ -70,7 +79,7 @@ public final class PersonDatabase {
 		/**
 		 * Class PersonDatabase: Method getDatabase Precondition: setDatabase has been run Postcondition: the user will be see an output of the persons in the database.
 		 */
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		Person[] database = readDatabase(list);
 		StringBuilder output = new StringBuilder();
@@ -122,12 +131,11 @@ public final class PersonDatabase {
 		 * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
 		 * failure of this will be given by a 0 or 1 returned respectively.
 		 */
+		File toDelLn = new File(databaseLocation + String.valueOf(personNo));
 		Person del = readDatabasePerson(personNo);
-		String command = "rm " + personNo + ".ser && rm " + del.getName() + ".ser";
-		Process p;
-		p = Runtime.getRuntime().exec(command);
-		p.waitFor();
-		p.destroy();
+		File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
+		toDel.delete();
+		toDelLn.delete();
 	}
 
 	public final String getPersonName(long personNo) {
@@ -148,7 +156,7 @@ public final class PersonDatabase {
 	}
 	public final String[] getUserNames() {
 		String[] output = new String[logicalSize];
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		Person[] database = readDatabase(list);
 		for(int i = 0; i < logicalSize; i++) {
@@ -191,7 +199,7 @@ public final class PersonDatabase {
 
 	}
 	public final boolean personExists(String extPersonName, long extBarCode) {
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		for(File file : list) {
 			if(file.getName().equals(extPersonName) || file.getName().equals(String.valueOf(extBarCode))) return true;
@@ -200,7 +208,7 @@ public final class PersonDatabase {
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
 	public final boolean personExists(long extBarCode) {
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		for(File file : list) {
 			if(file.getName().equals(String.valueOf(extBarCode))) return true;
@@ -211,19 +219,17 @@ public final class PersonDatabase {
 
 	public final int writeOutDatabasePerson(Person persOut) {
             try {
-                FileOutputStream personOut = new FileOutputStream(persOut.getName());
-                ObjectOutputStream out = new ObjectOutputStream(personOut);
-                out.writeObject(persOut);
-                out.close();
-                personOut.close();
-                // create a simlink to the person to allow the program to search for either username or barcode
-                String command = "ln -s " + persOut.getName() + " " + persOut.getBarCode();
-                Process p;
-                p = Runtime.getRuntime().exec(command);
-                p.waitFor();
-                p.destroy();
-
-            }
+				FileOutputStream personOut = new FileOutputStream(databaseLocation + persOut.getName());
+				ObjectOutputStream out = new ObjectOutputStream(personOut);
+				delPerson(persOut.getBarCode());
+			//	out.writeObject(persOut);
+				out.close();
+				personOut.close();
+				// create a simlink to the person to allow the program to search for either username or barcode
+				Path target = Paths.get(databaseLocation + persOut.getName());
+				Path link = Paths.get(databaseLocation + persOut.getBarCode());
+				Files.createSymbolicLink(target, link);
+			}
             catch (Exception e) {
                 System.out.println(e);
                 return 1;
@@ -256,7 +262,7 @@ public final class PersonDatabase {
         public final Person readDatabasePerson(long barcode){
             Person importing = null;
             try {
-                FileInputStream personIn = new FileInputStream(String.valueOf(barcode) + ".ser");
+                FileInputStream personIn = new FileInputStream(databaseLocation + String.valueOf(barcode) + ".ser");
                 ObjectInputStream in = new ObjectInputStream(personIn);
                 importing = (Person)in.readObject();
                 in.close();
@@ -273,7 +279,7 @@ public final class PersonDatabase {
          public final Person readDatabasePerson(String name) {
 			 Person importing = null;
 			 try {
-				 FileInputStream personIn = new FileInputStream(name + ".ser");
+				 FileInputStream personIn = new FileInputStream(databaseLocation + name + ".ser");
 				 ObjectInputStream in = new ObjectInputStream(personIn);
 				 importing = (Person) in.readObject();
 				 in.close();
@@ -304,13 +310,15 @@ public final class PersonDatabase {
 			}
 			int i = 0;
 			boolean alreadyExists = false;
-			for(Person pers : importing) {
-				if (inPers.getBarCode() == pers.getBarCode()) {
-					alreadyExists = true;
-					break;
+			if(inPers != null) {
+				for (Person pers : importing) {
+					if (inPers.getBarCode() == pers.getBarCode()) {
+						alreadyExists = true;
+						break;
+					} else i++;
 				}
-				else i++;
 			}
+			else alreadyExists = true;
 			if(!alreadyExists)
 				importing[i] = inPers;
 		}
@@ -323,7 +331,7 @@ public final class PersonDatabase {
 	}
 
 	public final void resetBills() {
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		Person[] database = readDatabase(list);
 		for (Person person : database) {

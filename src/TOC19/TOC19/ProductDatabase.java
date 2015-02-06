@@ -25,11 +25,16 @@ package TOC19;
 * Description: This program will allow for the input and retreval of the product database and will set the limits of the database.
 */
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public final class ProductDatabase
 {
 	private Product[] allProducts;
 	private int logicalSize;
+	private String databaseLocation;
+	private Settings config = new Settings();
 //	private String output;
 //	private File file;
 //	private PrintWriter outfile;
@@ -41,6 +46,11 @@ public final class ProductDatabase
 		allProducts = new Product[10];
 		logicalSize = 0;
 //		output = "";
+		try {
+			databaseLocation = config.productSettings();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -65,7 +75,7 @@ public final class ProductDatabase
 		Precondition: setDatabase has been run
 		Postcondition: the user will be see an output of the products in the database. 
 		*/
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		Product[] database = readDatabase(list);
 		StringBuilder output = new StringBuilder();
@@ -169,7 +179,7 @@ public final class ProductDatabase
 	}
 	public final boolean productExists(String extProductName, Long extBarCode)
 	{
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		for(File file : list) {
 			if(file.getName().equals(extProductName) || file.getName().equals(extBarCode.toString())) return true;
@@ -179,18 +189,16 @@ public final class ProductDatabase
 	}
 	public final int writeOutDatabaseProduct(Product productOut) {
             try {
-                FileOutputStream prodOut = new FileOutputStream(productOut.getName());
+                FileOutputStream prodOut = new FileOutputStream(databaseLocation + productOut.getName());
                 ObjectOutputStream out = new ObjectOutputStream(prodOut);
+				delProduct(productOut.getName());
                 out.writeObject(productOut);
                 out.close();
                 prodOut.close();
                  // create a simlink to the person to allow the program to search for either username or barcode
-                String command = "ln -s " + productOut.getName() + " " + (productOut.getBarCode());
-                Process p;
-                p = Runtime.getRuntime().exec(command);
-                p.waitFor();
-                p.destroy();
-
+				Path target = Paths.get(databaseLocation + productOut.getName());
+				Path link = Paths.get(databaseLocation + productOut.getBarCode());
+				Files.createSymbolicLink(target, link);
             }
             catch (Exception e) {
                 System.out.println(e);
@@ -201,18 +209,16 @@ public final class ProductDatabase
 	public final void writeOutDatabase(Product[] productsOut) {
 		for (Product productOut : productsOut) {
 			try {
-				FileOutputStream prodOut = new FileOutputStream(productOut.getName());
+				FileOutputStream prodOut = new FileOutputStream(databaseLocation + productOut.getName());
 				ObjectOutputStream out = new ObjectOutputStream(prodOut);
+				delProduct(productOut.getName());
 				out.writeObject(productOut);
 				out.close();
 				prodOut.close();
 				// create a simlink to the person to allow the program to search for either username or barcode
-				String command = "ln -s " + productOut.getName() + " " + (productOut.getBarCode());
-				Process p;
-				p = Runtime.getRuntime().exec(command);
-				p.waitFor();
-				p.destroy();
-
+				Path target = Paths.get(databaseLocation + productOut.getName());
+				Path link = Paths.get(databaseLocation + productOut.getBarCode());
+				Files.createSymbolicLink(target, link);
 			} catch (Exception e) {
 				System.out.println(e);
 			}
@@ -244,7 +250,7 @@ public final class ProductDatabase
 	public final Product readDatabaseProduct(long barcode){
             Product importing = null;
             try {
-                FileInputStream productIn = new FileInputStream(String.valueOf(barcode));
+                FileInputStream productIn = new FileInputStream(databaseLocation + String.valueOf(barcode));
                 ObjectInputStream in = new ObjectInputStream(productIn);
                 importing = (Product)in.readObject();
                 in.close();
@@ -261,7 +267,7 @@ public final class ProductDatabase
     public final Product readDatabaseProduct(String name){
             Product importing = null;
             try {
-                FileInputStream productIn = new FileInputStream(name);
+                FileInputStream productIn = new FileInputStream(databaseLocation + name);
                 ObjectInputStream in = new ObjectInputStream(productIn);
                 importing = (Product)in.readObject();
                 in.close();

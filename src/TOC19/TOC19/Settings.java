@@ -60,6 +60,42 @@ public class Settings {
 		output = properties.getProperty("adminPassword");
 		return output;
 	}
+	public final String personSettings() throws FileNotFoundException
+	{
+		if (inputStream != null) {
+			try {
+				properties.load(inputStream);
+			}
+			catch(IOException e) {
+				System.out.print("property file '" + propFileName + "' not found in the classpath");
+			}
+		}
+		else {
+			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+		}
+
+		String output;
+		output = properties.getProperty("personDatabaseLocation");
+		return output;
+	}
+	public final String productSettings() throws FileNotFoundException
+	{
+		if (inputStream != null) {
+			try {
+				properties.load(inputStream);
+			}
+			catch(IOException e) {
+				System.out.print("property file '" + propFileName + "' not found in the classpath");
+			}
+		}
+		else {
+			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+		}
+
+		String output;
+		output = properties.getProperty("productDatabaseLocation");
+		return output;
+	}
 	public final void adminSetPassword(String passwd) throws FileNotFoundException
 	{	
 		if (inputStream != null) {
