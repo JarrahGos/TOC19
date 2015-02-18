@@ -26,9 +26,6 @@ package TOC19;
  */
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 public final class PersonDatabase {
@@ -81,7 +78,11 @@ public final class PersonDatabase {
 		 */
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
-		Person[] database = readDatabase(list);
+		String[] stringList = new String[list.length];
+		for(int i = 0; i < list.length; i++) {
+			stringList[i] = list[i].getPath();
+		}
+		Person[] database = readDatabase(stringList);
 		StringBuilder output = new StringBuilder();
 		for (int i = 0; i < database.length; i++) { // loop until the all of the databases data has been output
 			if (database[i] != null) {
@@ -131,11 +132,16 @@ public final class PersonDatabase {
 		 * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
 		 * failure of this will be given by a 0 or 1 returned respectively.
 		 */
-		File toDelLn = new File(databaseLocation + String.valueOf(personNo));
-		Person del = readDatabasePerson(personNo);
-		File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
-		toDel.delete();
-		toDelLn.delete();
+		try {
+			File toDelLn = new File(databaseLocation + String.valueOf(personNo));
+			Person del = readDatabasePerson(personNo);
+			File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
+			toDel.delete();
+			toDelLn.delete();
+		}
+		catch (NullPointerException e ) {
+			System.out.println("fileNotFound");
+		}
 	}
 
 	public final String getPersonName(long personNo) {
@@ -155,12 +161,19 @@ public final class PersonDatabase {
 
 	}
 	public final String[] getUserNames() {
-		String[] output = new String[logicalSize];
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
-		Person[] database = readDatabase(list);
-		for(int i = 0; i < logicalSize; i++) {
-			output[i] = database[i].getName();
+		String[] stringList = new String[list.length];
+		for(int i = 0; i < list.length; i++) {
+			stringList[i] = list[i].getPath();
+			System.out.println(stringList[i]);
+		}
+		String[] output = new String[list.length];
+		Person[] database = readDatabase(stringList);
+		System.out.println(database);
+		for(int i = 0; i < database.length; i++) {
+			if(database[i] != null)
+				output[i] = database[i].getName();
 		}
 		return output;
 	}
@@ -217,21 +230,27 @@ public final class PersonDatabase {
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
 
-	public final int writeOutDatabasePerson(Person persOut) {
+	public final int writeOutDatabasePerson(Person persOut) { //TODO make the barcode work with this.
             try {
+                File check = new File(databaseLocation + persOut.getName());
+                if(check.exists()) check.delete();
+                check = new File(databaseLocation + persOut.getBarCode());
+                if(check.exists()) check.delete();
+                check = null;
 				FileOutputStream personOut = new FileOutputStream(databaseLocation + persOut.getName());
 				ObjectOutputStream out = new ObjectOutputStream(personOut);
-				delPerson(persOut.getBarCode());
-			//	out.writeObject(persOut);
+				out.writeObject(persOut);
 				out.close();
 				personOut.close();
-				// create a simlink to the person to allow the program to search for either username or barcode
-				Path target = Paths.get(databaseLocation + persOut.getName());
-				Path link = Paths.get(databaseLocation + persOut.getBarCode());
-				Files.createSymbolicLink(target, link);
+                // it may be quicker to do this with the java.properties setup that I have made. The code for that will sit unused in settings.java.
+				FileOutputStream personOut1 = new FileOutputStream(databaseLocation + persOut.getBarCode());
+				ObjectOutputStream out1 = new ObjectOutputStream(personOut1);
+				out1.writeObject(persOut);
+				out1.close();
+				personOut.close();
 			}
             catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
                 return 1;
             }
             return 0;
@@ -241,7 +260,11 @@ public final class PersonDatabase {
 		double total = 0;
 		File root = new File ("./");
 		File[] list = root.listFiles();
-		Person[] database = readDatabase(list);
+		String[] stringList = new String[list.length];
+		for(int i = 0; i < list.length; i++) {
+			stringList[i] = list[i].getPath();
+		}
+		Person[] database = readDatabase(stringList);
 		try {
 			File file = new File(path);
 			outfile = new PrintWriter(file); // attempt to open the file that has been created.
@@ -262,7 +285,7 @@ public final class PersonDatabase {
         public final Person readDatabasePerson(long barcode){
             Person importing = null;
             try {
-                FileInputStream personIn = new FileInputStream(databaseLocation + String.valueOf(barcode) + ".ser");
+                FileInputStream personIn = new FileInputStream(databaseLocation + String.valueOf(barcode) );
                 ObjectInputStream in = new ObjectInputStream(personIn);
                 importing = (Person)in.readObject();
                 in.close();
@@ -279,7 +302,7 @@ public final class PersonDatabase {
          public final Person readDatabasePerson(String name) {
 			 Person importing = null;
 			 try {
-				 FileInputStream personIn = new FileInputStream(databaseLocation + name + ".ser");
+				 FileInputStream personIn = new FileInputStream(databaseLocation + name );
 				 ObjectInputStream in = new ObjectInputStream(personIn);
 				 importing = (Person) in.readObject();
 				 in.close();
@@ -292,9 +315,9 @@ public final class PersonDatabase {
 			 }
 			 return importing;
 		 }
-	public final Person[] readDatabase(File[] databaseList){
+	public final Person[] readDatabase(String[] databaseList){
 		Person[] importing = new Person[databaseList.length];
-		for(File person : databaseList) {
+		for(String person : databaseList) {
 			Person inPers = null;
 			try {
 				FileInputStream personIn = new FileInputStream(person);
@@ -302,17 +325,17 @@ public final class PersonDatabase {
 				inPers = (Person) in.readObject();
 				in.close();
 				personIn.close();
-			} catch (IOException e) {
-				System.out.println(e);
-				return null;
+			}
+			catch (IOException e) {
+				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			int i = 0;
+			int i = -1;
 			boolean alreadyExists = false;
 			if(inPers != null) {
 				for (Person pers : importing) {
-					if (inPers.getBarCode() == pers.getBarCode()) {
+					if ( pers != null && inPers.getBarCode() == pers.getBarCode()) {
 						alreadyExists = true;
 						break;
 					} else i++;
@@ -333,7 +356,11 @@ public final class PersonDatabase {
 	public final void resetBills() {
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
-		Person[] database = readDatabase(list);
+		String[] stringList = new String[list.length];
+		for(int i = 0; i < list.length; i++) {
+			stringList[i] = list[i].getPath();
+		}
+		Person[] database = readDatabase(stringList);
 		for (Person person : database) {
 			person.resetWeekCost();
 			writeOutDatabasePerson(person);
