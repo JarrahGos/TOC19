@@ -24,10 +24,8 @@ package TOC19;
 * Class: ProductDatabase
 * Description: This program will allow for the input and retreval of the product database and will set the limits of the database.
 */
+
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public final class ProductDatabase
 {
@@ -35,12 +33,7 @@ public final class ProductDatabase
 	private int logicalSize;
 	private String databaseLocation;
 	private Settings config = new Settings();
-//	private String output;
-//	private File file;
-//	private PrintWriter outfile;
-//	private Scanner readOutFile;
-//	private int i;
-	
+
 	public ProductDatabase()
 	{
 		allProducts = new Product[10];
@@ -189,16 +182,21 @@ public final class ProductDatabase
 	}
 	public final int writeOutDatabaseProduct(Product productOut) {
             try {
-                FileOutputStream prodOut = new FileOutputStream(databaseLocation + productOut.getName());
-                ObjectOutputStream out = new ObjectOutputStream(prodOut);
-				delProduct(productOut.getName());
+                File check = new File(databaseLocation + productOut.getName());
+                if(check.exists()) check.delete();
+                check = new File(databaseLocation + productOut.getBarCode());
+                if(check.exists()) check.delete();
+                check = null;
+                FileOutputStream personOut = new FileOutputStream(databaseLocation + productOut.getName());
+                ObjectOutputStream out = new ObjectOutputStream(personOut);
                 out.writeObject(productOut);
                 out.close();
-                prodOut.close();
-                 // create a simlink to the person to allow the program to search for either username or barcode
-				Path target = Paths.get(databaseLocation + productOut.getName());
-				Path link = Paths.get(databaseLocation + productOut.getBarCode());
-				Files.createSymbolicLink(target, link);
+                personOut.close();
+                FileOutputStream personOut1 = new FileOutputStream(databaseLocation + productOut.getBarCode());
+                ObjectOutputStream out1 = new ObjectOutputStream(personOut1);
+                out1.writeObject(productOut);
+                out1.close();
+                personOut.close();
             }
             catch (Exception e) {
                 System.out.println(e);
@@ -209,16 +207,22 @@ public final class ProductDatabase
 	public final void writeOutDatabase(Product[] productsOut) {
 		for (Product productOut : productsOut) {
 			try {
-				FileOutputStream prodOut = new FileOutputStream(databaseLocation + productOut.getName());
-				ObjectOutputStream out = new ObjectOutputStream(prodOut);
-				delProduct(productOut.getName());
-				out.writeObject(productOut);
-				out.close();
-				prodOut.close();
-				// create a simlink to the person to allow the program to search for either username or barcode
-				Path target = Paths.get(databaseLocation + productOut.getName());
-				Path link = Paths.get(databaseLocation + productOut.getBarCode());
-				Files.createSymbolicLink(target, link);
+                File check = new File(databaseLocation + productOut.getName());
+                if(check.exists()) check.delete();
+                check = new File(databaseLocation + productOut.getBarCode());
+                if(check.exists()) check.delete();
+                check = null;
+                FileOutputStream personOut = new FileOutputStream(databaseLocation + productOut.getName());
+                ObjectOutputStream out = new ObjectOutputStream(personOut);
+                out.writeObject(productOut);
+                out.close();
+                personOut.close();
+                FileOutputStream personOut1 = new FileOutputStream(databaseLocation + productOut.getBarCode()); // do it all a second time for the barcode.
+                // it may be quicker to do this with the java.properties setup that I have made. The code for that will sit unused in settings.java.
+                ObjectOutputStream out1 = new ObjectOutputStream(personOut1);
+                out1.writeObject(productOut);
+                out1.close();
+                personOut.close();
 			} catch (Exception e) {
 				System.out.println(e);
 			}

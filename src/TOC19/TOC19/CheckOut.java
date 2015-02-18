@@ -30,7 +30,6 @@ public final class CheckOut
 {
 	// create the necessary variables in the order of use
 	private Product[] products;
-	private Product[] resized; // used for creating larger databases. 
 	private int[] quantities;
 //	private String output;
 	private int logicalSize;
@@ -46,8 +45,9 @@ public final class CheckOut
 	    totalPrice = 0;
 	}
 	    
-	public final void addProduct(Product item, int quantity)
+	public final void addProduct(Product item)
 	{
+        int quantity = 1; // this can be changed when the user can input a number.
 		if(logicalSize == products.length) {
 			products = resizeCheckOut(true, products);
 			quantities = resizeQuantities(true, quantities);
@@ -55,7 +55,7 @@ public final class CheckOut
 		int i = 0;
 		boolean alreadyExists = false;
 		for(Product prod : products) {
-			if (item.getBarCode() == prod.getBarCode()) {
+			if (prod != null && item.getBarCode() == prod.getBarCode()) {
 				alreadyExists = true;
 				break;
 			}
@@ -71,24 +71,7 @@ public final class CheckOut
 		}
 		totalPrice += item.productPrice()*quantity;
 	}
-	public final int addProduct(String name, long price, int barCode)
-	{
-		/** 
-		Class CheckOut: Method addProduct
-		Preconditions: Paramiters productNo, name, artist, size and duration have been entered as int, string, string, double, double respectively
-		Postconditions: The data for the given productNo will have been set.
-		*/
-		
-		if(logicalSize == products.length) { // resize the checkOut when needed. 
-			products = resizeCheckOut(true, products);
-		} //max time times 60 due to the fact that it is stored in minutes while the product stores time in seconds. 
-		// pass the values which are given to the product object.
-		products[logicalSize] = new Product(name, price, barCode);
-		totalPrice += price;
-		++logicalSize; // incerment the logicalSize value to show the added product.
-		return 0;
-	}
-	public final String getCheckOut(int sort) 
+	public final String getCheckOut(int sort)
 	{
 		/**
 		Class CheckOut: Method getCheckOut
@@ -111,23 +94,23 @@ public final class CheckOut
 	{
 		String[] output = new String[logicalSize];
 		for (int i = 0; i < logicalSize; i++) {
-			output[i] = (products[i].getDataName());
+			output[i] = (products[i].getDataName() + quantities[i] + "\n");
 		}
 		return output;
 	}
-	public final String[] getCheckOutPrices()
-	{
-		String[] output = new String[logicalSize];
-		for (int i = 0; i < logicalSize; i++) {
-			output[i] = (products[i].getDataPrice());
-		}
-		return output;
-	}
-	public final long getPrice()
-	{
-		return totalPrice;
-	}
-	public final void delProduct(int productNo)
+    public final String[] getCheckOutPrices()
+    {
+        String[] output = new String[logicalSize];
+        for (int i = 0; i < logicalSize; i++) {
+            output[i] = "Price: $" + products[i].getDataPrice() * quantities[i];
+        }
+        return output;
+    }
+    public long getPrice()
+    {
+        return totalPrice;
+    }
+    public final void delProduct(int productNo)
 	{
 		/**
 		Class CheckOut: Method delProduct
@@ -136,6 +119,7 @@ public final class CheckOut
 		*/
 		
 		if(productNo < logicalSize) { // check that the product exists
+            //TODO: remove manual array copy
 			totalPrice -= products[productNo].productPrice(); // remove the products data from the summaries of the checkOut
 			for(int i = productNo; i < logicalSize; i++) { // move the products in the database back one such that the deleted product is overwritten.
 				products[i] = products[i+1];
@@ -145,34 +129,6 @@ public final class CheckOut
 		if(logicalSize < products.length/2) { // if needed, lower the size of the database.
 			products = resizeCheckOut(false, products);
 		}
-
-	}
-	public final int emptyProduct() // return the logicalSize to if another class needs it. logicalSize will always point to the next free position.
-	{
-		/**
-		Class CheckOut: Method emptyProduct
-		Preconditions: none
-		Postconditions: the first found null product will be output, if none are found, 0 will be output as an error.
-		*/
-		
-		return logicalSize;
-	}
-
-	public final int productEqualTo(long extBarCode)
-	{
-		/**
-		Class CheckOut: Method productEqualTo
-		Preconditions: the string extProduct has been input as a paremiter and contains products data, addProduct has been run atleast once
-		PostConditions: the integer number of the product that is equal to extProduct will be returned. On the error that no products match 0 will be returned
-		*/
-		
-		for(int i = 0; i < logicalSize; i++) { //Loop untill the product that matches the one given as a paremeter is found
-			if(products[i] != null && products[i].getBarCode() == extBarCode) {
-				return i; // return the matching product.
-			}
-		}
-		return -1; // return on unfound match.
-
 	}
 	public final Product[] resizeCheckOut(Boolean action, Product[] resizing)
 	{
@@ -338,10 +294,5 @@ public final class CheckOut
 			}
 		}
 		return products;
-	}
-	public final void addQuantity(int productNo, int add)
-	{
-		products[productNo].setQuantity(products[productNo].getQuantity() + add);
-		totalPrice += products[productNo].productPrice();
 	}
 }
