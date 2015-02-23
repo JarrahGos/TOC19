@@ -24,7 +24,6 @@ package TOC19;
 * Class: ProductDatabase
 * Description: This program will allow for the input and retreval of the product database and will set the limits of the database.
 */
-
 import java.io.*;
 import java.util.Arrays;
 

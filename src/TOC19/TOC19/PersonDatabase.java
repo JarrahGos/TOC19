@@ -44,12 +44,19 @@ public final class PersonDatabase {
 	public PersonDatabase() throws FileNotFoundException {
 		logicalSize = 0;
 //		output = "";
+		String settings = config.adminSettings();
+		System.out.println(settings);
+	//	for(String string : settings) {
+			if (settings != null) System.out.println(settings);
+			else System.out.print("null");
+	//	}
+	//	admin.setBarCode(Long.parseLong(settings[0]));
+		admin = new Person(settings, 0, 0, 0, false);
 		try {
 			databaseLocation = config.personSettings();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-        admin = readDatabasePerson(7000000L);
 	}
 
 	public final void setDatabasePerson(String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
@@ -72,11 +79,7 @@ public final class PersonDatabase {
 		 */
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
-		String[] stringList = new String[list.length];
-		for(int i = 0; i < list.length; i++) {
-			stringList[i] = list[i].getPath();
-		}
-		Person[] database = readDatabase(stringList);
+		Person[] database = readDatabase(list);
 		StringBuilder output = new StringBuilder();
 		for (int i = 0; i < database.length; i++) { // loop until the all of the databases data has been output
 			if (database[i] != null) {
@@ -369,7 +372,7 @@ public final class PersonDatabase {
 	}
 	public final void setAdminPassword(String extPassword) {
 		admin.setName(extPassword);
-        writeOutDatabasePerson(admin);
+        	writeOutDatabasePerson(admin);
 	}
 
 	public final void setPersonCanBuy(long personNumber, boolean canBuy)
