@@ -26,6 +26,7 @@ package TOC19;
  */
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public final class PersonDatabase {
@@ -43,19 +44,12 @@ public final class PersonDatabase {
 	public PersonDatabase() throws FileNotFoundException {
 		logicalSize = 0;
 //		output = "";
-		String settings = config.adminSettings();
-		System.out.println(settings);
-	//	for(String string : settings) {
-			if (settings != null) System.out.println(settings);
-			else System.out.print("null");
-	//	}
-	//	admin.setBarCode(Long.parseLong(settings[0]));
-		admin = new Person(settings, 0, 0, 0, false);
 		try {
 			databaseLocation = config.personSettings();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+        admin = readDatabasePerson(7000000L);
 	}
 
 	public final void setDatabasePerson(String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
@@ -175,7 +169,10 @@ public final class PersonDatabase {
 			if(database[i] != null)
 				output[i] = database[i].getName();
 		}
-		return output;
+        output = Arrays.stream(output)
+                .filter(s -> (s != null && s.length() > 0))
+                .toArray(String[]::new);
+        return output;
 	}
 	public final double getPersonPriceYear(long personNo) {
 		/**
@@ -258,7 +255,7 @@ public final class PersonDatabase {
 	public final int adminWriteOutDatabase(String path) throws IOException {
 		PrintWriter outfile = null;
 		double total = 0;
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		String[] stringList = new String[list.length];
 		for(int i = 0; i < list.length; i++) {
@@ -274,9 +271,11 @@ public final class PersonDatabase {
 		}
 		outfile.println("Barcode, Name, Total, Bill");
 		for(Person person : database) {
-			outfile.println(person.getBarCode() + "," + person.getName() + ","
-					+ person.totalCostRunning() + "," + person.totalCostWeek());
-			total += person.totalCostWeek();
+            if(person != null) {
+                outfile.println(person.getBarCode() + "," + person.getName() + ","
+                        + person.totalCostRunning() + "," + person.totalCostWeek());
+                total += person.totalCostWeek();
+            }
 		}
 		outfile.println("Total, " + total);
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
@@ -317,6 +316,7 @@ public final class PersonDatabase {
 		 }
 	public final Person[] readDatabase(String[] databaseList){
 		Person[] importing = new Person[databaseList.length];
+        int i = 0;
 		for(String person : databaseList) {
 			Person inPers = null;
 			try {
@@ -331,19 +331,20 @@ public final class PersonDatabase {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			int i = -1;
 			boolean alreadyExists = false;
 			if(inPers != null) {
 				for (Person pers : importing) {
 					if ( pers != null && inPers.getBarCode() == pers.getBarCode()) {
 						alreadyExists = true;
 						break;
-					} else i++;
+					}
 				}
 			}
 			else alreadyExists = true;
-			if(!alreadyExists)
-				importing[i] = inPers;
+			if(!alreadyExists) {
+                importing[i] = inPers;
+                i++;
+            }
 		}
 		return importing;
 	}
@@ -368,11 +369,7 @@ public final class PersonDatabase {
 	}
 	public final void setAdminPassword(String extPassword) {
 		admin.setName(extPassword);
-		try {
-			config.adminSetPassword(extPassword);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+        writeOutDatabasePerson(admin);
 	}
 
 	public final void setPersonCanBuy(long personNumber, boolean canBuy)

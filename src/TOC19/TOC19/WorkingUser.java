@@ -175,7 +175,7 @@ public class WorkingUser {
 		}
 		Product adding = productDatabase.getProductRef(tempBarCode);
 		if(adding != null) {
-			checkOuts.addProduct(adding, 1); //otherwise, add the product as normal.
+			checkOuts.addProduct(adding); //otherwise, add the product as normal.
 			return true;
 		}
 		return false;

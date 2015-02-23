@@ -35,6 +35,7 @@ public final class Product implements java.io.Serializable
 	private long barCode;
 	private int numberOfItems;
 	private int quantity;
+    private static final long serialVersionUID = 165169198;
 
 	public Product(String extName, long extProductPrice, long extBarCode) // construtor which will give the product its values
 	{
@@ -44,29 +45,10 @@ public final class Product implements java.io.Serializable
 		barCode = extBarCode;
 	}
 	// Begin methods
-	public final void setData(String name, String artist, long productPrice, long barCode) 
-	{ // redundant method which has been left in case products are edited in some way which would require this to be used.
-		/**
-		Class Song: Method setData
-		Precondition: Augments String name, String artist, double productPrice, double time are input
-		Postcondition: the product that this method was invoked with now has been stored.
-		*/
-		this.name = name;
-		this.productPrice = productPrice;
-		this.barCode = barCode;
-	}
 	public final void setNumber(int number)
 	{
 		numberOfItems = number;
 	}
-    public final void setName(String name)
-    {
-       this.name = name;
-    }
-    public final void setPrice(long extPrice)
-    {
-        this.productPrice = extPrice;
-    }
 	public final int getNumber()
 	{
 		return numberOfItems;
@@ -130,18 +112,20 @@ public final class Product implements java.io.Serializable
 		StringBuilder output = new StringBuilder();
 		output.append(name);
 		output.append(" x ");
-		output.append(quantity);
-		output.append("\n");
 		return output.toString();
 	}
-	public final String getDataPrice()
-	{
-		StringBuilder output = new StringBuilder();
-		output.append("Price: $");
-		output.append(((double)((productPrice*quantity)))/100);
-		output.append("\n");
-		return output.toString();
-	}
+//	public final String getDataPrice()
+//	{
+//		StringBuilder output = new StringBuilder();
+//		output.append("Price: $");
+//		output.append(((double)((productPrice*quantity)))/100);
+//		output.append("\n");
+//		return output.toString();
+//	}
+    public final double getDataPrice()
+    {
+        return (((double)((productPrice)))/100);
+    }
 	public final String getName() // return the name of the product
 	{
 		/**

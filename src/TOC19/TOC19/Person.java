@@ -34,6 +34,7 @@ public final class Person implements java.io.Serializable
 	private long totalCostRunning, totalCostWeek; // Running can be yearly, or can be perminant. Up to TOC. Weekly will be reset each stocktake
 	private long barCode; // PMKeys number off ID
 	private boolean canBuy;
+    private static final long serialVersionUID = 126491946;
 
 	public Person(String extName, long extBarCode, long running, long week, boolean extCanBuy) // construtor which will give the person its values
 	{
@@ -159,7 +160,5 @@ public final class Person implements java.io.Serializable
 	{
 		canBuy = extCanBuy;
 	}
-	public final void setBarCode(long extBarCode) {
-		barCode = extBarCode;
-	}
+
 }

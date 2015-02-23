@@ -110,6 +110,10 @@ public final class Interface extends Application
 		// create button to enter data from input
 		Button enterBarCode = new Button("OK"); // button linked to action on input text field.
     	grid.add(enterBarCode, 2,0, 2,1); // add to the direct right of the input text field
+
+        //create product error text
+        Text productError = new Text();
+        grid.add(productError, 1,8);
 		
 		
 		// create the lists for the checkout. 
@@ -233,6 +237,7 @@ public final class Interface extends Application
 //						nameDataOut = new ScrollPane(nameData);
 //						priceData.setText(workingUser.getCheckOutPrices());
 //						priceDataOut = new ScrollPane(priceData);
+                        productError.setText("");
 						items.setAll(workingUser.getCheckOutNames());
 						itemList.setItems(items);
 						prices.setAll(workingUser.getCheckOutPrices());
@@ -240,8 +245,10 @@ public final class Interface extends Application
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
 					}
-					else 
+					else{
+                        productError.setText("Could not read that product");
 						input.clear();
+                    }
 				}
 		});
 		input.setOnKeyPressed((KeyEvent ke) -> { // the following allows the user to hit enter rather than OK. Works exactly the same as hitting OK. 

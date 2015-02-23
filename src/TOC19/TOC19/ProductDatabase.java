@@ -26,6 +26,7 @@ package TOC19;
 */
 
 import java.io.*;
+import java.util.Arrays;
 
 public final class ProductDatabase
 {
@@ -72,8 +73,8 @@ public final class ProductDatabase
 		File[] list = root.listFiles();
 		Product[] database = readDatabase(list);
 		StringBuilder output = new StringBuilder();
-		for(int i = 0; i < logicalSize; i++) { // loop until the all of the databases data has been output
-			if(allProducts[i] != null) {
+		for(int i = 0; i < database.length; i++) { // loop until the all of the databases data has been output
+			if(database[i] != null) {
 				output.append(String.format("\nProduct %d:\n",1+i));
 				output.append(database[i].getData());
 			}
@@ -231,7 +232,7 @@ public final class ProductDatabase
 	public final int adminWriteOutDatabase(String path) throws IOException {
 		PrintWriter outfile = null;
 		double total = 0;
-		File root = new File ("./");
+		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		Product[] database = readDatabase(list);
 		try {
@@ -243,9 +244,11 @@ public final class ProductDatabase
 		}
 		outfile.println("Name, Price, Barcode, Stock Count");
 		for(Product product : database) {
-			outfile.println(product.getName() + "," + product.productPrice() + ","
-					+ product.getBarCode() + "," + product.getNumber());
-			total += product.productPrice()*product.getNumber();
+            if(product != null) {
+                outfile.println(product.getName() + "," + product.productPrice() + ","
+                        + product.getBarCode() + "," + product.getNumber());
+                total += product.productPrice() * product.getNumber();
+            }
 		}
 		outfile.println("Total stock value, " + total);
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
@@ -287,34 +290,72 @@ public final class ProductDatabase
         }
 	public final Product[] readDatabase(File[] databaseList){
 		Product[] importing = new Product[databaseList.length];
+        int i = 0;
 		for(File product : databaseList) {
-			Product inProd = null;
-			try {
-				FileInputStream productIn = new FileInputStream(product);
-				ObjectInputStream in = new ObjectInputStream(productIn);
-				inProd = (Product) in.readObject();
-				in.close();
-				productIn.close();
-			} catch (IOException e) {
-				System.out.println(e);
-				return null;
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			int i = 0;
-			boolean alreadyExists = false;
-			for(Product prod : importing) {
-				if (inProd.getBarCode() == prod.getBarCode()) {
-					alreadyExists = true;
-					break;
-				}
-				else i++;
-			}
-			if(!alreadyExists)
-				importing[i] = inProd;
+            Product inProd = null;
+            try {
+                FileInputStream productIn = new FileInputStream(product);
+                ObjectInputStream in = new ObjectInputStream(productIn);
+                inProd = (Product) in.readObject();
+                in.close();
+                productIn.close();
+            } catch (IOException e) {
+                System.out.println(e);
+                return null;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            boolean alreadyExists = false;
+            if(inProd != null) {
+                for (Product prod : importing) {
+                    if (prod != null && inProd.getBarCode() == prod.getBarCode()) {
+                        alreadyExists = true;
+                        break;
+                    }
+                }
+            }
+            else alreadyExists = true;
+            if (!alreadyExists) {
+                importing[i] = inProd;
+                i++;
+            }
 		}
 		return importing;
 	}
+    public final Product[] readDatabase(String[] databaseList){
+        Product[] importing = new Product[databaseList.length];
+        int i = 0;
+        for(String product : databaseList) {
+            Product inProd = null;
+            try {
+                FileInputStream productIn = new FileInputStream(product);
+                ObjectInputStream in = new ObjectInputStream(productIn);
+                inProd = (Product) in.readObject();
+                in.close();
+                productIn.close();
+            } catch (IOException e) {
+                System.out.println(e);
+                return null;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            boolean alreadyExists = false;
+            if(inProd != null) {
+                for (Product prod : importing) {
+                    if (prod != null && inProd.getBarCode() == prod.getBarCode()) {
+                        alreadyExists = true;
+                        break;
+                    }
+                }
+            }
+            else alreadyExists = true;
+            if (!alreadyExists) {
+                importing[i] = inProd;
+                i++;
+            }
+        }
+        return importing;
+    }
 	public final int getNumber(int productNo)
 	{
 		return allProducts[productNo].getNumber();
@@ -325,13 +366,31 @@ public final class ProductDatabase
 	}
 	public final Product getProductRef(long productNo)
 	{
-		return readDatabaseProduct(productNo);
+        try {
+            return readDatabaseProduct(productNo); //TODO: if the product does not exist, do something.
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 	public final String[] getProductNames() {
-		String[] output = new String[logicalSize];
-		for(int i = 0; i < logicalSize; i++) {
-			output[i] = allProducts[i].getName();
-		}
-		return output;
+        File root = new File (databaseLocation);
+        File[] list = root.listFiles();
+        String[] stringList = new String[list.length];
+        for(int i = 0; i < list.length; i++) {
+            stringList[i] = list[i].getPath();
+            System.out.println(stringList[i]);
+        }
+        String[] output = new String[list.length];
+        Product[] database = readDatabase(stringList);
+        System.out.println(database);
+        for(int i = 0; i < database.length; i++) {
+            if(database[i] != null)
+                output[i] = database[i].getName();
+        }
+        output = Arrays.stream(output)
+                .filter(s -> (s != null && s.length() > 0))
+                .toArray(String[]::new);
+        return output;
 	}
 }
