@@ -38,7 +38,6 @@ public final class ProductDatabase
 	{
 		allProducts = new Product[10];
 		logicalSize = 0;
-//		output = "";
 		try {
 			databaseLocation = config.productSettings();
 		} catch (FileNotFoundException e) {
@@ -77,7 +76,6 @@ public final class ProductDatabase
         check = new File(databaseLocation + oldBarCode);
         if(check.exists()) check.delete();
         check = null;
-        System.out.println(price + "saotneuh");
         writeOutDatabaseProduct(newProduct);
 
     }
@@ -423,11 +421,9 @@ public final class ProductDatabase
         String[] stringList = new String[list.length];
         for(int i = 0; i < list.length; i++) {
             stringList[i] = list[i].getPath();
-            System.out.println(stringList[i]);
         }
         String[] output = new String[list.length];
         Product[] database = readDatabase(stringList);
-        System.out.println(database);
         for(int i = 0; i < database.length; i++) {
             if(database[i] != null)
                 output[i] = database[i].getName();

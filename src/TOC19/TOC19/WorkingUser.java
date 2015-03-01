@@ -102,7 +102,6 @@ public class WorkingUser {
         } catch (NumberFormatException e) {
             return false;
         }
-        // only got here if we didn't return false
         return true;
     }
 
@@ -145,7 +144,6 @@ public class WorkingUser {
 
     public final void buyProducts() {
         user.addPrice(checkOuts.getPrice());
-//		personDatabase.addCost(user, checkOuts.getPrice());// add the bill to the persons account
         Product[] purchased = checkOuts.productBought(); // clear the quantities and checkout
         productDatabase.writeOutDatabase(purchased);
         personDatabase.writeOutDatabasePerson(user);
@@ -222,16 +220,9 @@ public class WorkingUser {
         }
     }
 
-    public final void removePerson(int index) throws IOException, InterruptedException {
-        personDatabase.delPerson(index);
-    }
 
     public final void removePerson(String index) throws IOException, InterruptedException {
         personDatabase.delPerson(index);
-    }
-
-    public final void removeProduct(int index) throws IOException, InterruptedException {
-        productDatabase.delProduct(index);
     }
 
     public final void removeProduct(String index) throws IOException, InterruptedException {

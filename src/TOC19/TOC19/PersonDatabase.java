@@ -31,26 +31,15 @@ import java.util.Scanner;
 
 public final class PersonDatabase {
 
-//	private static TOC19.Person[] allPersons;
 	private static TOC19.Person admin;
 	private static int logicalSize;
-//	private String output;
-//	private File file;
-//	private PrintWriter outfile;
 	private Scanner readOutFile;
 	private Settings config = new Settings();
 	private String databaseLocation;
 
 	public PersonDatabase() throws FileNotFoundException {
 		logicalSize = 0;
-//		output = "";
 		String settings = config.adminSettings();
-		System.out.println(settings);
-	//	for(String string : settings) {
-			if (settings != null) System.out.println(settings);
-			else System.out.print("null");
-	//	}
-	//	admin.setBarCode(Long.parseLong(settings[0]));
 		admin = new Person(settings, 0, 0, 0, false);
 		try {
 			databaseLocation = config.personSettings();
@@ -183,11 +172,9 @@ public final class PersonDatabase {
 		String[] stringList = new String[list.length];
 		for(int i = 0; i < list.length; i++) {
 			stringList[i] = list[i].getPath();
-			System.out.println(stringList[i]);
 		}
 		String[] output = new String[list.length];
 		Person[] database = readDatabase(stringList);
-		System.out.println(database);
 		for(int i = 0; i < database.length; i++) {
 			if(database[i] != null && database[i].getBarCode() != 7000000)
 				output[i] = database[i].getName();

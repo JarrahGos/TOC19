@@ -24,7 +24,7 @@ package TOC19;
 * Class: Interface
 * Description: This program will allow the user to interact with the program, creating, deleting and modifying products and checkOuts.
 */
-// GUI Inports
+// GUI Imports
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -140,45 +140,7 @@ public final class Interface extends Application
 				itemList.scrollTo(priceList.getSelectionModel().getSelectedIndex());
 		});
 				
-//		for(Node node: priceList.lookupAll(".scroll-bar")) {
-//			if (node instanceof ScrollBar) {
-//				ScrollBar bar = (ScrollBar) node;
-//				bar.valueProperty().addListener((ObservableValue<? extends Number> value, Number oldValue, Number newValue) -> {
-//					System.out.println(bar.getOrientation() + " " + newValue);	
-//				});
-//			}
-//		}
 		grid.add(checkoutOut, 0,1,7,7);
-               // work checkout output
-//		Text nameData = new Text(workingUser.getCheckOutNames()); // the data which will be output by the checkout
-//		nameData.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-//		nameDataOut = new ScrollPane(nameData); // create a scroll pane to handle the data. 
-//		nameDataOut.setPrefViewportHeight(400);
-//		nameDataOut.setPrefViewportWidth(550);
-//		nameDataOut.setVbarPolicy(ScrollBarPolicy.NEVER); // ensure that there is a scroll bar.
-//		grid.add(nameDataOut, 0,1,4,7); // place front and centre. 
-//		// Do the same with the price
-//		Text priceData = new Text(workingUser.getCheckOutPrices());
-//		priceData.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-//		priceDataOut = new ScrollPane(priceData); // create a scroll pane to handle the data. 
-//		priceDataOut.setPrefViewportHeight(400); // was 400
-//		priceDataOut.setPrefViewportWidth(100);
-//		priceDataOut.setVbarPolicy(ScrollBarPolicy.ALWAYS); // ensure that there is a scroll bar.
-//		grid.add(priceDataOut, 4,1,2,7); // place front and centre. 
-		
-		// listen for changes to the scroll bar value
-//		DoubleProperty vPosition = new SimpleDoubleProperty();
-//			vPosition.bind(priceDataOut.vvalueProperty());
-//			vPosition.addListener(new ChangeListener() {
-//				@Override
-//				public void changed(ObservableValue arg0, Object arg1, Object arg2) {
-////					 nameDataOut.setVvalue((double) arg2);
-//					nameDataOut.setVvalue(priceDataOut.getVvalue()); // this is going in the right direction, but does not work. 
-//			
-//				}
-//			});
-			
-
 
         //listen on enter product barcode button
 		enterBarCode.setOnAction((ActionEvent e) -> {
@@ -198,14 +160,10 @@ public final class Interface extends Application
 								try {
 									Thread.sleep(90000); // after this time, log the user out. 
 									workingUser.logOut(); // set user number to -1 and delete any checkout made. 
-									System.out.println("logging Out");
+
 									grid.getChildren().remove(userLabel); // make it look like no user is logged in
 									inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate. 
-//									nameData.setText(workingUser.getCheckOutNames()); // clear the data of the checkout. 
-//									priceData.setText(workingUser.getCheckOutPrices());
-//									nameDataOut = new ScrollPane(nameData); // clear the scroll pane output. 
-//									priceDataOut = new ScrollPane(priceData);
-									total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00. 
+									total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
 								}
 								catch (InterruptedException e) {
 									// do nothing here. 
@@ -234,10 +192,6 @@ public final class Interface extends Application
 				else {
 					boolean correct = productEntered(input.getText());
 					if (correct) {
-//						nameData.setText(workingUser.getCheckOutNames());
-//						nameDataOut = new ScrollPane(nameData);
-//						priceData.setText(workingUser.getCheckOutPrices());
-//						priceDataOut = new ScrollPane(priceData);
                         productError.setText("");
 						items.setAll(workingUser.getCheckOutNames());
 						itemList.setItems(items);
@@ -256,10 +210,7 @@ public final class Interface extends Application
 			if (ke.getCode().equals(KeyCode.ENTER)) {
 				if(!workingUser.userLoggedIn()) {
 					int userError = PMKeySEntered(input.getText());
-                    System.out.println(userError);
-			
-			
-			
+
 					if(workingUser.userLoggedIn()) {
 						userLabel.setText(workingUser.userName(userError));
 						inputLabel.setText("Enter Barcode");
@@ -278,10 +229,6 @@ public final class Interface extends Application
 				else {
 					boolean correct = productEntered(input.getText());
 					if (correct) {
-//						nameData.setText(workingUser.getCheckOutNames());
-//						nameDataOut = new ScrollPane(nameData);
-//						priceData.setText(workingUser.getCheckOutPrices());
-//						priceDataOut = new ScrollPane(priceData);
 						items.setAll(workingUser.getCheckOutNames());
 						itemList.setItems(items);
 						prices.setAll(workingUser.getCheckOutPrices());
@@ -300,7 +247,6 @@ public final class Interface extends Application
 		Button adminMode = new Button("Enter Admin Mode"); // button which will bring up the admin mode. 
 		adminMode.setOnAction((ActionEvent e) -> {
 			enterPassword(); // method which will work the admin mode features. 
-//			primaryStage.hide(); // hide the user side of things. 
 		});
 		grid.add(adminMode, 0,8); // add the button to the bottum left of the screen. 
                 
@@ -312,10 +258,6 @@ public final class Interface extends Application
 			inputLabel.setText("Enter your PMKeyS"); // Set the input label to something better for user login. 
 			total.setText(String.valueOf(workingUser.getPrice())); //set total to the working users price, which after logout is 0.00
 			input.clear(); // clear the input ready for a PMKeyS
-//			nameData.setText(workingUser.getCheckOutNames()); // clear the data of the scroll pane, as the checkout will be clear. 
-//			priceData.setText(workingUser.getCheckOutPrices());
-//			nameDataOut = new ScrollPane(nameData); // replace the now clear scroll pane. 
-//			priceDataOut = new ScrollPane(nameData);
 			items.setAll(workingUser.getCheckOutNames());
 			itemList.setItems(items);
 			prices.setAll(workingUser.getCheckOutPrices());
@@ -328,10 +270,6 @@ public final class Interface extends Application
 			workingUser.logOut(); // set user number to -1 and delete any checkout made. 
 			grid.getChildren().remove(userLabel); // make it look like no user is logged in
 			inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate. 
-//			nameData.setText(workingUser.getCheckOutNames()); // clear the data of the checkout. 
-//			priceData.setText(workingUser.getCheckOutPrices());
-//			nameDataOut = new ScrollPane(nameData); // clear the scroll pane output. 
-//			priceDataOut = new ScrollPane(priceData);
 			items.setAll(workingUser.getCheckOutNames());
 			itemList.setItems(items);
 			prices.setAll(workingUser.getCheckOutPrices());
@@ -394,7 +332,6 @@ public final class Interface extends Application
 		VBox rightPane = new VBox();
 		
 		GridPane grid = new GridPane();
-//		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);

@@ -6,7 +6,6 @@
 package TOC19;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -58,7 +57,6 @@ public class Settings {
 		}
 		
 		String output;
-	//	output[0] = properties.getProperty("adminBarcode");
 		output = properties.getProperty("adminPassword");
 		return output;
 	}
@@ -98,38 +96,7 @@ public class Settings {
 		output = properties.getProperty("productDatabaseLocation");
 		return output;
 	}
-	public final void adminSetPassword(String passwd) throws FileNotFoundException
-	{	
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			}
-			catch(IOException e) {
-				System.out.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		} 
-		else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
-		
-		FileOutputStream output = null;
-		try {
-			properties.setProperty("adminPassword", passwd);
-			output = new FileOutputStream(propFileName);
-			properties.store(output, null);
-		}
-		catch (IOException e) {
-			System.out.print(e);
-		}
-		if(output != null) {
-			try { 
-				output.close();
-			}
-			catch (IOException e) {
-				System.out.print(e);
-			}
-		}
-	}
+
 	public final String[] interfaceSettings() throws FileNotFoundException
 	{
 		if (inputStream != null) {

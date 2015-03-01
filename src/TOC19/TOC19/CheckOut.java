@@ -31,14 +31,12 @@ public final class CheckOut
 	// create the necessary variables in the order of use
 	private Product[] products;
 	private int[] quantities;
-//	private String output;
 	private int logicalSize;
 	private long totalPrice;
 
 	public CheckOut()
 	{
 		// Initalise the needed variables
-//		output = "";
 	    products = new Product[4];
             quantities = new int[4];
 	    logicalSize = 0;
@@ -84,10 +82,7 @@ public final class CheckOut
 			output.append(products[i].getDataUser());
 		}
 		// Output the summary data of the checkOut
-//		if(totalPrice != 0) {
-//			output += "\nThe total price is: $";
-//			output +=  (double)totalPrice/100; 
-//		}
+
 		return output.toString();
 	}
 	public final String[] getCheckOutNames()

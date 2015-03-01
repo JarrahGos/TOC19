@@ -114,14 +114,6 @@ public final class Product implements java.io.Serializable
 		output.append(" x ");
 		return output.toString();
 	}
-//	public final String getDataPrice()
-//	{
-//		StringBuilder output = new StringBuilder();
-//		output.append("Price: $");
-//		output.append(((double)((productPrice*quantity)))/100);
-//		output.append("\n");
-//		return output.toString();
-//	}
     public final double getDataPrice()
     {
         return (((double)((productPrice)))/100);
@@ -158,13 +150,5 @@ public final class Product implements java.io.Serializable
 	public final void decrementNumber()
 	{
 		numberOfItems--;
-	}
-	public final void setQuantity(int quantity)
-	{
-		this.quantity = quantity;
-	}
-	public final int getQuantity()
-	{
-		return quantity;
 	}
 }
