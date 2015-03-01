@@ -585,7 +585,7 @@ public final class Interface extends Application
 					grid.add(remove, 1,0);
 					product.setAll(workingUser.getProductNames());
 				}
-				else if( selectedOption.equals("Change a Product")) {
+				else if( selectedOption.equals("Change a Product")) { // TODO: make this actually change the product desired
 					grid.getChildren().clear();
 					ListView<String> productList = new ListView<>();
 					ObservableList<String> product = FXCollections.observableArrayList();
@@ -622,7 +622,8 @@ public final class Interface extends Application
 					priceEntry.setOnAction((ActionEvent e) -> {
 						long barCode = Long.parseLong(barCodeEntry.getText());
 						long price = (long)(Double.parseDouble(priceEntry.getText())*100);
-						workingUser.addProductToDatabase(nameEntry.getText(), barCode, price);
+						workingUser.changeDatabaseProduct(nameEntry.getText(), workingUser.getProductName(productList.getSelectionModel().getSelectedItem()), price,
+                                barCode, workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
 						nameEntry.clear();
 						barCodeEntry.clear();
 						priceEntry.clear();

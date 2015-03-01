@@ -69,6 +69,7 @@ public final class ProductDatabase
          Precondition: augments int productNo, String name, String artist, double size, double duration are input
          Postcondition: Data for the currant working product in this database will be set.
          */
+        System.out.println(price + "saotuhaohrthduidhtiu");
         Product newProduct;
         if(!productExists(name, barCode)) { // alter this to check whether a file with the name name/barcode exists
             newProduct = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
@@ -78,6 +79,7 @@ public final class ProductDatabase
             check = new File(databaseLocation + oldBarCode);
             if(check.exists()) check.delete();
             check = null;
+            System.out.println(price + "saotneuh");
             writeOutDatabaseProduct(newProduct);
         }
 
@@ -125,11 +127,16 @@ public final class ProductDatabase
 		Preconditions: setDatabase has been run, productNo is an integer paremeter
 		Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
 		*/
-		File toDel = new File(String.valueOf(productNo));
-		Product del = readDatabaseProduct(productNo);
-		File toDelLn = new File(del.getName());
-		toDel.delete();
-		toDelLn.delete();
+        try {
+            File toDelLn = new File(databaseLocation + String.valueOf(productNo));
+            Product del = readDatabaseProduct(productNo);
+            File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
+            toDel.delete();
+            toDelLn.delete();
+        }
+        catch (NullPointerException e ) {
+            System.out.println("fileNotFound");
+        }
 	}
 	public final void delProduct(String name) throws IOException, InterruptedException {
 		/**
@@ -137,11 +144,16 @@ public final class ProductDatabase
 		 Preconditions: setDatabase has been run, productNo is an integer paremeter
 		 Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
 		 */
-		File toDelLn = new File(name);
-		Product del = readDatabaseProduct(name);
-		File toDel = new File(String.valueOf(del.getBarCode()));
-		toDel.delete();
-		toDelLn.delete();
+        try {
+            File toDelLn = new File(databaseLocation + name);
+            Product del = readDatabaseProduct(name);
+            File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
+            toDel.delete();
+            toDelLn.delete();
+        }
+        catch (NullPointerException e ) {
+            System.out.println("fileNotFound");
+        }
 	}
 	public final String getProductName(long productNo)
 	{
@@ -214,6 +226,7 @@ public final class ProductDatabase
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
 	public final int writeOutDatabaseProduct(Product productOut) {
+        System.out.println("got here");
             try {
                 File check = new File(databaseLocation + productOut.getName());
                 if(check.exists()) check.delete();
