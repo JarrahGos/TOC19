@@ -62,6 +62,26 @@ public final class ProductDatabase
 		}
 
 	}
+    public final void changeDatabaseProduct(String name, String oldName, long price, long barCode, long oldBarCode) // take the products data and pass it to the products constructor
+    {
+        /**
+         Class ProductDatabase: Method setDatabase
+         Precondition: augments int productNo, String name, String artist, double size, double duration are input
+         Postcondition: Data for the currant working product in this database will be set.
+         */
+        Product newProduct;
+        if(!productExists(name, barCode)) { // alter this to check whether a file with the name name/barcode exists
+            newProduct = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
+            logicalSize++; // We have a new product, Now we have something to show for it.
+            File check = new File(databaseLocation + oldName);
+            if(check.exists()) check.delete();
+            check = new File(databaseLocation + oldBarCode);
+            if(check.exists()) check.delete();
+            check = null;
+            writeOutDatabaseProduct(newProduct);
+        }
+
+    }
 	public final String getDatabase(int sort) throws IOException {
 		/**
 		Class ProductDatabase: Method getDatabase
@@ -152,8 +172,21 @@ public final class ProductDatabase
 			return getting.productPrice(); // now that we know it does, give it to the interface
 		}
 		else return 0;
-	
 	}
+    public final double getProductPrice(String productNo)
+    {
+        /**
+         Class ProductDatabase: Method getProductSize
+         Preconditions: setDatabase has been run for the invoking product
+         Postconditions: the size of the invoking product will be returned as a double
+         */
+        Product getting = readDatabaseProduct(productNo);
+        if (getting != null) { // check that the desired person exists
+            return getting.productPrice(); // now that we know it does, give it to the interface
+        }
+        else return 0;
+
+    }
 	public final long getBarCode(int productNo)
 	{
 		/** 

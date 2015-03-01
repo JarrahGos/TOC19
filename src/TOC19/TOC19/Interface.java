@@ -468,7 +468,7 @@ public final class Interface extends Application
 					personList.setItems(persons);
 					grid.add(personList,0,0);
 					remove.setOnAction((ActionEvent e) -> {
-						int index = personList.getSelectionModel().getSelectedIndex();
+						String index = personList.getSelectionModel().getSelectedItem();
 						try {
 							workingUser.removePerson(index);
 						} catch (IOException e1) {
@@ -572,7 +572,7 @@ public final class Interface extends Application
 					productList.setItems(product);
 					grid.add(productList,0,0);
 					remove.setOnAction((ActionEvent e) -> {
-						int index = productList.getSelectionModel().getSelectedIndex();
+						String index = productList.getSelectionModel().getSelectedItem();
 						try {
 							workingUser.removeProduct(index);
 						} catch (IOException e1) {
@@ -608,9 +608,9 @@ public final class Interface extends Application
 					productList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
 						nameEntry.setText(selectedProduct);
-						String BC = Long.toString(workingUser.getProductBarCode(productList.getSelectionModel().getSelectedIndex()));
+						String BC = String.valueOf(workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
 						barCodeEntry.setText(BC);
-						String price = Double.toString(workingUser.getProductPrice(productList.getSelectionModel().getSelectedIndex()));
+						String price = Double.toString(workingUser.getProductPrice(productList.getSelectionModel().getSelectedItem())/100);
 						priceEntry.setText(price);
 					});
 					nameEntry.setOnAction((ActionEvent e) -> {

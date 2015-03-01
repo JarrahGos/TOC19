@@ -219,17 +219,33 @@ public class WorkingUser {
 	public final void removePerson(int index) throws IOException, InterruptedException {
 		personDatabase.delPerson(index);
 	}
+    public final void removePerson(String index) throws IOException, InterruptedException {
+        personDatabase.delPerson(index);
+    }
 	public final void removeProduct(int index) throws IOException, InterruptedException {
 		productDatabase.delProduct(index);
-	}		
-	public final long getProductBarCode(int index)
+	}
+    public final void removeProduct(String index) throws IOException, InterruptedException {
+        productDatabase.delProduct(index);
+    }
+    public final long getProductBarCode(int index)
 	{
 		return productDatabase.getBarCode(index);
 	}
+    public final long getProductBarCode(String index)
+    {
+        Product getting = productDatabase.readDatabaseProduct(index);
+        return getting.getBarCode();
+    }
 	public final double getProductPrice(int index)
 	{
-		return productDatabase.getProductPrice(index);
+        Product getting = productDatabase.readDatabaseProduct(index);
+        return getting.getBarCode();
 	}
+    public final double getProductPrice(String index)
+    {
+        return productDatabase.getProductPrice(index);
+    }
 	public final int getProductNumber(int index)
 	{
 		return productDatabase.getNumber(index);

@@ -128,22 +128,38 @@ public final class PersonDatabase {
 
 	}
 
-	public final void delPerson(long personNo) throws IOException, InterruptedException {
-		/**
-		 * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
-		 * failure of this will be given by a 0 or 1 returned respectively.
-		 */
-		try {
-			File toDelLn = new File(databaseLocation + String.valueOf(personNo));
-			Person del = readDatabasePerson(personNo);
-			File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
-			toDel.delete();
-			toDelLn.delete();
-		}
-		catch (NullPointerException e ) {
-			System.out.println("fileNotFound");
-		}
-	}
+    public final void delPerson(long personNo) throws IOException, InterruptedException {
+        /**
+         * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
+         * failure of this will be given by a 0 or 1 returned respectively.
+         */
+        try {
+            File toDelLn = new File(databaseLocation + String.valueOf(personNo));
+            Person del = readDatabasePerson(personNo);
+            File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
+            toDel.delete();
+            toDelLn.delete();
+        }
+        catch (NullPointerException e ) {
+            System.out.println("fileNotFound");
+        }
+    }
+    public final void delPerson(String personNo) throws IOException, InterruptedException {
+        /**
+         * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
+         * failure of this will be given by a 0 or 1 returned respectively.
+         */
+        try {
+            File toDelLn = new File(databaseLocation + String.valueOf(personNo));
+            Person del = readDatabasePerson(personNo);
+            File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
+            toDel.delete();
+            toDelLn.delete();
+        }
+        catch (NullPointerException e ) {
+            System.out.println("fileNotFound");
+        }
+    }
 
 	public final String getPersonName(long personNo) {
 		/**
