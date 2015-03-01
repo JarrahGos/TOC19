@@ -693,13 +693,8 @@ public final class Interface extends Application
 					grid.add(saveLabel, 0,0,2,1);
 					grid.add(save, 1,1);
 					save.setOnAction((ActionEvent e) -> {
-						try {
-							workingUser.adminWriteOutDatabase("Person");
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
+							workingUser.resetBills();
+                            grid.getChildren().remove(save);
 						saveLabel.setText("saved");
 					});
 				}

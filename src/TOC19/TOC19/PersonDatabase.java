@@ -388,8 +388,10 @@ public final class PersonDatabase {
 		}
 		Person[] database = readDatabase(stringList);
 		for (Person person : database) {
-			person.resetWeekCost();
-			writeOutDatabasePerson(person);
+            if(person != null) {
+                person.resetWeekCost();
+                writeOutDatabasePerson(person);
+            }
 		}
 	}
 	public final void setAdminPassword(String extPassword) {
