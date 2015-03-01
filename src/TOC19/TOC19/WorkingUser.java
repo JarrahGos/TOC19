@@ -120,9 +120,9 @@ public class WorkingUser {
 		switch(type) {
 			case("Product"):textArea = new TextArea(productDatabase.getDatabase(3));
 							break;
-			case("Person"):textArea = new TextArea(personDatabase.getDatabase(1));
+			case("Person"):textArea = new TextArea(personDatabase.getDatabase());
 							break;
-			default:textArea = new TextArea(personDatabase.getDatabase(1));
+			default:textArea = new TextArea(personDatabase.getDatabase());
 							break;
 		}
 		textArea.setEditable(false); // stop the user being able to edit this and thinking it will save. 

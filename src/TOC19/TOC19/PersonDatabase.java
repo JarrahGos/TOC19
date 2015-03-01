@@ -73,16 +73,20 @@ public final class PersonDatabase {
 		}
 	}
 
-	public final String getDatabase(int sort) throws IOException {
+	public final String getDatabase() throws IOException {
 		/**
 		 * Class PersonDatabase: Method getDatabase Precondition: setDatabase has been run Postcondition: the user will be see an output of the persons in the database.
 		 */
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
-		Person[] database = readDatabase(list);
+        String[] stringList = new String[list.length];
+        for(int i = 0; i < list.length; i++) {
+            stringList[i] = list[i].getPath();
+        }
+        Person[] database = readDatabase(stringList);
 		StringBuilder output = new StringBuilder();
 		for (int i = 0; i < database.length; i++) { // loop until the all of the databases data has been output
-			if (database[i] != null) {
+			if (database[i] != null && database[i].getBarCode() != 7000000) {
 				output.append(String.format("\nPerson %d:\n", 1 + i));
 				output.append(database[i].getData());
 			}
@@ -237,17 +241,19 @@ public final class PersonDatabase {
                 check = new File(databaseLocation + persOut.getBarCode());
                 if(check.exists()) check.delete();
                 check = null;
-				FileOutputStream personOut = new FileOutputStream(databaseLocation + persOut.getName());
-				ObjectOutputStream out = new ObjectOutputStream(personOut);
-				out.writeObject(persOut);
-				out.close();
-				personOut.close();
+                if(persOut.getBarCode() != 7000000) {
+                    FileOutputStream personOut = new FileOutputStream(databaseLocation + persOut.getName());
+                    ObjectOutputStream out = new ObjectOutputStream(personOut);
+                    out.writeObject(persOut);
+                    out.close();
+                    personOut.close();
+                }
                 // it may be quicker to do this with the java.properties setup that I have made. The code for that will sit unused in settings.java.
 				FileOutputStream personOut1 = new FileOutputStream(databaseLocation + persOut.getBarCode());
 				ObjectOutputStream out1 = new ObjectOutputStream(personOut1);
 				out1.writeObject(persOut);
 				out1.close();
-				personOut.close();
+				personOut1.close();
 			}
             catch (Exception e) {
                 e.printStackTrace();
@@ -337,7 +343,7 @@ public final class PersonDatabase {
 			boolean alreadyExists = false;
 			if(inPers != null) {
 				for (Person pers : importing) {
-					if ( pers != null && inPers.getBarCode() == pers.getBarCode()) {
+					if ( pers != null && inPers.getBarCode() != 7000000 && inPers.getBarCode() == pers.getBarCode()) {
 						alreadyExists = true;
 						break;
 					}

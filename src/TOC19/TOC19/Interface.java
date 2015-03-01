@@ -456,7 +456,7 @@ public final class Interface extends Application
 					});
 					
 				}
-				else if(selectedOption.equals("Remove Person")) {
+				else if(selectedOption.equals("Remove Person")) { //TODO: this shows the list, but includes admin and doesn't delete
 					grid.getChildren().clear();
 					Button remove = new Button("Remove");
 					grid.add(remove, 1,0);
@@ -505,7 +505,7 @@ public final class Interface extends Application
 						saveLabel.setText("saved");
 					});
 				}
-				else if(selectedOption.equals("Lock People Out")) {
+				else if(selectedOption.equals("Lock People Out")) { //TODO: this doesn't work.
 					grid.getChildren().clear();
 					ListView<String> personList = new ListView<>();
 					ObservableList<String> persons = FXCollections.observableArrayList();
