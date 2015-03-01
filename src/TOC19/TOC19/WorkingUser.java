@@ -254,13 +254,13 @@ public class WorkingUser {
     {
         return productDatabase.getProductPrice(index);
     }
-	public final int getProductNumber(int index)
+	public final int getProductNumber(String name)
 	{
-		return productDatabase.getNumber(index);
+		return productDatabase.getNumber(name);
 	}
-	public final void setNumberOfProducts(int index, int numberOfProducts)
+	public final void setNumberOfProducts(String name, int numberOfProducts)
 	{
-		productDatabase.setNumber(index, numberOfProducts);
+		productDatabase.setNumber(name, numberOfProducts);
 	}
 	public final boolean userCanBuy()
 	{

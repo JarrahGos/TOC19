@@ -645,13 +645,13 @@ public final class Interface extends Application
 					
 					productList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
-						String numberOfProduct = Integer.toString(workingUser.getProductNumber(productList.getSelectionModel().getSelectedIndex()));
+						String numberOfProduct = Integer.toString(workingUser.getProductNumber(productList.getSelectionModel().getSelectedItem()));
 						numberEntry.setText(numberOfProduct);
 						numberEntry.requestFocus();
 						
 					});
 					numberEntry.setOnAction((ActionEvent e) -> {
-						workingUser.setNumberOfProducts(productList.getSelectionModel().getSelectedIndex(), Integer.parseInt(numberEntry.getText()));
+						workingUser.setNumberOfProducts(productList.getSelectionModel().getSelectedItem(), Integer.parseInt(numberEntry.getText()));
 						productList.getSelectionModel().select(productList.getSelectionModel().getSelectedIndex() + 1);
 						numberEntry.requestFocus();
 					});

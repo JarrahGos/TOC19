@@ -397,13 +397,16 @@ public final class ProductDatabase
         }
         return importing;
     }
-	public final int getNumber(int productNo)
+	public final int getNumber(String productName)
 	{
-		return allProducts[productNo].getNumber();
+		Product getting = readDatabaseProduct(productName);
+        return getting.getNumber();
 	}
-	public final void setNumber(int productNo, int number)
+	public final void setNumber(String name, int number)
 	{
-		allProducts[productNo].setNumber(number);
+		Product setting = readDatabaseProduct(name);
+        setting.setNumber(number);
+        writeOutDatabaseProduct(setting);
 	}
 	public final Product getProductRef(long productNo)
 	{
