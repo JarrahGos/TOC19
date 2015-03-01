@@ -69,19 +69,16 @@ public final class ProductDatabase
          Precondition: augments int productNo, String name, String artist, double size, double duration are input
          Postcondition: Data for the currant working product in this database will be set.
          */
-        System.out.println(price + "saotuhaohrthduidhtiu");
         Product newProduct;
-        if(!productExists(name, barCode)) { // alter this to check whether a file with the name name/barcode exists
-            newProduct = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
-            logicalSize++; // We have a new product, Now we have something to show for it.
-            File check = new File(databaseLocation + oldName);
-            if(check.exists()) check.delete();
-            check = new File(databaseLocation + oldBarCode);
-            if(check.exists()) check.delete();
-            check = null;
-            System.out.println(price + "saotneuh");
-            writeOutDatabaseProduct(newProduct);
-        }
+        newProduct = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
+        logicalSize++; // We have a new product, Now we have something to show for it.
+        File check = new File(databaseLocation + oldName);
+        if(check.exists()) check.delete();
+        check = new File(databaseLocation + oldBarCode);
+        if(check.exists()) check.delete();
+        check = null;
+        System.out.println(price + "saotneuh");
+        writeOutDatabaseProduct(newProduct);
 
     }
 	public final String getDatabase(int sort) throws IOException {
@@ -226,7 +223,6 @@ public final class ProductDatabase
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
 	public final int writeOutDatabaseProduct(Product productOut) {
-        System.out.println("got here");
             try {
                 File check = new File(databaseLocation + productOut.getName());
                 if(check.exists()) check.delete();

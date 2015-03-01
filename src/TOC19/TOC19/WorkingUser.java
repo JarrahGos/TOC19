@@ -209,7 +209,6 @@ public class WorkingUser {
 	}
     public final void changeDatabaseProduct(String name, String oldName, long price, long barcode, long oldBarcode) {
         productDatabase.changeDatabaseProduct(name, oldName, price, barcode, oldBarcode);
-        System.out.println(price);
     }
 	public final void adminWriteOutDatabase(String type) throws IOException, InterruptedException {
 		switch(type) {
