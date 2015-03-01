@@ -33,17 +33,23 @@ public class WorkingUser {
 
 		user = null;
 	}
-	public final void getPMKeyS(String input)
+	public final int getPMKeyS(String input)
     {
 		if(( input != null && !input.equals("")) && (!input.matches("[0-9]+"))) {
 			input = input.substring(1);
 		}
-		if(input == null || input.equals("") || !isLong(input) || (input.length() != 7 && input.length() != 5 && input.length() != 6) || !personDatabase.personExists(Long.parseLong(input))) { // checks for valid numbers in the PMKeyS
+		if(input == null || input.equals("") || !isLong(input) || !personDatabase.personExists(Long.parseLong(input))) { // checks for valid numbers in the PMKeyS
 			user =  null;
+            return 1;
 		}
 		else {
 			user =  personDatabase.readDatabasePerson(Long.parseLong(input));
 		}
+        if(!user.canBuy()) {
+            user = null;
+            return 2;
+        }
+        return 0;
     }
 	public final String[] getUserNames() {
 		return personDatabase.getUserNames();
@@ -160,9 +166,17 @@ public class WorkingUser {
 	{
 		return checkOuts.getCheckOutPrices();
 	}
-	public final String userName()
+	public final String userName(int userError)
 	{
-		return user == null ? "error" : user.getName();
+        switch (userError) {
+            case 0:
+                return user.getName();
+            case 1:
+                return "User not found";
+            case 2:
+                return "You have been locked out.\n See the TOC treasurer";
+        }
+        return user == null ? "Error" : user.getName();
 	}
 	public final boolean addToCart(String input) 
 	{

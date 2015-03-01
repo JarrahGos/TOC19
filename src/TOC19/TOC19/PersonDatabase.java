@@ -173,7 +173,7 @@ public final class PersonDatabase {
 		Person[] database = readDatabase(stringList);
 		System.out.println(database);
 		for(int i = 0; i < database.length; i++) {
-			if(database[i] != null)
+			if(database[i] != null && database[i].getBarCode() != 7000000)
 				output[i] = database[i].getName();
 		}
         output = Arrays.stream(output)

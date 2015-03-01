@@ -183,7 +183,8 @@ public final class Interface extends Application
         //listen on enter product barcode button
 		enterBarCode.setOnAction((ActionEvent e) -> {
 				if(!workingUser.userLoggedIn()) { // treat the input as a PMKeyS
-					PMKeySEntered(input.getText()); // take the text, do user logon stuff with it. 
+					int userError;
+                    userError = PMKeySEntered(input.getText()); // take the text, do user logon stuff with it.
 			
 			
 			
@@ -215,7 +216,7 @@ public final class Interface extends Application
 						thread.setPriority(Thread.MIN_PRIORITY);
 						thread.start();
 						thread.interrupt();
-						userLabel.setText(workingUser.userName()); // find out the name of those who dare log on. 
+						userLabel.setText(workingUser.userName(userError)); // find out the name of those who dare log on.
 						inputLabel.setText("Enter Barcode"); // change the label to suit the next action. 
 						grid.getChildren().remove(userLabel); // remove any error labels which may have appeared. 
 						grid.add(userLabel, 3,0); // add the new user label
@@ -225,7 +226,7 @@ public final class Interface extends Application
 					}
 					else {
 						input.clear(); // there was an error with the PMKeyS, get ready for another. 
-						userLabel.setText("Error"); // tell the user there was a problem. Maybe this could be done better. 
+						userLabel.setText(workingUser.userName(userError)); // tell the user there was a problem. Maybe this could be done better.
 						grid.getChildren().remove(userLabel); // Remove a userlabel, as above. 
 						grid.add(userLabel, 3,0); // add it again, as above. 
 					}
@@ -254,12 +255,13 @@ public final class Interface extends Application
 		input.setOnKeyPressed((KeyEvent ke) -> { // the following allows the user to hit enter rather than OK. Works exactly the same as hitting OK. 
 			if (ke.getCode().equals(KeyCode.ENTER)) {
 				if(!workingUser.userLoggedIn()) {
-					PMKeySEntered(input.getText());
+					int userError = PMKeySEntered(input.getText());
+                    System.out.println(userError);
 			
 			
 			
 					if(workingUser.userLoggedIn()) {
-						userLabel.setText(workingUser.userName());
+						userLabel.setText(workingUser.userName(userError));
 						inputLabel.setText("Enter Barcode");
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 3,0);
@@ -267,7 +269,7 @@ public final class Interface extends Application
 					}
 					else {
 						input.clear();
-						userLabel.setText("error");
+						userLabel.setText(workingUser.userName(userError));
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 3,0);
 						input.clear();
@@ -346,9 +348,9 @@ public final class Interface extends Application
 		
 		primaryStage.show();
 	}
-	private void PMKeySEntered(String input) 
+	private int PMKeySEntered(String input)
 	{
-		workingUser.getPMKeyS(input);
+		return workingUser.getPMKeyS(input);
 	}
 	private boolean productEntered(String input)
 	{
