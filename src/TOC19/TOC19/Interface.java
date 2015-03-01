@@ -751,9 +751,14 @@ public final class Interface extends Application
 					Text sorry = new Text("This feature is not yet functioning");
 					grid.add(sorry, 0,0);
 				}
-				else if(selectedOption.equals("Close The Program")) {
-					System.exit(0);
-				}
+                else if(selectedOption.equals("Close The Program")) {
+                    grid.getChildren().clear();
+                    Button save = new Button("Close The Program");
+                    grid.add(save, 1,1);
+                    save.setOnAction((ActionEvent e) -> {
+                            System.exit(0);
+                    });
+                }
 		});
 		Scene adminScene = new Scene(split, horizontalSize, verticalSize);
 		adminStage.setScene(adminScene);
