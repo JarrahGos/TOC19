@@ -163,7 +163,7 @@ public final class Interface extends Application
 
 									grid.getChildren().remove(userLabel); // make it look like no user is logged in
 									inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate. 
-									total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
+									total.setText(String.valueOf("$" + workingUser.getPrice())); // set the total price to 0.00.
 								}
 								catch (InterruptedException e) {
 									// do nothing here. 
@@ -249,7 +249,21 @@ public final class Interface extends Application
 			enterPassword(); // method which will work the admin mode features. 
 		});
 		grid.add(adminMode, 0,8); // add the button to the bottum left of the screen. 
-                
+
+        Button removeProduct = new Button("Remove"); // button which will bring up the admin mode.
+        removeProduct.setOnAction((ActionEvent e) -> {
+            int index = itemList.getSelectionModel().getSelectedIndex();
+            if(index >= 0) {
+                workingUser.deleteProduct(index);
+                prices.setAll(workingUser.getCheckOutPrices());
+                priceList.setItems(prices);
+                items.setAll(workingUser.getCheckOutNames());
+                itemList.setItems(items);
+                total.setText(String.valueOf("$" + workingUser.getPrice()));
+            }
+        });
+        grid.add(removeProduct, 2,8); // add the button to the bottum left of the screen.
+
                 // create and listen on purchase button
         Button purchase = new Button("Purchase"); // button which will add the cost of the items to the users bill
         purchase.setOnAction((ActionEvent e) -> {
@@ -395,7 +409,7 @@ public final class Interface extends Application
 					});
 					
 				}
-				else if(selectedOption.equals("Remove Person")) { //TODO: this shows the list, but includes admin and doesn't delete
+				else if(selectedOption.equals("Remove Person")) {
 					grid.getChildren().clear();
 					Button remove = new Button("Remove");
 					grid.add(remove, 1,0);
@@ -444,7 +458,7 @@ public final class Interface extends Application
 						saveLabel.setText("saved");
 					});
 				}
-				else if(selectedOption.equals("Lock People Out")) { //TODO: this doesn't work.
+				else if(selectedOption.equals("Lock People Out")) {
 					grid.getChildren().clear();
 					ListView<String> personList = new ListView<>();
 					ObservableList<String> persons = FXCollections.observableArrayList();
@@ -452,7 +466,7 @@ public final class Interface extends Application
 					personList.setItems(persons);
 					grid.add(personList,0,0);
 					ChoiceBox canBuy = new ChoiceBox();
-					canBuy.getItems().addAll("true", "false");
+					canBuy.getItems().addAll("unlocked", "Locked");
 					grid.add(canBuy, 1,0);
 					personList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
@@ -522,7 +536,7 @@ public final class Interface extends Application
 					grid.add(remove, 1,0);
 					product.setAll(workingUser.getProductNames());
 				}
-				else if( selectedOption.equals("Change a Product")) { // TODO: make this actually change the product desired
+				else if( selectedOption.equals("Change a Product")) {
 					grid.getChildren().clear();
 					ListView<String> productList = new ListView<>();
 					ObservableList<String> product = FXCollections.observableArrayList();

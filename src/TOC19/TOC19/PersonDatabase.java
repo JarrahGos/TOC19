@@ -237,7 +237,7 @@ public final class PersonDatabase {
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
 
-	public final int writeOutDatabasePerson(Person persOut) { //TODO make the barcode work with this.
+	public final int writeOutDatabasePerson(Person persOut) {
             try {
                 File check = new File(databaseLocation + persOut.getName());
                 if(check.exists()) check.delete();

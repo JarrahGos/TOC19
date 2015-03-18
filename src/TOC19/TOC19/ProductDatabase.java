@@ -409,7 +409,7 @@ public final class ProductDatabase
 	public final Product getProductRef(long productNo)
 	{
         try {
-            return readDatabaseProduct(productNo); //TODO: if the product does not exist, do something.
+            return readDatabaseProduct(productNo);
         }
         catch (Exception e) {
             return null;
