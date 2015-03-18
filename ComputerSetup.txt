@@ -6,3 +6,6 @@
 xinput list ## to get ID number
 xinput list-props 9 ## change 9 to ID
 xinput set-prop 9 270 1 0 ## alter first number for device ID, alter second for setting, third and fourth invert X/Y
+
+
+##Install udiskie and pcmanfm to manage files.
