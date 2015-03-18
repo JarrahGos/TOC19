@@ -115,11 +115,16 @@ public final class CheckOut
 		
 		if(productNo < logicalSize) { // check that the product exists
             //TODO: remove manual array copy
-			totalPrice -= products[productNo].productPrice(); // remove the products data from the summaries of the checkOut
-			for(int i = productNo; i < logicalSize; i++) { // move the products in the database back one such that the deleted product is overwritten.
-				products[i] = products[i+1];
-			}
-			logicalSize--; // should something not be done with quantities here?
+            if(quantities[productNo] != 1) {
+                totalPrice -= products[productNo].productPrice(); // remove the products data from the summaries of the checkOut
+                quantities[productNo]--;
+            }
+            else {
+                for (int i = productNo; i < logicalSize; i++) { // move the products in the database back one such that the deleted product is overwritten.
+                    products[i] = products[i + 1];
+                }
+                logicalSize--; // should something not be done with quantities here?
+            }
 		}
 		if(logicalSize < products.length/2) { // if needed, lower the size of the database.
 			products = resizeCheckOut(false, products);

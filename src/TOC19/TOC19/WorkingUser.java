@@ -228,6 +228,10 @@ public class WorkingUser {
     public final void removeProduct(String index) throws IOException, InterruptedException {
         productDatabase.delProduct(index);
     }
+    public final void deleteProduct(int index)
+    {
+        checkOuts.delProduct(index);
+    }
 
     public final long getProductBarCode(int index) {
         return productDatabase.getBarCode(index);
