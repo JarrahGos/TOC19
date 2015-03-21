@@ -34,6 +34,10 @@ public final class ProductDatabase
 	private String databaseLocation;
 	private Settings config = new Settings();
 
+    /**
+     * Constructor for ProductDatabase.
+     * Will create a Person database with the ability to read and write people to the database location given in the preferences file of Settings
+     */
 	public ProductDatabase()
 	{
 		allProducts = new Product[10];
@@ -44,8 +48,15 @@ public final class ProductDatabase
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+    /**
+     * Set a new product within the database.
+     * Precondition: augments int productNo, String name, String artist, double size, double duration are input
+     * Postcondition: Data for the currant working product in this database will be set.
+     * @param name The name of the new product
+     * @param price The price of the new product
+     * @param barCode The barcode of the new product
+     */
 	public final void setDatabaseProduct(String name, long price, long barCode) // take the products data and pass it to the products constructor
 	{
 		/**
@@ -61,13 +72,19 @@ public final class ProductDatabase
 		}
 
 	}
+
+    /**
+     * Alter an existing product within the database
+     * Precondition: augments int productNo, String name, String artist, double size, double duration are input
+     * Postcondition: Data for the currant working product in this database will be set.
+     * @param name The new name of the product.
+     * @param oldName The old name of the product
+     * @param price The new price of the product
+     * @param barCode The new barcode of the product
+     * @param oldBarCode The old barcode of the product
+     */
     public final void changeDatabaseProduct(String name, String oldName, long price, long barCode, long oldBarCode) // take the products data and pass it to the products constructor
     {
-        /**
-         Class ProductDatabase: Method setDatabase
-         Precondition: augments int productNo, String name, String artist, double size, double duration are input
-         Postcondition: Data for the currant working product in this database will be set.
-         */
         Product newProduct;
         newProduct = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
         logicalSize++; // We have a new product, Now we have something to show for it.
@@ -79,12 +96,15 @@ public final class ProductDatabase
         writeOutDatabaseProduct(newProduct);
 
     }
-	public final String getDatabase(int sort) throws IOException {
-		/**
-		Class ProductDatabase: Method getDatabase
-		Precondition: setDatabase has been run
-		Postcondition: the user will be see an output of the products in the database. 
-		*/
+    /**
+     * Get the entire database as a string
+     * Precondition: setDatabase has been run
+     * Postcondition: the user will be see an output of the persons in the database.
+     * @return A string containing the entire database
+     * @throws IOException
+     */
+	public final String getDatabase() throws IOException {
+
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		Product[] database = readDatabase(list);
@@ -97,48 +117,16 @@ public final class ProductDatabase
 		}
 		return output.toString(); // send the calling program one large string containing the ingredients of all the products in the database
 	}
-	
 
-	public final String getProduct(int productNo) 
-	{
-		/**
-		Class ProductDatabase: Method getProduct
-		Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4
-		Postconditions: the user will see the details of their chosen product output.
-		*/
-
-		if(productNo < logicalSize) { // check that the product exists
-			return allProducts[productNo].getData(); // now that we know that it does, send it to the interface
-		}
-		else {
-		    return "error"; // We cannot find the product that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
-			//PEBKAC: It is possible to commit no errors and still lose. That is not a weakness. That is life. --CAPTAIN PICARD
-		}
-
-	}
-	public final void delProduct(long productNo) throws IOException, InterruptedException {
-		/**
-		Class ProductDatabase: Method delProduct
-		Preconditions: setDatabase has been run, productNo is an integer paremeter
-		Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
-		*/
-        try {
-            File toDelLn = new File(databaseLocation + String.valueOf(productNo));
-            Product del = readDatabaseProduct(productNo);
-            File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
-            toDel.delete();
-            toDelLn.delete();
-        }
-        catch (NullPointerException e ) {
-            System.out.println("fileNotFound");
-        }
-	}
+    /**
+     * Deletes the specified product from the database
+     * Preconditions: setDatabase has been run
+     * Postconditions: the chosen product will no longer exist.
+     * @param name The barcode of the person you wish to delete
+     * @throws IOException
+     * @throws InterruptedException
+     */
 	public final void delProduct(String name) throws IOException, InterruptedException {
-		/**
-		 Class ProductDatabase: Method delProduct
-		 Preconditions: setDatabase has been run, productNo is an integer paremeter
-		 Postconditions: the chosen product will no longer exist. The success or failure of this will be given by a 0 or 1 returned respectively.
-		 */
         try {
             File toDelLn = new File(databaseLocation + name);
             Product del = readDatabaseProduct(name);
@@ -150,43 +138,16 @@ public final class ProductDatabase
             System.out.println("fileNotFound");
         }
 	}
-	public final String getProductName(long productNo)
-	{
-		/**
-		Class ProductDatabase: Method getProductName
-		Preconditions: setDatabase has been run for the invoking product
-		Postconditions: the product name will be returned
-		*/
-		Product getting = readDatabaseProduct(productNo);
-		if (getting != null) { // check that the desired person exists
-			return getting.getName(); // now that we know it does, give it to the interface
-		}
-		else {
-			return "error"; // nope, the product does not exist. Most likely PICNIC
-		}
 
-	}
-
-	public final double getProductPrice(int productNo)
-	{
-		/** 
-		Class ProductDatabase: Method getProductSize
-		Preconditions: setDatabase has been run for the invoking product
-		Postconditions: the size of the invoking product will be returned as a double
-		*/
-		Product getting = readDatabaseProduct(productNo);
-		if (getting != null) { // check that the desired person exists
-			return getting.productPrice(); // now that we know it does, give it to the interface
-		}
-		else return 0;
-	}
+    /**
+     * Get the price of the specified product
+     * Preconditions: setDatabase has been run for the invoking product
+     * Postconditions: the price of the invoking product will be returned as a double
+     * @param productNo The barcode or name of the product desired as a string
+     * @return the price of the product as a double
+     */
     public final double getProductPrice(String productNo)
     {
-        /**
-         Class ProductDatabase: Method getProductSize
-         Preconditions: setDatabase has been run for the invoking product
-         Postconditions: the size of the invoking product will be returned as a double
-         */
         Product getting = readDatabaseProduct(productNo);
         if (getting != null) { // check that the desired person exists
             return getting.productPrice(); // now that we know it does, give it to the interface
@@ -194,13 +155,9 @@ public final class ProductDatabase
         else return 0;
 
     }
+    // TODO: why is this still a thing.
 	public final long getBarCode(int productNo)
 	{
-		/** 
-		Class ProductDatabase: Method getProductBarCode
-		Precondition: setDatabase has been run for the invoking product
-		Postcondition: the duration of the invoking product will be returned as a double
-		*/
 		Product getting = readDatabaseProduct(productNo);
 		if (getting != null) { // check that the desired person exists
 			return getting.getBarCode(); // now that we know it does, give it to the interface
@@ -210,6 +167,13 @@ public final class ProductDatabase
 		}
 	
 	}
+
+    /**
+     * Determine Whether a product Exists given only their barcode
+     * @param extBarCode The barcode of the person you wish to check for
+     * @param extProductName The name of the product you wish to check for
+     * @return A boolean value of whether the product exists or not
+     */
 	public final boolean productExists(String extProductName, Long extBarCode)
 	{
 		File root = new File (databaseLocation);
@@ -220,6 +184,12 @@ public final class ProductDatabase
 	    return false; // if you are running this, no product was found and therefore it is logical to conclude none exist.
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
+
+    /**
+     * Write out the given product to the database
+     * @param productOut The person you wish to write out
+     * @return An integer, 0 meaning correct completion, 1 meaning an exception. Exception will be printed.
+     */
 	public final int writeOutDatabaseProduct(Product productOut) {
             try {
                 File check = new File(databaseLocation + productOut.getName());
@@ -244,6 +214,11 @@ public final class ProductDatabase
             }
             return 0;
         }
+
+    /**
+     * Write out the given products array to the database
+     * @param productsOut The person you wish to write out
+     */
 	public final void writeOutDatabase(Product[] productsOut) {
 		for (Product productOut : productsOut) {
 			try {
@@ -268,6 +243,12 @@ public final class ProductDatabase
 			}
 		}
 	}
+    /**
+     * Write out a CSV version of the database for future import.
+     * @param path The path to the directory you wish to output to
+     * @return An integer of 1 if the file was not found and 0 if it worked.
+     * @throws IOException
+     */
 	public final int adminWriteOutDatabase(String path) throws IOException {
 		PrintWriter outfile = null;
 		double total = 0;
@@ -293,6 +274,11 @@ public final class ProductDatabase
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
 		return 0; // let the program and thus the user know that everything is shiny.
 	}
+    /**
+     * Reads one product from the database.
+     * @param barcode The barcode of the product you wish to read
+     * @return The person in the database which correlates with the barcode, or null if the person is not found
+     */
 	public final Product readDatabaseProduct(long barcode){
             Product importing = null;
             try {
@@ -310,6 +296,12 @@ public final class ProductDatabase
 			}
 			 return importing;
         }
+
+    /**
+     * Reads one product from the database.
+     * @param name The name of the product you wish to read
+     * @return The person in the database which correlates with the barcode, or null if the person is not found
+     */
     public final Product readDatabaseProduct(String name){
             Product importing = null;
             try {
@@ -327,6 +319,11 @@ public final class ProductDatabase
 			}
 			 return importing;
         }
+    /**
+     * Create an array of products from the provided string of paths
+     * @param databaseList A File array of files which are to be put into the array
+     * @return An array of all products found from the given file array
+     */
 	public final Product[] readDatabase(File[] databaseList){
 		Product[] importing = new Product[databaseList.length];
         int i = 0;
@@ -361,6 +358,11 @@ public final class ProductDatabase
 		}
 		return importing;
 	}
+    /**
+     * Create an array of products from the provided string of paths
+     * @param databaseList A string array of paths to files which are to be put into the array
+     * @return An array of all Products found from the given string
+     */
     public final Product[] readDatabase(String[] databaseList){
         Product[] importing = new Product[databaseList.length];
         int i = 0;
@@ -395,17 +397,35 @@ public final class ProductDatabase
         }
         return importing;
     }
+
+    /**
+     * Get the number of a given product left in stock
+     * @param productName the name of the product you wish to check
+     * @return The number as an int of the product left in stock
+     */
 	public final int getNumber(String productName)
 	{
 		Product getting = readDatabaseProduct(productName);
         return getting.getNumber();
 	}
+
+    /**
+     * Set the number of a specified item you have in stock
+     * @param name The name of the item you wish to set
+     * @param number The number of that item you now have.
+     */
 	public final void setNumber(String name, int number)
 	{
 		Product setting = readDatabaseProduct(name);
         setting.setNumber(number);
         writeOutDatabaseProduct(setting);
 	}
+
+    /**
+     * Returns the product specified
+     * @param productNo the barcode of the product you would like
+     * @return The product specified
+     */
 	public final Product getProductRef(long productNo)
 	{
         try {
@@ -415,6 +435,11 @@ public final class ProductDatabase
             return null;
         }
     }
+
+    /**
+     * A list of the names of all products in the database
+     * @return A String array of the names of all products in the database.
+     */
 	public final String[] getProductNames() {
         File root = new File (databaseLocation);
         File[] list = root.listFiles();

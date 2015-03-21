@@ -20,9 +20,9 @@ package TOC19;
 
 /*
  * Author: Jarrah Gosbell
- * Student Number: z5012558
+ *
  * Class: PersonDatabase
- * Description: This program will allow for the input and retreval of the person database and will set the limits of the database.
+ * Description: This program will allow for the input and retrieval of the person database and will set the limits of the database.
  */
 
 import java.io.*;
@@ -37,23 +37,34 @@ public final class PersonDatabase {
 	private Settings config = new Settings();
 	private String databaseLocation;
 
-	public PersonDatabase() throws FileNotFoundException {
+    /**
+     * Constructor for PersonDatabase.
+     * Will create a Person database with the ability to read and write people to the database location given in the preferences file of Settings
+     */
+	public PersonDatabase() {
 		logicalSize = 0;
-		String settings = config.adminSettings();
-		admin = new Person(settings, 0, 0, 0, false);
 		try {
+            String settings = config.adminSettings();
+            admin = new Person(settings, 0, 0, 0, false);
 			databaseLocation = config.personSettings();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
+    /**
+     * Set a new person within the database
+     * Precondition: augments int personNo, String name, String artist, double size, double duration are input
+     * Postcondition: Data for the currant working person in this database will be set.
+     * @param name The name of the new person
+     * @param running The running bill of the person
+     * @param week The current bill of the person
+     * @param barCode The barcode of the person
+     * @param canBuy Whether the person can buy or not
+     */
 	public final void setDatabasePerson(String name, long running, long week, long barCode, boolean canBuy) // take the persons data and pass it to the persons constructor
 	{
-		/**
-		 * Class PersonDatabase: Method setDatabase Precondition: augments int personNo, String name, String artist, double size, double duration are input Postcondition: Data for the currant working
-		 * person in this database will be set.
-		 */
+
 				Person newPerson;
 		if (!personExists(name, barCode)) { // check whether the person already exists
 			newPerson = new Person(name, barCode, running, week, canBuy); // pass off the work to the constructor: "make it so."
@@ -62,10 +73,14 @@ public final class PersonDatabase {
 		}
 	}
 
+    /**
+     * Get the entire database as a string
+     * Precondition: setDatabase has been run
+     * Postcondition: the user will be see an output of the persons in the database.
+     * @return A string containing the entire database
+     * @throws IOException
+     */
 	public final String getDatabase() throws IOException {
-		/**
-		 * Class PersonDatabase: Method getDatabase Precondition: setDatabase has been run Postcondition: the user will be see an output of the persons in the database.
-		 */
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
         String[] stringList = new String[list.length];
@@ -84,60 +99,15 @@ public final class PersonDatabase {
 		return output.toString(); // send the calling program one large string containing the ingredients of all the persons in the database
 	}
 
-	public final String getPerson(long personNo) {
-		/**
-		 * Class PersonDatabase: Method getPerson Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4 Postconditions: the user will see the details of their chosen
-		 * person output.
-		 */
-		Person getting = readDatabasePerson(personNo);
-		if (getting != null) { // check that the person exists
-			return getting.getData(); // now that we know that it does, send it to the interface
-		} else {
-			return "the person that you have identified does not exist"; // We cannot find the person that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
-			//PEBKAC: It is possible to commit no errors and still lose. That is not a weakness. That is life. --CAPTAIN PICARD
-		}
-
-	}
-
-	public final String getPersonUser(long personNo, boolean html) {
-		/**
-		 * Class PersonDatabase: Method getPerson Preconditions: setDatabase has been run, paremeter is an interger between from 1 to 4 Postconditions: the user will see the details of their 
-		 *							chosen
-		 * person output.
-		 */
-
-		if(personNo == -1 || personNo == -2) return "admin";
-		Person getting = readDatabasePerson(personNo);
-		if (getting != null) { // check that the person exists
-			return getting.getDataUser(html);
-		} else {
-			return "the person that you have identified does not exist"; // We cannot find the person that you asked for, so we will give you this instead. Probably a PEBKAC anyway.
-			//PEBKAC: It is possible to commit no errors and still lose. That is not a weakness. That is life. --CAPTAIN PICARD
-		}
-
-	}
-
-    public final void delPerson(long personNo) throws IOException, InterruptedException {
-        /**
-         * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
-         * failure of this will be given by a 0 or 1 returned respectively.
-         */
-        try {
-            File toDelLn = new File(databaseLocation + String.valueOf(personNo));
-            Person del = readDatabasePerson(personNo);
-            File toDel = new File(databaseLocation + String.valueOf(del.getBarCode()));
-            toDel.delete();
-            toDelLn.delete();
-        }
-        catch (NullPointerException e ) {
-            System.out.println("fileNotFound");
-        }
-    }
+    /**
+     * Deletes the specified person from the database
+     * Preconditions: setDatabase has been run
+     * Postconditions: the chosen person will no longer exist.
+     * @param personNo The barcode of the person you wish to delete
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public final void delPerson(String personNo) throws IOException, InterruptedException {
-        /**
-         * Class PersonDatabase: Method delPerson Preconditions: setDatabase has been run, personNo is an integer paremeter Postconditions: the chosen person will no longer exist. The success or
-         * failure of this will be given by a 0 or 1 returned respectively.
-         */
         try {
             File toDelLn = new File(databaseLocation + String.valueOf(personNo));
             Person del = readDatabasePerson(personNo);
@@ -150,10 +120,14 @@ public final class PersonDatabase {
         }
     }
 
+    /**
+     * Get the name of the specified person
+     * Preconditions: setDatabase has been run for the invoking person
+     * Postconditions: the person name will be returned
+     * @param personNo The barcode of the person you wish to get
+     * @return The name of the person with the specified barcode as a string or error if the person does not exist.
+     */
 	public final String getPersonName(long personNo) {
-		/**
-		 * Class PersonDatabase: Method getPersonName Preconditions: setDatabase has been run for the invoking person Postconditions: the person name will be returned
-		 */
 		if(personNo == -2) {
 			return admin.getName(); // returns password{
 		}
@@ -166,6 +140,11 @@ public final class PersonDatabase {
 		}
 
 	}
+
+    /**
+     * Get a list of the usernames of those in the database
+     * @return A String array of the names of those in the database
+     */
 	public final String[] getUserNames() {
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
@@ -184,40 +163,13 @@ public final class PersonDatabase {
                 .toArray(String[]::new);
         return output;
 	}
-	public final double getPersonPriceYear(long personNo) {
-		/**
-		 * Class PersonDatabase: Method getPersonSize Preconditions: setDatabase has been run for the invoking person Postconditions: the size of the invoking person will be returned as a double
-		 */
-		Person getting = readDatabasePerson(personNo);
-		if (getting != null) { // to understand its workings, see getPersonName. it works the same but this returns a double
-			return getting.totalCostRunning();
-		} else {
-			return 0;
-		}
 
-	}
-
-	public final double getPersonPriceWeek(long personNo) {
-		/**
-		 * Class PersonDatabase: Method getPersonSize Preconditions: setDatabase has been run for the invoking person Postconditions: the size of the invoking person will be returned as a double
-		 */
-		Person getting = readDatabasePerson(personNo);
-		if(getting != null) return getting.totalCostWeek();
-		else return 0;
-	}
-
-	public final long getBarCode(int personNo) {
-		/**
-		 * Class PersonDatabase: Method getPersonBarCode Precondition: setDatabase has been run for the invoking person Postcondition: the duration of the invoking person will be returned as a double
-		 */
-		Person getting = readDatabasePerson(personNo);
-		if (getting != null) { // to understand its workings, see getPersonName. it works the same but this returns a double
-			return getting.getBarCode();
-		} else {
-			return 0;
-		}
-
-	}
+    /**
+     * Determine whether a given person exists
+     * @param extPersonName The name of the person you are checking for
+     * @param extBarCode The barcode of the person you are checking for
+     * @return A boolean value of whether the person exists or not
+     */
 	public final boolean personExists(String extPersonName, long extBarCode) {
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
@@ -227,6 +179,12 @@ public final class PersonDatabase {
 		return false; // if you are running this, no person was found and therefore it is logical to conclude none exist.
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
+
+    /**
+     * Determine Whether a person Exists given only their barcode
+     * @param extBarCode The barcode of the person you wish to check for
+     * @return A boolean value of whether the person exists or not
+     */
 	public final boolean personExists(long extBarCode) {
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
@@ -237,6 +195,11 @@ public final class PersonDatabase {
 		// similar to Kiri-Kin-Tha's first law of metaphysics.
 	}
 
+    /**
+     * Write out the given person to the database
+     * @param persOut The person you wish to write out
+     * @return An integer, 0 meaning correct completion, 1 meaning an exception. Stack trace will be printed on error.
+     */
 	public final int writeOutDatabasePerson(Person persOut) {
             try {
                 File check = new File(databaseLocation + persOut.getName());
@@ -263,8 +226,15 @@ public final class PersonDatabase {
                 return 1;
             }
             return 0;
-        }
-	public final int adminWriteOutDatabase(String path) throws IOException {
+    }
+
+    /**
+     * Write out a CSV version of the database for future import.
+     * @param path The path to the directory you wish to output to
+     * @return An integer of 1 if the file was not found and 0 if it worked.
+     * @throws IOException
+     */
+	public final int adminWriteOutDatabase(String path) throws IOException { //TODO: Ensure this works as a CSV
 		PrintWriter outfile = null;
 		double total = 0;
 		File root = new File (databaseLocation);
@@ -293,6 +263,12 @@ public final class PersonDatabase {
 		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
 		return 0; // let the program and thus the user know that everything is shiny.
 	}
+
+    /**
+     * Reads one person from the database.
+     * @param barcode The barcode of the person you wish to read
+     * @return The person in the database which correlates with the barcode, or null if the person is not found
+     */
         public final Person readDatabasePerson(long barcode){
             Person importing = null;
             try {
@@ -310,6 +286,12 @@ public final class PersonDatabase {
 			}
 			return importing;
         }
+
+    /**
+     * Reads one person from the database
+     * @param name The name of the preson you wish to read
+     * @return The person in the database which correlates with the name, or null if the person is not found
+     */
          public final Person readDatabasePerson(String name) {
 			 Person importing = null;
 			 try {
@@ -326,6 +308,12 @@ public final class PersonDatabase {
 			 }
 			 return importing;
 		 }
+
+    /**
+     * Create an array of people from the provided string of paths
+     * @param databaseList A string array of paths to files which are to be put into the array
+     * @return An array of all people found from the given string
+     */
 	public final Person[] readDatabase(String[] databaseList){
 		Person[] importing = new Person[databaseList.length];
         int i = 0;
@@ -360,12 +348,10 @@ public final class PersonDatabase {
 		}
 		return importing;
 	}
-	public final void addCost(long personNo, long cost) {
-		Person adding = readDatabasePerson(personNo);
-		adding.addPrice(cost);
-		writeOutDatabasePerson(adding);
-	}
 
+    /**
+     * Reset the current bill of the entire database to zero. Will not effect the running bill.
+     */
 	public final void resetBills() {
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
@@ -381,17 +367,32 @@ public final class PersonDatabase {
             }
 		}
 	}
+
+    /**
+     * Changes the Admin password to the one specified
+     * @param extPassword The new password, prehashed.
+     */
 	public final void setAdminPassword(String extPassword) {
 		admin.setName(extPassword);
         	writeOutDatabasePerson(admin);
 	}
 
+    /**
+     * Set weather the specified person can buy from the program
+     * @param personNumber The barcode of the person you are changing
+     * @param canBuy A boolean of whether the person should be able to buy.
+     */
 	public final void setPersonCanBuy(long personNumber, boolean canBuy)
 	{
 		Person set = readDatabasePerson(personNumber);
 		set.setCanBuy(canBuy);
 		writeOutDatabasePerson(set);
 	}
+    /**
+     * Set weather the specified person can buy from the program
+     * @param userName The name of the person you are changing
+     * @param canBuy A boolean of whether the person should be able to buy.
+     */
 	public final void setPersonCanBuy(String userName, boolean canBuy)
 	{
 		Person set = readDatabasePerson(userName);

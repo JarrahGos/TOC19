@@ -119,7 +119,7 @@ public final class Person implements java.io.Serializable
 		 */
 		return barCode;
 	}
-	public final double totalCostRunning() // retung the size of the person. 
+	public final double totalCostRunning()
 	{
 		/**
 		Class Person: Method totalCostRunning
