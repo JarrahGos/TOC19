@@ -63,7 +63,11 @@ public final class Interface extends Application
 
 	private int logicalSize;
 //	Timer timeOut = new Timer(60000000, new actionListener());
-		
+
+    /**
+     * Create an interface instance with it's parameters set by the config file
+      * @throws IOException
+     */
 	public Interface() throws IOException
 	{
 		config = new Settings();
@@ -74,7 +78,12 @@ public final class Interface extends Application
 		textSize = Integer.parseInt(settings[2]);
 		//initalize the variables created above
 		
-	}	
+	}
+
+    /**
+     * The user part of the GUI
+     * @param primaryStage The base stage of the program
+     */
 	@Override
 	public void start(Stage primaryStage)
 	{
@@ -300,14 +309,31 @@ public final class Interface extends Application
 		
 		primaryStage.show();
 	}
+
+    /**
+     * Log the user into working user given their PMKeyS
+     * @param input The users PMKeyS as a string
+     * @return The error from logging the user in.
+     */
 	private int PMKeySEntered(String input)
 	{
 		return workingUser.getPMKeyS(input);
 	}
+
+    /**
+     * Add a product to the checkout
+     * @param input The barcode of the product as a string
+     * @return A Boolean value of whether the action worked
+     */
 	private boolean productEntered(String input)
 	{
 		return workingUser.addToCart(input);
 	}
+
+    /**
+     * Allows the user to enter the password for the admin user.
+     * Will start the admin stage if the password is entered correctly.
+     */
 	private void enterPassword()
 	{
 		Stage passwordStage = new Stage();
@@ -337,6 +363,11 @@ public final class Interface extends Application
 		passwordStage.setScene(passwordScene);
 		passwordStage.show();
 	}
+
+    /**
+     * Will open the admin panel of the program.
+     * @param lastStage The stage which opened this stage
+     */
 	private void enterAdminMode(Stage lastStage)
 	{
 		lastStage.hide();
@@ -711,6 +742,11 @@ public final class Interface extends Application
 		adminStage.show();
                 
 	}
+
+    /**
+     * The main method of the program
+     * @param args No arguments needed, -w int for width, -h int for height, both in pixels.
+     */
 	public static void main(String[] args)
 	{
 		for(int i = args.length-1; i > 0; i--) {
