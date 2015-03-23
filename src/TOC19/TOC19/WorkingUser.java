@@ -53,7 +53,7 @@ public class WorkingUser {
         } else {
             user = personDatabase.readDatabasePerson(Long.parseLong(input));
         }
-        if (!user.canBuy()) {
+        if (!user.canBuy()|| input.equals("7000000") {
             user = null;
             return 2;
         }
