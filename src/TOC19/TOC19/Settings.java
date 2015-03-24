@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/***
+/*
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
 *

@@ -1,6 +1,6 @@
 package TOC19;
 
-/***
+/*
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
 *
@@ -37,7 +37,13 @@ public final class Product implements java.io.Serializable
 	private int quantity;
     private static final long serialVersionUID = 165169198;
 
-	public Product(String extName, long extProductPrice, long extBarCode) // construtor which will give the product its values
+    /**
+     * Create a product with the given name, price and barcode
+     * @param extName The name of the new product
+     * @param extProductPrice The price of the new product
+     * @param extBarCode The barcode of the new product
+     */
+	public Product(String extName, long extProductPrice, long extBarCode)
 	{
 		//output = new StringBuilder("");
 		name = extName;
@@ -45,21 +51,33 @@ public final class Product implements java.io.Serializable
 		barCode = extBarCode;
 	}
 	// Begin methods
+
+    /**
+     * Set the number of the product you have in stock
+     * @param number The number you currently have in stock.
+     */
 	public final void setNumber(int number)
 	{
 		numberOfItems = number;
 	}
+
+    /**
+     * Get the number of the item you currently have in stock.
+     * @return The number of items you have in stock.
+     */
 	public final int getNumber()
 	{
 		return numberOfItems;
 	}
+
+    /**
+     * Get the human readable string form of the product
+     * Procondition: setData has been run for invoking product or the product constructor outlined above has been run
+     * Postcondition: The data that has been entered for the invoking product will be returned.
+     * @return The human readable string form of the product.
+     */
 	public final String getData() // output the product data as a string
 	{
-		/**
-		Class Song: Method getData
-		Procondition: setData has been run for invoking product or the product constructor outlined above has been run
-		Postcondition: The data that has been entered for the invoking product will be returned. 
-		*/
 		StringBuilder output = new StringBuilder();
 		output.append("\n	Product name: ");
 		output.append(name);
@@ -72,31 +90,15 @@ public final class Product implements java.io.Serializable
 
 		return output.toString(); //return a string with all of the product's data in it
 	}
-	public final String getDataScreen() // output the product data as a string
-	{
-		/**
-		Class Song: Method getData
-		Procondition: setData has been run for invoking product or the product constructor outlined above has been run
-		Postcondition: The data that has been entered for the invoking product will be returned. 
-		*/
-		StringBuilder output = new StringBuilder();
-		output.append("");
-		output.append("\n	Product name: ");
-		output.append(name);
-		output.append(" x ");
-		output.append(quantity);
-		output.append("\n	Price: $");
-		output.append(((double)productPrice/100)*quantity);
-		
-		return output.toString(); //return a string with all of the product's data in it
-	}
+
+    /**
+     * Get the name, quantity and total price of an item.
+     * Procondition: setData has been run for invoking product or the product constructor outlined above has been run
+     * Postcondition: The data that has been entered for the invoking product will be returned.
+     * @return A human readable string containing the name, quantity and total price of the item.
+     */
         public final String getDataUser() // output the product data as a string
 	{
-		/**
-		Class Song: Method getData
-		Procondition: setData has been run for invoking product or the product constructor outlined above has been run
-		Postcondition: The data that has been entered for the invoking product will be returned. 
-		*/
 		StringBuilder output = new StringBuilder();
 		output.append(name);
 		output.append(" x ");
@@ -107,6 +109,11 @@ public final class Product implements java.io.Serializable
 		
 		return output.toString(); //return a string with all of the product's data in it
 	}
+
+    /**
+     * Get the name formatted ready to have the quantity attached to it.
+     * @return the name of the item formatted ready to have the quantity appended.
+     */
 	public final String getDataName()
 	{
 		StringBuilder output = new StringBuilder();
@@ -114,39 +121,47 @@ public final class Product implements java.io.Serializable
 		output.append(" x ");
 		return output.toString();
 	}
+
+    /**
+     * Get the price of the item as a double.
+     * @return The price of the item as a double.
+     */
     public final double getDataPrice()
     {
         return (((double)((productPrice)))/100);
     }
+
+    /**
+     * Get the name of the item.
+     * @return The name of the item.
+     */
 	public final String getName() // return the name of the product
 	{
-		/**
-		Class Song: Method getData
-		Precondition: setData has been run for invoking product
-		Post condition: the method will return a string contianing the name.
-		*/
-
 		return name;
 	}
+
+    /**
+     * Get the barcode of the item.
+     * @return The barcode of the item.
+     */
 	public final long getBarCode() // return the barcode assoiated with the product
 	{
-		 /**
-		 Class Song: Method getBarCode
-		 Precondition: SetData has been run for the invoking product
-		 Psotcondition: The method will return an int containing the barcode of the item. 
-		 */
-		return barCode;
+		 return barCode;
 	}
+
+    /**
+     * Get the price of the item as a long.
+     * This is useful for correct calculations, but not for display.
+     * @return The price of the item as a long (multiplied by 100 such that the decimal places are the last two digits).
+     */
 	public final long productPrice() // retung the size of the product. 
 	{
-		/**
-		Class Song: Method productPrice
-		Precondition: setData has been run for the invoking product
-		Postcondition: this method will return the price of the invoking product.
-		*/
-		
 		return productPrice;
 	}
+
+    /**
+     * Reduce the number of the item in stock
+     */
 	public final void decrementNumber()
 	{
 		numberOfItems--;

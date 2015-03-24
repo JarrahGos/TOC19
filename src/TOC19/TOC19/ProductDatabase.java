@@ -1,6 +1,6 @@
 package TOC19;
 
-/****
+/*
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
 *

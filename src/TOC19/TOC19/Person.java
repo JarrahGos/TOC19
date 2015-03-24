@@ -1,6 +1,6 @@
 package TOC19;
 
-/***
+/*
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
 *
@@ -36,6 +36,14 @@ public final class Person implements java.io.Serializable
 	private boolean canBuy;
     private static final long serialVersionUID = 126491946;
 
+    /**
+     * Create a new person with the given name, barcode, total cost, bill cost and the ability to buy or not.
+     * @param extName The name of the person
+     * @param extBarCode the barcode of the person
+     * @param running The total bill of the person
+     * @param week The current bill of the person.
+     * @param extCanBuy Whether the person can buy or not.
+     */
 	public Person(String extName, long extBarCode, long running, long week, boolean extCanBuy) // construtor which will give the person its values
 	{
 		name = extName;
@@ -44,26 +52,13 @@ public final class Person implements java.io.Serializable
 		totalCostWeek = week;
 		canBuy = extCanBuy;
 	}
-	// Begin methods
-	public final void setData(String name, int barCode, boolean extCanBuy) // redundant method which has been left in case persons are edited in some way which would require this to be used.
-	{
-		/**
-		Class Person: Method setData
-		Precondition: Augments String name, String artist, double totalCostRunning, double time are input
-		Postcondition: the person that this method was invoked with now has been stored.
-		*/
-		this.name = name;
-		this.barCode = barCode;
-		canBuy = extCanBuy;
-	}
 
+    /**
+     * Get the users data in a human readable format
+     * @return The name, running cost and bill cost of the person.
+     */
 	public final String getData() // output the person data as a string
 	{
-		/**
-		Class Person: Method getData
-		Procondition: setData has been run for invoking person or the person constructor outlined above has been run
-		Postcondition: The data that has been entered for the invoking person will be returned. 
-		*/
 		StringBuilder output = new StringBuilder();
 		output.append("");
 		output.append("\n	Name: ");
@@ -75,31 +70,11 @@ public final class Person implements java.io.Serializable
 
 		return output.toString(); //return a string with all of the person's data in it
 	}
-		public final String getDataUser(Boolean html) // output the person data as a string
-	{
-		/**
-		Class Person: Method getData
-		Procondition: setData has been run for invoking person or the person constructor outlined above has been run
-		Postcondition: The data that has been entered for the invoking person will be returned. 
-		*/
-			
-		StringBuilder output = new StringBuilder();
-		if (html) {
-			output.append("");
-			output.append(name);
-			output.append("<br>	Current Bill Total: $");
-			output.append((double)totalCostWeek/100);
-		}
-		else {
-			output.append("");
-			output.append(name);
-			output.append("\n	Running Cost: $");
-			output.append((double)totalCostRunning/100);
-			output.append("\n	Current Bill Total: $");
-			output.append((double)totalCostWeek/100);
-		}
-		return output.toString(); //return a string with all of the person's data in it
-	}
+
+    /**
+     * Get the name of the person.
+     * @return The nmae of the person
+     */
 	public final String getName() // return the name of the person
 	{
 		/**
@@ -110,6 +85,11 @@ public final class Person implements java.io.Serializable
 
 		return name;
 	}
+
+    /**
+     * Get the barcode of the person.
+     * @return The barcode of the person.
+     */
 	public final long getBarCode() // return the barcode assoiated with the person
 	{
 		 /**
@@ -119,6 +99,11 @@ public final class Person implements java.io.Serializable
 		 */
 		return barCode;
 	}
+
+    /**
+     * Get the total bill of the person since their additon to the program.
+     * @return The total bill of the person as a double
+     */
 	public final double totalCostRunning()
 	{
 		/**
@@ -129,6 +114,11 @@ public final class Person implements java.io.Serializable
 		
 		return (double)totalCostRunning/100;
 	}
+
+    /**
+     * Get the current bill cost of the person.
+     * @return The current bill cost of the person as a double.
+     */
 	public final double totalCostWeek() // retung the size of the person. 
 	{
 		/**
@@ -139,23 +129,47 @@ public final class Person implements java.io.Serializable
 		
 		return (double)totalCostWeek/100;
 	}
+
+    /**
+     * add the given cost to the bill of the person.
+     * @param cost The amount to be added as a long with the final two digits representing cents.
+     */
 	public final void addPrice(long cost)
 	{
 		totalCostRunning += cost;
 		totalCostWeek += cost;
 	}
+
+    /**
+     * Reset the bill for this person.
+     */
 	public final void resetWeekCost()
 	{
 		totalCostWeek = 0;
 	}
+
+    /**
+     * Set the name of the person.
+     * @param extName the new name for the person.
+     */
 	public final void setName(String extName)
 	{
 		name = extName;
 	}
+
+    /**
+     * Get whether the person can buy from the program.
+     * @return Whether the user is allowed to buy.
+     */
 	public final boolean canBuy()
 	{
 		return canBuy;
 	}
+
+    /**
+     * Set whether the user can buy from the program.
+     * @param extCanBuy Whether you want the user to be able to buy from the program.
+     */
 	public final void setCanBuy(boolean extCanBuy)
 	{
 		canBuy = extCanBuy;

@@ -15,7 +15,7 @@ import java.security.NoSuchAlgorithmException;
  * and open the template in the editor.
  */
 
-/**
+/*
  *
  * @author jarrah
  */
@@ -243,6 +243,11 @@ public class WorkingUser {
         Product adding = productDatabase.getProductRef(tempBarCode);
         if (adding != null) {
             checkOuts.addProduct(adding); //otherwise, add the product as normal.
+            return true;
+        }
+        else if(user.getBarCode() == tempBarCode) {
+            adding = new Product("Buying yourself are you. You can't do that.", 0, tempBarCode);
+            checkOuts.addProduct(adding);
             return true;
         }
         return false;

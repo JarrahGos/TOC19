@@ -1,7 +1,7 @@
 package TOC19;
 
 import java.util.Arrays;
-/***
+/*
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
 *
@@ -33,7 +33,11 @@ public final class CheckOut
 	private int[] quantities;
 	private int logicalSize;
 	private long totalPrice;
+    private int first;
 
+    /**
+     * Construct a new checkout with no products
+     */
 	public CheckOut()
 	{
 		// Initalise the needed variables
@@ -41,8 +45,13 @@ public final class CheckOut
             quantities = new int[4];
 	    logicalSize = 0;
 	    totalPrice = 0;
+        first = 0;
 	}
-	    
+
+    /**
+     * Add a new product to the checkout
+     * @param item The product to be added to the checkout
+     */
 	public final void addProduct(Product item)
 	{
         int quantity = 1; // this can be changed when the user can input a number.
@@ -68,6 +77,15 @@ public final class CheckOut
 			quantities[i] += quantity;
 		}
 		totalPrice += item.productPrice()*quantity;
+        if(totalPrice >= 20000 && 0 == first) {
+            first = 1;
+            addProduct(new Product("The high roller has come to town.", 0, 0));
+        }
+        else if(totalPrice > 110000 && 1 == first) {
+            first = 2;
+            addProduct(new Product("That's a paycheck", 0, 1651198189));
+
+        }
 	}
 	public final String getCheckOut(int sort)
 	{
@@ -85,6 +103,11 @@ public final class CheckOut
 
 		return output.toString();
 	}
+
+    /**
+     * Get the names and quantities of everything in the checkout
+     * @return A String array of all names and quantities
+     */
 	public final String[] getCheckOutNames()
 	{
 		String[] output = new String[logicalSize];
@@ -93,6 +116,11 @@ public final class CheckOut
 		}
 		return output;
 	}
+
+    /**
+     * Get the prices of all items in the checkout
+     * @return A string array of the prices.
+     */
     public final String[] getCheckOutPrices()
     {
         String[] output = new String[logicalSize];
@@ -101,10 +129,20 @@ public final class CheckOut
         }
         return output;
     }
+
+    /**
+     * Get the total price of the checkout
+     * @return The summation of the prices for all items.
+     */
     public long getPrice()
     {
         return totalPrice;
     }
+
+    /**
+     * Delete a product within the checkout.
+     * @param productNo The index of the item within the checkout.
+     */
     public final void delProduct(int productNo)
 	{
 		/**
@@ -114,11 +152,12 @@ public final class CheckOut
 		*/
 		
 		if(productNo < logicalSize) { // check that the product exists
-            if(quantities[productNo] != 1) {
+            if(quantities[productNo] >= 1) {
                 totalPrice -= products[productNo].productPrice(); // remove the products data from the summaries of the checkOut
                 quantities[productNo]--;
             }
             else {
+                totalPrice -= products[productNo].productPrice();
                 for (int i = productNo; i < logicalSize; i++) { // move the products in the database back one such that the deleted product is overwritten.
                     products[i] = products[i + 1];
                 }
@@ -129,6 +168,13 @@ public final class CheckOut
 			products = resizeCheckOut(false, products);
 		}
 	}
+
+    /**
+     * Alter the size of the checkout up or down
+     * @param action Whether to increase (true) or decrease (false) the size of the checkout.
+     * @param resizing The checkout to be resized.
+     * @return The new resized checkout.
+     */
 	public final Product[] resizeCheckOut(Boolean action, Product[] resizing)
 	{
 		if(action) { //Make the checkOut bigger
@@ -143,6 +189,13 @@ public final class CheckOut
 		}
 		
 	}
+
+    /**
+     * Alter the size of the quantities array
+     * @param action Whether to increase (true) or decrease (false) the size of the checkout.
+     * @param resize The array to be resized
+     * @return The resized array
+     */
 	public final int[] resizeQuantities(Boolean action, int[] resize)
 	{
 		if(action) {
@@ -157,6 +210,12 @@ public final class CheckOut
 
 	}
 
+    /**
+     * Partition portion of the quick sort function.
+     * @param left The lower end of the array to sort
+     * @param right The higher end of the array to sort
+     * @return The next pivot point being the right most point.
+     */
 	public final int partitionByName(int left, int  right) // used by sort by name
 	{
 		int max = logicalSize;
@@ -186,6 +245,11 @@ public final class CheckOut
 		return right; // return the new pivot (see quick sort)
 	}
 
+    /**
+     * The recursive function of the quicksort funciton.
+     * @param left The left most part of the array to sort
+     * @param right The right most point of the array to sort.
+     */
 	public final void quickSortByName(int left, int right)
 	{
 		if (left < right) // start the sort.
@@ -285,6 +349,11 @@ public final class CheckOut
 						break;
 		}
 	}
+
+    /**
+     * Reduce the stock counts for the purchased products and return the product array to be stored
+     * @return The product array, having been reduced in stock. 
+     */
 	public final Product[] productBought()
 	{
 		for(int i = logicalSize -1; i > 0; i--) {

@@ -1,6 +1,6 @@
 package TOC19;
 
-/***
+/*
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
 *
@@ -267,8 +267,9 @@ public final class Interface extends Application
                 prices.setAll(workingUser.getCheckOutPrices());
                 priceList.setItems(prices);
                 items.setAll(workingUser.getCheckOutNames());
-                itemList.setItems(items);
+                itemList.setItems(items); //TODO: add select top.
                 total.setText(String.valueOf("$" + workingUser.getPrice()));
+                itemList.scrollTo(index);
             }
         });
         grid.add(removeProduct, 2,8); // add the button to the bottum left of the screen.
@@ -304,7 +305,7 @@ public final class Interface extends Application
 		primaryStage.setOnCloseRequest((WindowEvent event) -> {
 			event.consume();
 		});
-		Scene primaryScene = new Scene(grid, horizontalSize, verticalSize); // create the scene at 800x600
+		Scene primaryScene = new Scene(grid, horizontalSize, verticalSize); // create the scene at the given size
 		primaryStage.setScene(primaryScene);
 		
 		primaryStage.show();
