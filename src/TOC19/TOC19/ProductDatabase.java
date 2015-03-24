@@ -27,12 +27,9 @@ package TOC19;
 import java.io.*;
 import java.util.Arrays;
 
-public final class ProductDatabase
+final class ProductDatabase
 {
-	private Product[] allProducts;
-	private int logicalSize;
 	private String databaseLocation;
-	private Settings config = new Settings();
 
     /**
      * Constructor for ProductDatabase.
@@ -40,9 +37,8 @@ public final class ProductDatabase
      */
 	public ProductDatabase()
 	{
-		allProducts = new Product[10];
-		logicalSize = 0;
 		try {
+            Settings config = new Settings();
 			databaseLocation = config.productSettings();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -67,7 +63,6 @@ public final class ProductDatabase
 		Product newProduct;
 		if(!productExists(name, barCode)) { // alter this to check whether a file with the name name/barcode exists
 			newProduct = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
-			logicalSize++; // We have a new product, Now we have something to show for it.
 			writeOutDatabaseProduct(newProduct);
 		}
 
@@ -87,7 +82,6 @@ public final class ProductDatabase
     {
         Product newProduct;
         newProduct = new Product(name, price, barCode); // pass off the work to the constructor: "make it so."
-        logicalSize++; // We have a new product, Now we have something to show for it.
         File check = new File(databaseLocation + oldName);
         if(check.exists()) check.delete();
         check = new File(databaseLocation + oldBarCode);
@@ -103,7 +97,7 @@ public final class ProductDatabase
      * @return A string containing the entire database
      * @throws IOException
      */
-	public final String getDatabase() throws IOException {
+	public final String getDatabase() {
 
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
@@ -126,7 +120,7 @@ public final class ProductDatabase
      * @throws IOException
      * @throws InterruptedException
      */
-	public final void delProduct(String name) throws IOException, InterruptedException {
+	public final void delProduct(String name) {
         try {
             File toDelLn = new File(databaseLocation + name);
             Product del = readDatabaseProduct(name);
@@ -174,7 +168,7 @@ public final class ProductDatabase
      * @param extProductName The name of the product you wish to check for
      * @return A boolean value of whether the product exists or not
      */
-	public final boolean productExists(String extProductName, Long extBarCode)
+	final boolean productExists(String extProductName, Long extBarCode)
 	{
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
@@ -190,7 +184,7 @@ public final class ProductDatabase
      * @param productOut The person you wish to write out
      * @return An integer, 0 meaning correct completion, 1 meaning an exception. Exception will be printed.
      */
-	public final int writeOutDatabaseProduct(Product productOut) {
+	final int writeOutDatabaseProduct(Product productOut) {
             try {
                 File check = new File(databaseLocation + productOut.getName());
                 if(check.exists()) check.delete();
@@ -249,7 +243,7 @@ public final class ProductDatabase
      * @return An integer of 1 if the file was not found and 0 if it worked.
      * @throws IOException
      */
-	public final int adminWriteOutDatabase(String path) throws IOException {
+	public final int adminWriteOutDatabase(String path) {
 		PrintWriter outfile = null;
 		double total = 0;
 		File root = new File (databaseLocation);
@@ -279,7 +273,7 @@ public final class ProductDatabase
      * @param barcode The barcode of the product you wish to read
      * @return The person in the database which correlates with the barcode, or null if the person is not found
      */
-	public final Product readDatabaseProduct(long barcode){
+	final Product readDatabaseProduct(long barcode){
             Product importing = null;
             try {
                 FileInputStream productIn = new FileInputStream(databaseLocation + String.valueOf(barcode));
@@ -324,7 +318,7 @@ public final class ProductDatabase
      * @param databaseList A File array of files which are to be put into the array
      * @return An array of all products found from the given file array
      */
-	public final Product[] readDatabase(File[] databaseList){
+	final Product[] readDatabase(File[] databaseList){
 		Product[] importing = new Product[databaseList.length];
         int i = 0;
 		for(File product : databaseList) {
@@ -363,7 +357,7 @@ public final class ProductDatabase
      * @param databaseList A string array of paths to files which are to be put into the array
      * @return An array of all Products found from the given string
      */
-    public final Product[] readDatabase(String[] databaseList){
+    final Product[] readDatabase(String[] databaseList){
         Product[] importing = new Product[databaseList.length];
         int i = 0;
         for(String product : databaseList) {

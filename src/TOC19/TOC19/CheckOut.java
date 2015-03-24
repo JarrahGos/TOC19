@@ -26,7 +26,7 @@ import java.util.Arrays;
 * Description: This program will allow for the creation, retreval, modification and deletion of checkOuts created from products in the product database.
 */
 
-public final class CheckOut
+final class CheckOut
 {
 	// create the necessary variables in the order of use
 	private Product[] products;
@@ -158,9 +158,7 @@ public final class CheckOut
             }
             else {
                 totalPrice -= products[productNo].productPrice();
-                for (int i = productNo; i < logicalSize; i++) { // move the products in the database back one such that the deleted product is overwritten.
-                    products[i] = products[i + 1];
-                }
+                System.arraycopy(products, productNo + 1, products, productNo, logicalSize - productNo);
                 logicalSize--; // should something not be done with quantities here?
             }
 		}
@@ -175,7 +173,7 @@ public final class CheckOut
      * @param resizing The checkout to be resized.
      * @return The new resized checkout.
      */
-	public final Product[] resizeCheckOut(Boolean action, Product[] resizing)
+	final Product[] resizeCheckOut(Boolean action, Product[] resizing)
 	{
 		if(action) { //Make the checkOut bigger
 			return (Arrays.copyOf(resizing, resizing.length + 4));
@@ -196,7 +194,7 @@ public final class CheckOut
      * @param resize The array to be resized
      * @return The resized array
      */
-	public final int[] resizeQuantities(Boolean action, int[] resize)
+	final int[] resizeQuantities(Boolean action, int[] resize)
 	{
 		if(action) {
 			return (Arrays.copyOf(resize, resize.length + 4));
@@ -216,7 +214,7 @@ public final class CheckOut
      * @param right The higher end of the array to sort
      * @return The next pivot point being the right most point.
      */
-	public final int partitionByName(int left, int  right) // used by sort by name
+	final int partitionByName(int left, int right) // used by sort by name
 	{
 		int max = logicalSize;
 		Product pivotElement = products[left]; //Store the left most product as the object that all other objects will be tested against
@@ -250,7 +248,7 @@ public final class CheckOut
      * @param left The left most part of the array to sort
      * @param right The right most point of the array to sort.
      */
-	public final void quickSortByName(int left, int right)
+	final void quickSortByName(int left, int right)
 	{
 		if (left < right) // start the sort.
 		{
@@ -259,7 +257,7 @@ public final class CheckOut
 			quickSortByName(pivot+1, right); // do the above for the right of the pivot
 		}
 	}
-	public final int partitionByPrice(int left, int  right) // see the name version of this method
+	final int partitionByPrice(int left, int right) // see the name version of this method
 	{
 		Product pivotElement = products[left];
 		int max = logicalSize;
@@ -288,7 +286,7 @@ public final class CheckOut
 		return right;
 	}
 
-	public final void quickSortByPrice(int left, int right) // see the name version of this method
+	final void quickSortByPrice(int left, int right) // see the name version of this method
 	{
 		if (left < right)
 		{
@@ -297,7 +295,7 @@ public final class CheckOut
 			quickSortByPrice(pivot+1, right);
 		}
 	}
-	public final int partitionByBarCode(int left, int  right) // see the name version of this method
+	final int partitionByBarCode(int left, int right) // see the name version of this method
 	{
 		Product pivotElement = products[left];
 		int max = logicalSize;
@@ -326,7 +324,7 @@ public final class CheckOut
 		return right;
 	}
 
-	public final void quickSortByBarCode(int left, int right) // see the name version of this method
+	final void quickSortByBarCode(int left, int right) // see the name version of this method
 	{
 		if (left < right)
 		{

@@ -27,14 +27,10 @@ package TOC19;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.Scanner;
 
-public final class PersonDatabase {
+final class PersonDatabase {
 
 	private static TOC19.Person admin;
-	private static int logicalSize;
-	private Scanner readOutFile;
-	private Settings config = new Settings();
 	private String databaseLocation;
 
     /**
@@ -42,8 +38,8 @@ public final class PersonDatabase {
      * Will create a Person database with the ability to read and write people to the database location given in the preferences file of Settings
      */
 	public PersonDatabase() {
-		logicalSize = 0;
 		try {
+            Settings config = new Settings();
             String settings = config.adminSettings();
             admin = new Person(settings, 0, 0, 0, false);
 			databaseLocation = config.personSettings();
@@ -68,7 +64,6 @@ public final class PersonDatabase {
 				Person newPerson;
 		if (!personExists(name, barCode)) { // check whether the person already exists
 			newPerson = new Person(name, barCode, running, week, canBuy); // pass off the work to the constructor: "make it so."
-			logicalSize++; // We have a new person, Now we have something to show for it.
 			writeOutDatabasePerson(newPerson);
 		}
 	}
@@ -80,7 +75,7 @@ public final class PersonDatabase {
      * @return A string containing the entire database
      * @throws IOException
      */
-	public final String getDatabase() throws IOException {
+	public final String getDatabase() {
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
         String[] stringList = new String[list.length];
@@ -107,7 +102,7 @@ public final class PersonDatabase {
      * @throws IOException
      * @throws InterruptedException
      */
-    public final void delPerson(String personNo) throws IOException, InterruptedException {
+    public final void delPerson(String personNo) {
         try {
             File toDelLn = new File(databaseLocation + String.valueOf(personNo));
             Person del = readDatabasePerson(personNo);
@@ -170,7 +165,7 @@ public final class PersonDatabase {
      * @param extBarCode The barcode of the person you are checking for
      * @return A boolean value of whether the person exists or not
      */
-	public final boolean personExists(String extPersonName, long extBarCode) {
+	final boolean personExists(String extPersonName, long extBarCode) {
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		for(File file : list) {
@@ -234,7 +229,7 @@ public final class PersonDatabase {
      * @return An integer of 1 if the file was not found and 0 if it worked.
      * @throws IOException
      */
-	public final int adminWriteOutDatabase(String path) throws IOException { //TODO: Ensure this works as a CSV
+	public final int adminWriteOutDatabase(String path) { //TODO: Ensure this works as a CSV
 		PrintWriter outfile = null;
 		double total = 0;
 		File root = new File (databaseLocation);
@@ -314,7 +309,7 @@ public final class PersonDatabase {
      * @param databaseList A string array of paths to files which are to be put into the array
      * @return An array of all people found from the given string
      */
-	public final Person[] readDatabase(String[] databaseList){
+	final Person[] readDatabase(String[] databaseList){
 		Person[] importing = new Person[databaseList.length];
         int i = 0;
 		for(String person : databaseList) {
@@ -326,12 +321,10 @@ public final class PersonDatabase {
 				in.close();
 				personIn.close();
 			}
-			catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
+			catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			boolean alreadyExists = false;
+            boolean alreadyExists = false;
 			if(inPers != null) {
 				for (Person pers : importing) {
 					if ( pers != null && inPers.getBarCode() != 7000000 && inPers.getBarCode() == pers.getBarCode()) {

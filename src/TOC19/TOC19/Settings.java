@@ -35,12 +35,10 @@ import java.util.Properties;
  * Description: This program will allow for the input and retreval of the person database and will set the limits of the database.
  */
 
-public class Settings {
-	private Properties properties = new Properties();
-    private Properties persBarCodes = new Properties();
-    private Properties prodBarCodes = new Properties();
-	private String propFileName = "TOC19.properties";
-	private InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+class Settings {
+	private final Properties properties = new Properties();
+	private final String propFileName = "TOC19.properties";
+	private final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 	
 	public final String adminSettings() throws FileNotFoundException
 	{
@@ -117,42 +115,4 @@ public class Settings {
 		output[2] = properties.getProperty("textSize");
 		return output;
 	}
-    public final String personBarcode(String name) throws FileNotFoundException
-    {
-        InputStream persInputStream = getClass().getClassLoader().getResourceAsStream(personSettings() + "barcodes.properties");
-        if (persInputStream != null) {
-            try {
-                persBarCodes.load(persInputStream);
-            }
-            catch(IOException e) {
-                System.out.print("property file '" + propFileName + "' not found in the classpath");
-            }
-        }
-        else {
-            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-        }
-
-        String output;
-        output = properties.getProperty(name);
-        return output;
-    }
-    public final String productBarcode(String name) throws FileNotFoundException
-    {
-        InputStream prodInputStream = getClass().getClassLoader().getResourceAsStream(personSettings() + "barcodes.properties");
-        if (prodInputStream != null) {
-            try {
-                prodBarCodes.load(prodInputStream);
-            }
-            catch(IOException e) {
-                System.out.print("property file '" + propFileName + "' not found in the classpath");
-            }
-        }
-        else {
-            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-        }
-
-        String output;
-        output = properties.getProperty(name);
-        return output;
-    }
 }

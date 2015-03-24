@@ -484,8 +484,6 @@ public final class Interface extends Application
 							workingUser.adminWriteOutDatabase("Person");
 						} catch (IOException e1) {
 							e1.printStackTrace();
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
 						}
 						saveLabel.setText("saved");
 					});
@@ -661,8 +659,6 @@ public final class Interface extends Application
 						try {
 							workingUser.adminWriteOutDatabase("Product");
 						} catch (IOException e1) {
-							e1.printStackTrace();
-						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
 						saveLabel.setText("saved");

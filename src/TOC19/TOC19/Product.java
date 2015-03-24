@@ -29,10 +29,10 @@ public final class Product implements java.io.Serializable
 {
 
 	// create the variables that are needed in order of use
-	private String name;
+	private final String name;
 //	private StringBuilder output;
-	private long productPrice;
-	private long barCode;
+	private final long productPrice;
+	private final long barCode;
 	private int numberOfItems;
 	private int quantity;
     private static final long serialVersionUID = 165169198;

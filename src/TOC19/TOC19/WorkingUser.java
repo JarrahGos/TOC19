@@ -19,10 +19,10 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author jarrah
  */
-public class WorkingUser {
+class WorkingUser {
 
-    private ProductDatabase productDatabase;
-    private PersonDatabase personDatabase;
+    private final ProductDatabase productDatabase;
+    private final PersonDatabase personDatabase;
     private CheckOut checkOuts;
     private static Person user;
 
@@ -30,7 +30,7 @@ public class WorkingUser {
      * Create the working user instance with both databases and a checkout.
      * @throws FileNotFoundException
      */
-    public WorkingUser() throws FileNotFoundException {
+    public WorkingUser() {
         productDatabase = new ProductDatabase();
         personDatabase = new PersonDatabase();
         checkOuts = new CheckOut();
@@ -53,7 +53,7 @@ public class WorkingUser {
         } else {
             user = personDatabase.readDatabasePerson(Long.parseLong(input));
         }
-        if (!user.canBuy()|| input.equals("7000000") {
+        if (!user.canBuy()|| input.equals("7000000")) {
             user = null;
             return 2;
         }
@@ -87,8 +87,8 @@ public class WorkingUser {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] bytes = md.digest(passwordToHash.getBytes());
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            for (byte aByte : bytes) {
+                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
             }
             generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
@@ -136,7 +136,7 @@ public class WorkingUser {
         return true;
     }
 
-    public final boolean isLong(String s) {
+    final boolean isLong(String s) {
         if (s == null) return false;
         try {
             Long.parseLong(s); // try to parse the string, catching a failure.
@@ -299,7 +299,7 @@ public class WorkingUser {
      * @throws IOException
      * @throws InterruptedException
      */
-    public final void adminWriteOutDatabase(String type) throws IOException, InterruptedException {
+    public final void adminWriteOutDatabase(String type) throws IOException {
         switch (type) {
             case ("Person"):
                 personDatabase.adminWriteOutDatabase("adminPersonDatabase.csv");
