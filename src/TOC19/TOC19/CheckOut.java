@@ -152,7 +152,7 @@ public final class CheckOut
 		*/
 		
 		if(productNo < logicalSize) { // check that the product exists
-            if(quantities[productNo] >= 1) {
+            if(quantities[productNo] != 1) {
                 totalPrice -= products[productNo].productPrice(); // remove the products data from the summaries of the checkOut
                 quantities[productNo]--;
             }

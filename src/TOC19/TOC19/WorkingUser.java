@@ -53,7 +53,7 @@ public class WorkingUser {
         } else {
             user = personDatabase.readDatabasePerson(Long.parseLong(input));
         }
-        if (!user.canBuy()) {
+        if (!user.canBuy()|| input.equals("7000000") {
             user = null;
             return 2;
         }
@@ -246,7 +246,7 @@ public class WorkingUser {
             return true;
         }
         else if(user.getBarCode() == tempBarCode) {
-            adding = new Product("Buying yourself are you. You can't do that.", 0, tempBarCode);
+            adding = new Product("Buying yourself are you? You can't do that.", 0, tempBarCode);
             checkOuts.addProduct(adding);
             return true;
         }
