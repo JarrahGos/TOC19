@@ -45,12 +45,10 @@ public final class Product implements java.io.Serializable
      */
 	public Product(String extName, long extProductPrice, long extBarCode)
 	{
-		//output = new StringBuilder("");
 		name = extName;
 		productPrice = extProductPrice;
 		barCode = extBarCode;
 	}
-	// Begin methods
 
     /**
      * Set the number of the product you have in stock
@@ -166,4 +164,9 @@ public final class Product implements java.io.Serializable
 	{
 		numberOfItems--;
 	}
+    public boolean equals(Product check) {
+        if(check.getName().equals(name) && check.getBarCode() == barCode && check.productPrice() == productPrice) return true;
+        return false;
+    }
+
 }

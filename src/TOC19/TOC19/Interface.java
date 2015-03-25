@@ -18,13 +18,10 @@ package TOC19;
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* 
-* Author: Jarrah Gosbell 
-* Student Number: z5012558
-* Class: Interface
-* Description: This program will allow the user to interact with the program, creating, deleting and modifying products and checkOuts.
+/**
+* @author Jarrah Gosbell
 */
-// GUI Imports
+
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -54,15 +51,11 @@ public final class Interface extends Application
 {
 	// Create the necessary instance variables.
 	private final WorkingUser workingUser; // Place for all data to go through
-	private ScrollPane nameDataOut; // output of product data in the interface. 
-	private ScrollPane priceDataOut; // output the price of the product.
 	private static int horizontalSize = 1024;
 	private static int verticalSize = 576;
 	private final int textSize;
 	Settings config;
 
-	private int logicalSize;
-//	Timer timeOut = new Timer(60000000, new actionListener());
 
     /**
      * Create an interface instance with it's parameters set by the config file
@@ -556,12 +549,10 @@ public final class Interface extends Application
 						String index = productList.getSelectionModel().getSelectedItem();
 						try {
 							workingUser.removeProduct(index);
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						} catch (InterruptedException e1) {
+						} catch (IOException | InterruptedException e1) {
 							e1.printStackTrace();
 						}
-						product.setAll(workingUser.getProductNames());
+                        product.setAll(workingUser.getProductNames());
 					});
 					grid.add(remove, 1,0);
 					product.setAll(workingUser.getProductNames());

@@ -18,11 +18,8 @@ package TOC19;
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Author: Jarrah Gosbell
-* Student Number: z5012558
-* Class: ProductDatabase
-* Description: This program will allow for the input and retreval of the product database and will set the limits of the database.
+/**
+* @author Jarrah Gosbell
 */
 import java.io.*;
 import java.util.Arrays;

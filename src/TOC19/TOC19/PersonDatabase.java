@@ -18,11 +18,8 @@ package TOC19;
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
- * Author: Jarrah Gosbell
- *
- * Class: PersonDatabase
- * Description: This program will allow for the input and retrieval of the person database and will set the limits of the database.
+/**
+ * @author Jarrah Gosbell
  */
 
 import java.io.*;
@@ -372,18 +369,7 @@ final class PersonDatabase {
 
     /**
      * Set weather the specified person can buy from the program
-     * @param personNumber The barcode of the person you are changing
-     * @param canBuy A boolean of whether the person should be able to buy.
-     */
-	public final void setPersonCanBuy(long personNumber, boolean canBuy)
-	{
-		Person set = readDatabasePerson(personNumber);
-		set.setCanBuy(canBuy);
-		writeOutDatabasePerson(set);
-	}
-    /**
-     * Set weather the specified person can buy from the program
-     * @param userName The name of the person you are changing
+     * @param userName The name (or barcode) of the person you are changing
      * @param canBuy A boolean of whether the person should be able to buy.
      */
 	public final void setPersonCanBuy(String userName, boolean canBuy)
