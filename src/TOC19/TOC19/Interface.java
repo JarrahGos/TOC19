@@ -23,6 +23,9 @@ package TOC19;
 */
 
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -32,20 +35,27 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
+import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
+import java.util.*;
 
 public final class Interface extends Application
 {
@@ -176,6 +186,7 @@ public final class Interface extends Application
 						thread.setPriority(Thread.MIN_PRIORITY);
 						thread.start();
 						thread.interrupt();
+						flashColour(input, 1500, Color.AQUAMARINE);
 						userLabel.setText(workingUser.userName(userError)); // find out the name of those who dare log on.
 						inputLabel.setText("Enter Barcode"); // change the label to suit the next action. 
 						grid.getChildren().remove(userLabel); // remove any error labels which may have appeared. 
@@ -188,7 +199,8 @@ public final class Interface extends Application
 						input.clear(); // there was an error with the PMKeyS, get ready for another. 
 						userLabel.setText(workingUser.userName(userError)); // tell the user there was a problem. Maybe this could be done better.
 						grid.getChildren().remove(userLabel); // Remove a userlabel, as above. 
-						grid.add(userLabel, 3,0); // add it again, as above. 
+						grid.add(userLabel, 3,0); // add it again, as above.
+						flashColour(input, 1500, Color.RED);
 					}
 				}
 				else {
@@ -201,10 +213,12 @@ public final class Interface extends Application
 						priceList.setItems(prices);
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
+						flashColour(input, 500, Color.AQUAMARINE);
 					}
 					else{
                         productError.setText("Could not read that product");
 						input.clear();
+						flashColour(input, 500, Color.RED);
                     }
 				}
 		});
@@ -219,6 +233,7 @@ public final class Interface extends Application
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 3,0);
 						input.clear();
+						flashColour(input, 1500, Color.AQUAMARINE);
 					}
 					else {
 						input.clear();
@@ -226,6 +241,7 @@ public final class Interface extends Application
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 3,0);
 						input.clear();
+						flashColour(input, 1500, Color.RED);
 					}
 				}
 				else {
@@ -237,9 +253,12 @@ public final class Interface extends Application
 						priceList.setItems(prices);
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
+						flashColour(input, 500, Color.AQUAMARINE);
 					}
-					else 
+					else{
 						input.clear();
+						flashColour(input, 500, Color.RED);
+					}
 				}
 			}
 		});
@@ -369,7 +388,6 @@ public final class Interface extends Application
 		adminStage.setTitle("TOC19");
 		SplitPane split = new SplitPane();
 		VBox rightPane = new VBox();
-		
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
@@ -431,6 +449,8 @@ public final class Interface extends Application
 						nameEntry.clear();
 						PMKeySEntry.clear();
 						nameEntry.requestFocus();
+						flashColour(nameEntry, 1500, Color.AQUAMARINE);
+						flashColour(PMKeySEntry, 1500, Color.AQUAMARINE);
 					});
 					
 				}
@@ -447,10 +467,13 @@ public final class Interface extends Application
 						String index = personList.getSelectionModel().getSelectedItem();
 						try {
 							workingUser.removePerson(index);
+							flashColour(remove, 1500, Color.AQUAMARINE);
 						} catch (IOException e1) {
 							e1.printStackTrace();
+							flashColour(remove, 1500, Color.RED);
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
+							flashColour(remove, 1500, Color.RED);
 						}
 						persons.setAll(workingUser.getUserNames());
 					});
@@ -475,10 +498,12 @@ public final class Interface extends Application
 					save.setOnAction((ActionEvent e) -> {
 						try {
 							workingUser.adminWriteOutDatabase("Person");
+							flashColour(save, 3000, Color.AQUAMARINE);
 						} catch (IOException e1) {
 							e1.printStackTrace();
+							flashColour(save, 3000, Color.RED);
 						}
-						saveLabel.setText("saved");
+
 					});
 				}
 				else if(selectedOption.equals("Lock People Out")) {
@@ -534,6 +559,9 @@ public final class Interface extends Application
 						BarCodeEntry.clear();
 						priceEntry.clear();
 						nameEntry.requestFocus();
+						flashColour(nameEntry, 1500, Color.AQUAMARINE);
+						flashColour(priceEntry, 1500, Color.AQUAMARINE);
+						flashColour(BarCodeEntry, 1500, Color.AQUAMARINE);
 					});
 					
 				}
@@ -549,8 +577,10 @@ public final class Interface extends Application
 						String index = productList.getSelectionModel().getSelectedItem();
 						try {
 							workingUser.removeProduct(index);
+							flashColour(remove, 1500, Color.AQUAMARINE);
 						} catch (IOException | InterruptedException e1) {
 							e1.printStackTrace();
+							flashColour(remove, 1500, Color.RED);
 						}
                         product.setAll(workingUser.getProductNames());
 					});
@@ -595,11 +625,27 @@ public final class Interface extends Application
 						long barCode = Long.parseLong(barCodeEntry.getText());
 						long price = (long)(Double.parseDouble(priceEntry.getText())*100);
 						workingUser.changeDatabaseProduct(nameEntry.getText(), workingUser.getProductName(productList.getSelectionModel().getSelectedItem()), price,
-                                barCode, workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
+								                                 barCode, workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
 						nameEntry.clear();
 						barCodeEntry.clear();
 						priceEntry.clear();
 						nameEntry.requestFocus();
+						flashColour(nameEntry, 1500, Color.AQUAMARINE);
+						flashColour(barCodeEntry, 1500, Color.AQUAMARINE);
+						flashColour(priceEntry, 1500, Color.AQUAMARINE);
+
+
+						//Now need to update the form
+						String selectedProduct = productList.getSelectionModel().getSelectedItem();
+
+						nameEntry.setText(selectedProduct);
+						String BC = String.valueOf(workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
+						barCodeEntry.setText(BC);
+						String price2 = Double.toString(workingUser.getProductPrice(productList.getSelectionModel()
+								                                                            .getSelectedItem())/100);
+						priceEntry.setText(price2);
+						product.setAll(workingUser.getProductNames());
+						productList.setItems(product);
 					});
 					
 				}
@@ -626,6 +672,7 @@ public final class Interface extends Application
 						workingUser.setNumberOfProducts(productList.getSelectionModel().getSelectedItem(), Integer.parseInt(numberEntry.getText()));
 						productList.getSelectionModel().select(productList.getSelectionModel().getSelectedIndex() + 1);
 						numberEntry.requestFocus();
+						flashColour(numberEntry, 1500, Color.AQUAMARINE);
 					});
 						
 					
@@ -649,10 +696,11 @@ public final class Interface extends Application
 					save.setOnAction((ActionEvent e) -> {
 						try {
 							workingUser.adminWriteOutDatabase("Product");
+							flashColour(save, 3000, Color.AQUAMARINE);
 						} catch (IOException e1) {
 							e1.printStackTrace();
+							flashColour(save, 3000, Color.RED);
 						}
-						saveLabel.setText("saved");
 					});
 				}
 				else if(selectedOption.equals("Reset Bills")) {
@@ -664,8 +712,9 @@ public final class Interface extends Application
 					grid.add(save, 1,1);
 					save.setOnAction((ActionEvent e) -> {
 							workingUser.resetBills();
-                            grid.getChildren().remove(save);
-						saveLabel.setText("saved");
+                            flashColour(save, 1500, Color.AQUAMARINE);
+							save.setDisable(true);
+							save.setText("Bills Reset");
 					});
 				}
 				else if(selectedOption.equals("Change Password")) {
@@ -685,6 +734,7 @@ public final class Interface extends Application
 							oldPW.setText("");
 							grid.getChildren().remove(error);
 							grid.add(error, 2,0);
+							flashColour(oldPW, 1500, Color.RED);
 						}
 						else {
 							grid.add(newLabel, 0,1);
@@ -703,6 +753,8 @@ public final class Interface extends Application
 							workingUser.setAdminPassword(workingUser.getSecurePassword(newPW.getText()));
 							Text changed = new Text("Success");
 							grid.add(changed, 1,3);
+							flashColour(newPW, 1500, Color.AQUAMARINE);
+							flashColour(newPW2, 1500, Color.AQUAMARINE);
 						}
 						else {
 							error.setText("Passwords do not match");
@@ -711,16 +763,64 @@ public final class Interface extends Application
 						}
 					});
 				}
-				else if(selectedOption.equals("Save Databases To USB")) {
+				else if(selectedOption.equals("Save Databases To USB")) { //TODO: Bring admin stage to front after
+
+					final File[] saveDir = new File[1];
+
+					JFileChooser fc = new JFileChooser();
+					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+
 					grid.getChildren().clear();
-					Text sorry = new Text("This feature is not yet functioning");
-					grid.add(sorry, 0,0);
+					Text fileLabel = new Text("Save Directory");
+					TextField filePath = new TextField("");
+					filePath.setEditable(false);
+					Button saveDirBtn = new Button("Choose Save Directory");
+					Button saveBtn = new Button("Save Databases to Selected Directories");
+
+					grid.add(saveBtn,1,5);
+					grid.add(fileLabel,0,0);
+					grid.add(filePath,0,1);
+					grid.add(saveDirBtn,1,1);
+
+					saveDirBtn.setOnAction((ActionEvent e) -> {
+						int returnVal = fc.showDialog(null, "Select File");
+
+						if (returnVal == JFileChooser.APPROVE_OPTION) {
+							filePath.setText(fc.getSelectedFile().getAbsolutePath());
+							saveDir[0] = fc.getSelectedFile();
+							flashColour(saveDirBtn, 1500, Color.AQUAMARINE);
+						}else{
+							flashColour(saveDirBtn, 1500, Color.RED);
+						}
+					});
+
+					saveBtn.setOnAction((ActionEvent e) -> {
+						try {
+							workingUser.adminWriteOutDatabase("Person"); //adminPersonDatabase.csv
+							workingUser.adminWriteOutDatabase("Product"); //adminProductDatabase.csv
+
+							File adminPersonFile = new File(Compatibility.getFilePath("adminPersonDatabase.csv"));
+							File adminProductFile = new File(Compatibility.getFilePath("adminProductDatabase.csv"));
+
+							adminPersonFile.renameTo(new File(saveDir[0].getAbsolutePath() + "\\adminPersonDatabase.csv"));
+							adminProductFile.renameTo(new File(saveDir[0].getAbsolutePath() + "\\adminProductDatabase" +
+									                               ".csv"));
+							flashColour(saveBtn, 3000, Color.AQUAMARINE);
+
+						} catch (IOException e1) {
+							e1.printStackTrace();
+							flashColour(saveBtn, 3000, Color.RED);
+						}
+					});
+
 				}
                 else if(selectedOption.equals("Close The Program")) {
                     grid.getChildren().clear();
                     Button save = new Button("Close The Program");
                     grid.add(save, 1,1);
                     save.setOnAction((ActionEvent e) -> {
+	                    flashColour(save,1500, Color.AQUAMARINE);
                             System.exit(0);
                     });
                 }
@@ -728,7 +828,27 @@ public final class Interface extends Application
 		Scene adminScene = new Scene(split, horizontalSize, verticalSize);
 		adminStage.setScene(adminScene);
 		adminStage.show();
+		adminStage.toFront();
                 
+	}
+
+	public static void flashColour(Node node, int duration, Color colour){
+
+		InnerShadow shadow = new InnerShadow();
+		shadow.setRadius(25d);
+		shadow.setColor(colour);
+		node.setEffect(shadow);
+
+		Timeline time = new Timeline();
+
+		time.setCycleCount(1);
+
+		List<KeyFrame> frames = new ArrayList<>();
+		frames.add(new KeyFrame(Duration.ZERO, new KeyValue(shadow.radiusProperty(),25)));
+		frames.add(new KeyFrame(new Duration(duration), new KeyValue(shadow.radiusProperty(),0)));
+		time.getKeyFrames().addAll(frames);
+
+		time.playFromStart();
 	}
 
     /**
