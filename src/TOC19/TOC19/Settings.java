@@ -5,9 +5,11 @@
  */
 package TOC19;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /*
@@ -37,9 +39,24 @@ import java.util.Properties;
 
 class Settings {
 	private final Properties properties = new Properties();
-	private final String propFileName = "TOC19.properties";
-	private final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
-	
+	private final String propFileName = Compatibility.getFilePath("TOC19.properties");
+	private InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(propFileName);
+
+	public Settings() {
+		if (inputStream != null) return;
+
+		try {
+			if (inputStream == null){
+				inputStream = new FileInputStream(String.valueOf(Paths.get(propFileName)));
+			}
+			if (inputStream == null){
+				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public final String adminSettings() throws FileNotFoundException
 	{
 		if (inputStream != null) {
