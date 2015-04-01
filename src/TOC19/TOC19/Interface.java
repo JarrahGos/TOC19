@@ -55,6 +55,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -769,15 +771,13 @@ public final class Interface extends Application
 				}
 				else if(selectedOption.equals("Save Databases To USB")) { //TODO: Bring admin stage to front after
 
-					final File saveDir = new File();
-
 					DirectoryChooser fc = new DirectoryChooser();
 
 
 					grid.getChildren().clear();
 					Text fileLabel = new Text("Save Directory");
 					TextField filePath = new TextField("");
-					filePath.setEditable(false);
+					filePath.setEditable(true);
 					Button saveDirBtn = new Button("Choose Save Directory");
 					Button saveBtn = new Button("Save Databases to Selected Directories");
 
@@ -791,7 +791,6 @@ public final class Interface extends Application
 
 						if (returnVal != null) {
 							filePath.setText(returnVal.getPath());
-							saveDir = returnVal;
 							flashColour(saveDirBtn, 1500, Color.AQUAMARINE);
 						}else{
 							flashColour(saveDirBtn, 1500, Color.RED);
@@ -805,10 +804,17 @@ public final class Interface extends Application
 
 							File adminPersonFile = new File(Compatibility.getFilePath("adminPersonDatabase.csv"));
 							File adminProductFile = new File(Compatibility.getFilePath("adminProductDatabase.csv"));
-
-							adminPersonFile.copy(new Path(saveDir.getAbsolutePath() + "\\adminPersonDatabase.csv", adminPersonFile.getPath()));
-							adminProductFile.copy(new Path(saveDir.getAbsolutePath() + "\\adminProductDatabase.csv"), adminProductFile.getPath());
-							flashColour(saveBtn, 3000, Color.AQUAMARINE);
+							if(filePath.getText() != "" || filePath.getText() != null) {
+								File destPers = new File(filePath.getText() + "/adminPersonDatabase.csv");
+								File destProd = new File(filePath.getText() + "/adminProductDatabase.csv");
+								Files.copy(adminPersonFile.toPath(), destPers.toPath(), StandardCopyOption.REPLACE_EXISTING);
+								Files.copy(adminProductFile.toPath(), destProd.toPath(), StandardCopyOption.REPLACE_EXISTING);
+								flashColour(saveBtn, 3000, Color.AQUAMARINE);
+							}
+							else {
+								flashColour(saveBtn, 3000, Color.RED);
+								flashColour(filePath, 3000, Color.RED);
+							}
 
 						} catch (IOException e1) {
 							e1.printStackTrace();
