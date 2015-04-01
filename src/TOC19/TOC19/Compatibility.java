@@ -2,7 +2,7 @@ package TOC19;
 
 /*
 *    TOC19 is a simple program to run TOC payments within a small group.
-*    Copyright (C) 2014  Michael Brock
+*    Copyright (C) 2015 Michael Brock
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -18,10 +18,11 @@ package TOC19;
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * @author Michael Brock
- * This class enables compatibility with Windows based operating
- * systems and will handle all external file access.
+/*
+* Author: Michael Brock
+* Student Number: z5056704
+* Class: Compatibility
+* Description: This class enables compatibility with Windows based operating systems and will handle all external file access.
 */
 
 public class Compatibility {
@@ -34,12 +35,6 @@ public class Compatibility {
 		return (System.getProperty("os.name").startsWith("Windows"));
 	}
 
-	/**
-	 * Get either the full path (windows) or the relative path
-	 * (other) of a file
-	 * @param file The relative path of the file.
-	 * @return The path, based on the OS being used.
-	 */
 	public static String getFilePath(String file){
 		return isWindows()? System.getProperty("user.dir") + "\\" + file : file;
 	}
