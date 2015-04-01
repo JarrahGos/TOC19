@@ -18,12 +18,11 @@ package TOC19;
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Author: Michael Brock
-* Student Number: z5056704
-* Class: Compatibility
-* Description: This class enables compatibility with Windows based operating systems and will handle all external file access.
-*/
+/**
+  * @author Michael Brock
+  * This class enables compatibility with Windows based operating
+  * systems and will handle all external file access.
+ */
 
 public class Compatibility {
 
@@ -35,6 +34,12 @@ public class Compatibility {
 		return (System.getProperty("os.name").startsWith("Windows"));
 	}
 
+	/**
+	  * Get either the full path (windows) or the relative path
+	  * (other) of a file
+	  * @param file The relative path of the file.
+	  * @return The path, based on the OS being used.
+	  */
 	public static String getFilePath(String file){
 		return isWindows()? System.getProperty("user.dir") + "\\" + file : file;
 	}

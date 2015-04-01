@@ -63,7 +63,7 @@ final class CheckOut
                 break found;
             } else i++;
         }
-		if(!alreadyExists) { //TODO: This now adds a third rather than second. Counts normally from there.
+		if(!alreadyExists) {
 			products.add(item);
 			quantities.add(quantity);
 			++logicalSize;

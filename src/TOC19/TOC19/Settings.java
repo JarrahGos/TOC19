@@ -91,6 +91,7 @@ class Settings {
 
 		String output;
 		output = properties.getProperty("personDatabaseLocation");
+		output = Compatibility.getFilePath(output);
 		return output;
 	}
 	public final String productSettings() throws FileNotFoundException
@@ -109,6 +110,7 @@ class Settings {
 
 		String output;
 		output = properties.getProperty("productDatabaseLocation");
+		output = Compatibility.getFilePath(output);
 		return output;
 	}
 
