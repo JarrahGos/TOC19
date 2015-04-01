@@ -443,12 +443,18 @@ public final class Interface extends Application
 					});
 					PMKeySEntry.setOnAction((ActionEvent e) -> {
 						long PMKeyS = Long.parseLong(PMKeySEntry.getText());
-						workingUser.addPersonToDatabase(nameEntry.getText(), PMKeyS);
-						nameEntry.clear();
-						PMKeySEntry.clear();
-						nameEntry.requestFocus();
-						flashColour(nameEntry, 1500, Color.AQUAMARINE);
-						flashColour(PMKeySEntry, 1500, Color.AQUAMARINE);
+						if(PMKeyS != 7000000) {
+							workingUser.addPersonToDatabase(nameEntry.getText(), PMKeyS);
+							nameEntry.clear();
+							PMKeySEntry.clear();
+							nameEntry.requestFocus();
+							flashColour(nameEntry, 1500, Color.AQUAMARINE);
+							flashColour(PMKeySEntry, 1500, Color.AQUAMARINE);
+						}
+						else {
+							flashColour(nameEntry, 1500, Color.RED);
+							flashColour(PMKeySEntry, 1500, Color.RED;
+						}
 					});
 					
 				}
