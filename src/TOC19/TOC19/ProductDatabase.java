@@ -219,7 +219,7 @@ final class ProductDatabase
                 if(check.exists()) check.delete();
                 check = null;
                 FileOutputStream personOut = new FileOutputStream(databaseLocation + productOut.getName());
-                ObjectOutputStream out = new ObjectOutputStream(personOut);
+                ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(personOut));
                 out.writeObject(productOut);
                 out.close();
                 personOut.close();
@@ -239,29 +239,58 @@ final class ProductDatabase
      * @param path The path to the directory you wish to output to
      * @return An integer of 1 if the file was not found and 0 if it worked.
      */
-	public final int adminWriteOutDatabase(String path) {
-		PrintWriter outfile = null;
+	public final int adminWriteOutDatabase(String path)  {
+		FileWriter outfile = null;
+        BufferedWriter bufOut = null;
 		double total = 0;
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
 		Product[] database = readDatabase(list);
 		try {
 			File file = new File(path);
-			outfile = new PrintWriter(file); // attempt to open the file that has been created.
+			outfile = new FileWriter(file); // attempt to open the file that has been created.
+            bufOut = new BufferedWriter(outfile);
 		} catch (FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			if (outfile != null)outfile.close();
+			if (bufOut != null) {
+                try {
+                    bufOut.close();
+                    outfile.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
 			return 1;
-		}
-		outfile.println("Name, Price, Barcode, Stock Count");
-		for(Product product : database) {
+		} catch (IOException e) {
+            e.printStackTrace();
+        }
+        String out = "Name, Price, Barcode, Stock Count";
+        try {
+            outfile.write(out, 0, out.length());
+            bufOut.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for(Product product : database) {
             if(product != null) {
-                outfile.println(product.getName() + "," + product.productPrice() + ","
-                        + product.getBarCode() + "," + product.getNumber());
+                out = product.getName() + "," + product.productPrice() + ","
+                        + product.getBarCode() + "," + product.getNumber();
+                try {
+                    outfile.write(out, 0, out.length());
+                    bufOut.newLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 total += product.productPrice() * product.getNumber();
             }
 		}
-		outfile.println("Total stock value, " + total);
-		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
+        out = "Total stock value, " + total;
+        try {
+            outfile.write(out, 0, out.length());
+            bufOut.close();
+            outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 		return 0; // let the program and thus the user know that everything is shiny.
 	}
     /**
@@ -273,7 +302,7 @@ final class ProductDatabase
             Product importing = null;
             try {
                 FileInputStream productIn = new FileInputStream(databaseLocation + String.valueOf(barcode));
-                ObjectInputStream in = new ObjectInputStream(productIn);
+                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(productIn));
                 importing = (Product)in.readObject();
                 in.close();
                 productIn.close();
@@ -296,7 +325,7 @@ final class ProductDatabase
             Product importing = null;
             try {
                 FileInputStream productIn = new FileInputStream(databaseLocation + name);
-                ObjectInputStream in = new ObjectInputStream(productIn);
+                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(productIn));
                 importing = (Product)in.readObject();
                 in.close();
                 productIn.close();
@@ -321,7 +350,7 @@ final class ProductDatabase
             Product inProd = null;
             try {
                 FileInputStream productIn = new FileInputStream(product);
-                ObjectInputStream in = new ObjectInputStream(productIn);
+                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(productIn));
                 inProd = (Product) in.readObject();
                 in.close();
                 productIn.close();
@@ -360,7 +389,7 @@ final class ProductDatabase
             Product inProd = null;
             try {
                 FileInputStream productIn = new FileInputStream(product);
-                ObjectInputStream in = new ObjectInputStream(productIn);
+                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(productIn));
                 inProd = (Product) in.readObject();
                 in.close();
                 productIn.close();

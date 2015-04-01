@@ -199,7 +199,7 @@ final class PersonDatabase {
                 check = null;
                 if(persOut.getBarCode() != 7000000) {
                     FileOutputStream personOut = new FileOutputStream(databaseLocation + persOut.getName());
-                    ObjectOutputStream out = new ObjectOutputStream(personOut);
+                    ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(personOut));
                     out.writeObject(persOut);
                     out.close();
                     personOut.close();
@@ -223,8 +223,9 @@ final class PersonDatabase {
      * @param path The path to the directory you wish to output to
      * @return An integer of 1 if the file was not found and 0 if it worked.
      */
-	public final int adminWriteOutDatabase(String path) { //TODO: Ensure this works as a CSV
-		PrintWriter outfile = null;
+	public final int adminWriteOutDatabase(String path)  { //TODO: Ensure this works as a CSV
+		FileWriter outfile = null;
+		BufferedWriter bufOut = null;
 		double total = 0;
 		File root = new File (databaseLocation);
 		File[] list = root.listFiles();
@@ -235,21 +236,47 @@ final class PersonDatabase {
 		Person[] database = readDatabase(stringList);
 		try {
 			File file = new File(path);
-			outfile = new PrintWriter(file); // attempt to open the file that has been created.
+			outfile = new FileWriter(file); // attempt to open the file that has been created.
+			bufOut = new BufferedWriter(outfile);
 		} catch (FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
-			if (outfile != null)outfile.close();
+			if (bufOut != null) try {
+				bufOut.close();
+				outfile.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			return 1;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		outfile.println("Barcode, Name, Total, Bill");
+		String out = "Barcode, Name, Total, Bill";
+		try {
+			bufOut.write(out, 0, out.length());
+			bufOut.newLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		for(Person person : database) {
             if(person != null) {
-                outfile.println(person.getBarCode() + "," + person.getName() + ","
-                        + person.totalCostRunning() + "," + person.totalCostWeek());
-                total += person.totalCostWeek();
+				out = person.getBarCode() + "," + person.getName() + ","
+						+ person.totalCostRunning() + "," + person.totalCostWeek();
+				try {
+					bufOut.write(out, 0, out.length());
+					bufOut.newLine();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				total += person.totalCostWeek();
             }
 		}
-		outfile.println("Total, " + total);
-		outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
+		out = "Total, " + total;
+		try {
+			outfile.write(out, 0, out.length());
+			bufOut.close();
+			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return 0; // let the program and thus the user know that everything is shiny.
 	}
 
@@ -262,7 +289,7 @@ final class PersonDatabase {
             Person importing = null;
             try {
                 FileInputStream personIn = new FileInputStream(databaseLocation + barcode);
-                ObjectInputStream in = new ObjectInputStream(personIn);
+                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(personIn));
                 importing = (Person)in.readObject();
                 in.close();
                 personIn.close();
@@ -285,7 +312,7 @@ final class PersonDatabase {
 			 Person importing = null;
 			 try {
 				 FileInputStream personIn = new FileInputStream(databaseLocation + name );
-				 ObjectInputStream in = new ObjectInputStream(personIn);
+				 ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(personIn));
 				 importing = (Person) in.readObject();
 				 in.close();
 				 personIn.close();
@@ -310,7 +337,7 @@ final class PersonDatabase {
 			Person inPers = null;
 			try {
 				FileInputStream personIn = new FileInputStream(person);
-				ObjectInputStream in = new ObjectInputStream(personIn);
+				ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(personIn));
 				inPers = (Person) in.readObject();
 				in.close();
 				personIn.close();
