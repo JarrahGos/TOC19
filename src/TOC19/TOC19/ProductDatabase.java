@@ -92,7 +92,6 @@ final class ProductDatabase
      * Precondition: setDatabase has been run
      * Postcondition: the user will be see an output of the persons in the database.
      * @return A string containing the entire database
-     * @throws IOException
      */
 	public final String getDatabase() {
 
@@ -114,8 +113,6 @@ final class ProductDatabase
      * Preconditions: setDatabase has been run
      * Postconditions: the chosen product will no longer exist.
      * @param name The barcode of the person you wish to delete
-     * @throws IOException
-     * @throws InterruptedException
      */
 	public final void delProduct(String name) {
         try {
@@ -238,7 +235,6 @@ final class ProductDatabase
      * Write out a CSV version of the database for future import.
      * @param path The path to the directory you wish to output to
      * @return An integer of 1 if the file was not found and 0 if it worked.
-     * @throws IOException
      */
 	public final int adminWriteOutDatabase(String path) {
 		PrintWriter outfile = null;

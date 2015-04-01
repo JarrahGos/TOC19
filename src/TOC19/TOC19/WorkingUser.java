@@ -4,7 +4,6 @@ package TOC19;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -40,13 +39,11 @@ class WorkingUser {
 
     /**
      * Create the working user instance with both databases and a checkout.
-     * @throws FileNotFoundException
      */
     public WorkingUser() {
         productDatabase = new ProductDatabase();
         personDatabase = new PersonDatabase();
         checkOuts = new CheckOut();
-
         user = null;
     }
 
@@ -309,7 +306,6 @@ class WorkingUser {
      * Write out the CSV version of the database for the admin.
      * @param type "Person" for the person database or "Produt" for the product database
      * @throws IOException
-     * @throws InterruptedException
      */
     public final void adminWriteOutDatabase(String type) throws IOException {
         switch (type) {
@@ -441,5 +437,9 @@ class WorkingUser {
     public final void resetBills()
     {
         personDatabase.resetBills();
+    }
+    public static long getLogedInBarcode()
+    {
+        return user.getBarCode();
     }
 }
