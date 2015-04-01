@@ -55,7 +55,8 @@ import javafx.util.Duration;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Interface extends Application
 {
@@ -360,13 +361,10 @@ public final class Interface extends Application
 		PasswordField PW = new PasswordField();
 		grid.add(PWLabel, 0,0);
 		grid.add(PW, 1,0);
-		Text error = new Text();
 		PW.setOnAction((ActionEvent e) -> {
 			if(!workingUser.passwordsEqual(PW.getText())) {
-				error.setText("Password incorrect");
+				flashColour(PW, 1500, Color.RED);
 				PW.setText("");
-				grid.getChildren().remove(error);
-				grid.add(error, 1,2);
 			}
 			else {
 				enterAdminMode(passwordStage);
