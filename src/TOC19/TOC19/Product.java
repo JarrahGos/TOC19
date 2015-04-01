@@ -29,12 +29,15 @@ public final class Product implements java.io.Serializable
 {
 
 	// create the variables that are needed in order of use
+	/** The name of the product */
 	private final String name;
-//	private StringBuilder output;
+	/** The price of the product */
 	private final long productPrice;
+	/** the barcode of the product */
 	private final long barCode;
+	/** The number of the product currently in stock */
 	private int numberOfItems;
-	private int quantity;
+	/** A version number of this class to avoid java breaking the serialisation storage. */
     private static final long serialVersionUID = 165169198;
 
     /**
@@ -86,25 +89,6 @@ public final class Product implements java.io.Serializable
 		output.append("\n	Quantity: ");
 		output.append(numberOfItems);
 
-		return output.toString(); //return a string with all of the product's data in it
-	}
-
-    /**
-     * Get the name, quantity and total price of an item.
-     * Procondition: setData has been run for invoking product or the product constructor outlined above has been run
-     * Postcondition: The data that has been entered for the invoking product will be returned.
-     * @return A human readable string containing the name, quantity and total price of the item.
-     */
-        public final String getDataUser() // output the product data as a string
-	{
-		StringBuilder output = new StringBuilder();
-		output.append(name);
-		output.append(" x ");
-		output.append(quantity);
-		output.append("                                                                 	Price: $");
-		output.append(((double)((productPrice*quantity)))/100);
-                output.append("\n");
-		
 		return output.toString(); //return a string with all of the product's data in it
 	}
 
@@ -165,8 +149,7 @@ public final class Product implements java.io.Serializable
 		numberOfItems--;
 	}
     public boolean equals(Product check) {
-        if(check.getName().equals(name) && check.getBarCode() == barCode && check.productPrice() == productPrice) return true;
-        return false;
-    }
+		return check.getName().equals(name) && check.getBarCode() == barCode && check.productPrice() == productPrice;
+	}
 
 }

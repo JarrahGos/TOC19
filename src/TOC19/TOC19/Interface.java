@@ -63,12 +63,14 @@ import java.util.List;
 
 public final class Interface extends Application
 {
-	// Create the necessary instance variables.
+	/** The class which the user logs into and which handles all interaction with the program. */
 	private final WorkingUser workingUser; // Place for all data to go through
+	/** the number of horisontal pixels, defaulted to 1024 but set by the settings class */
 	private static int horizontalSize = 1024;
+	/** the number of vertical pixels, defaulted to 576 but set by the settings class */
 	private static int verticalSize = 576;
+	/** The text size of the program, set by the settings class */
 	private final int textSize;
-	Settings config;
 
 
     /**
@@ -77,7 +79,7 @@ public final class Interface extends Application
      */
 	public Interface() throws IOException
 	{
-		config = new Settings();
+		Settings config = new Settings();
 		workingUser = new WorkingUser();
 		String[] settings = config.interfaceSettings();
 		horizontalSize = Integer.parseInt(settings[0]);
@@ -288,23 +290,32 @@ public final class Interface extends Application
                 itemList.setItems(items); //TODO: add select top.
                 total.setText(String.valueOf("$" + workingUser.getPrice()));
                 itemList.scrollTo(index);
+				flashColour(removeProduct, 1500, Color.AQUAMARINE);
             }
+			else flashColour(removeProduct, 1500, Color.RED);
         });
         grid.add(removeProduct, 2,8); // add the button to the bottum left of the screen.
 
                 // create and listen on purchase button
         Button purchase = new Button("Purchase"); // button which will add the cost of the items to the users bill
         purchase.setOnAction((ActionEvent e) -> {
-			workingUser.buyProducts(); // add the cost to the bill. 
-			grid.getChildren().remove(userLabel); // make it look like the user has been logged out. 
-			inputLabel.setText("Enter your PMKeyS"); // Set the input label to something better for user login. 
-			total.setText(String.valueOf(workingUser.getPrice())); //set total to the working users price, which after logout is 0.00
-			input.clear(); // clear the input ready for a PMKeyS
-			items.setAll(workingUser.getCheckOutNames());
-			itemList.setItems(items);
-			prices.setAll(workingUser.getCheckOutPrices());
-			priceList.setItems(prices);
-			checkoutOut.setDividerPositions(0.8f);
+			if(workingUser.userLoggedIn()) {
+				workingUser.buyProducts(); // add the cost to the bill.
+				grid.getChildren().remove(userLabel); // make it look like the user has been logged out.
+				inputLabel.setText("Enter your PMKeyS"); // Set the input label to something better for user login.
+				total.setText(String.valueOf(workingUser.getPrice())); //set total to the working users price, which after logout is 0.00
+				input.clear(); // clear the input ready for a PMKeyS
+				items.setAll(workingUser.getCheckOutNames());
+				itemList.setItems(items);
+				prices.setAll(workingUser.getCheckOutPrices());
+				priceList.setItems(prices);
+				checkoutOut.setDividerPositions(0.8f);
+				flashColour(purchase, 1500, Color.AQUAMARINE);
+			}
+			else {
+				flashColour(purchase, 1500, Color.RED);
+				flashColour(input, 1500, Color.RED);
+			}
 		});
         grid.add(purchase, 4,8, 2,1); // add the button to the bottum right corner, next to the total price. 
                 
@@ -538,6 +549,7 @@ public final class Interface extends Application
 						@Override
 						public void changed(ObservableValue ov, Number value, Number newValue) {
 							workingUser.setUserCanBuy(personList.getSelectionModel().getSelectedItem(), canBuy.getSelectionModel().getSelectedIndex() == 0);
+							flashColour(canBuy, 1500, Color.AQUAMARINE);
 						}
 					});
 				}

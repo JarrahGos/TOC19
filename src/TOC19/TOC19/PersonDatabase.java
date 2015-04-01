@@ -27,7 +27,9 @@ import java.util.Arrays;
 
 final class PersonDatabase {
 
+	/** Stores the admin user for the TOC program. Used for getting the password. */
 	private static TOC19.Person admin;
+	/** Stores the path of the database as a string, based on the OS being run. */
 	private String databaseLocation;
 
     /**
@@ -37,9 +39,8 @@ final class PersonDatabase {
 	public PersonDatabase() {
 		try {
             Settings config = new Settings();
-            String settings = config.adminSettings();
-            admin = new Person(settings, 0, 0, 0, false);
 			databaseLocation = config.personSettings();
+			admin = readDatabasePerson(7000000);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -70,7 +71,6 @@ final class PersonDatabase {
      * Precondition: setDatabase has been run
      * Postcondition: the user will be see an output of the persons in the database.
      * @return A string containing the entire database
-     * @throws IOException
      */
 	public final String getDatabase() {
 		File root = new File (databaseLocation);
@@ -96,8 +96,6 @@ final class PersonDatabase {
      * Preconditions: setDatabase has been run
      * Postconditions: the chosen person will no longer exist.
      * @param personNo The barcode of the person you wish to delete
-     * @throws IOException
-     * @throws InterruptedException
      */
     public final void delPerson(String personNo) {
         try {
@@ -224,7 +222,6 @@ final class PersonDatabase {
      * Write out a CSV version of the database for future import.
      * @param path The path to the directory you wish to output to
      * @return An integer of 1 if the file was not found and 0 if it worked.
-     * @throws IOException
      */
 	public final int adminWriteOutDatabase(String path) { //TODO: Ensure this works as a CSV
 		PrintWriter outfile = null;
@@ -264,7 +261,7 @@ final class PersonDatabase {
         public final Person readDatabasePerson(long barcode){
             Person importing = null;
             try {
-                FileInputStream personIn = new FileInputStream(databaseLocation + String.valueOf(barcode) );
+                FileInputStream personIn = new FileInputStream(databaseLocation + barcode);
                 ObjectInputStream in = new ObjectInputStream(personIn);
                 importing = (Person)in.readObject();
                 in.close();

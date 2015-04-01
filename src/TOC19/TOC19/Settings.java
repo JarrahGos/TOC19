@@ -38,10 +38,16 @@ import java.util.Properties;
  */
 
 class Settings {
+	/** The properties object which is used to interact with the properties file */
 	private final Properties properties = new Properties();
+	/** the path to the properties file which contains the settings */
 	private final String propFileName = Compatibility.getFilePath("TOC19.properties");
+	/** an input stream which is used to access the properties file */
 	private InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(propFileName);
 
+	/**
+	 * Create an instance of the settings class from which to read settings from.
+	 */
 	public Settings() {
 		if (inputStream != null) return;
 
@@ -57,24 +63,11 @@ class Settings {
 		}
 	}
 
-	public final String adminSettings() throws FileNotFoundException
-	{
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			}
-			catch(IOException e) {
-				System.out.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		} 
-		else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
-		
-		String output;
-		output = properties.getProperty("adminPassword");
-		return output;
-	}
+	/**
+	 * Get the settings for the person database, specifically the location to store the database
+	 * @return The location in which the database is stored. This is checked for compatibility against the running OS
+	 * @throws FileNotFoundException if the settings file is not in the location it should be.
+	 */
 	public final String personSettings() throws FileNotFoundException
 	{
 		if (inputStream != null) {
@@ -94,6 +87,12 @@ class Settings {
 		output = Compatibility.getFilePath(output);
 		return output;
 	}
+
+	/**
+	 * Get the settings for the product datasbase, specifically the location to store the database in.
+	 * @return The location in which the database is stored. This is checked for compatibility against the running OS
+	 * @throws FileNotFoundException If the settings file is not in the location it should be.
+	 */
 	public final String productSettings() throws FileNotFoundException
 	{
 		if (inputStream != null) {
@@ -114,6 +113,11 @@ class Settings {
 		return output;
 	}
 
+	/**
+	 * Get the settings for the interface. Specifically the horizontal size, vertical size, (both in pixels) and the text size
+	 * @return A string array with the horizontal size, vertical size and textsize.
+	 * @throws FileNotFoundException If the settings file is not in the location it should be.
+	 */
 	public final String[] interfaceSettings() throws FileNotFoundException
 	{
 		if (inputStream != null) {

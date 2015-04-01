@@ -27,13 +27,17 @@ package TOC19;
 
 public final class Person implements java.io.Serializable
 {
-
-	// create the variables that are needed in order of use
+	/** The name of the person */
 	private String name;
-//	private StringBuilder output;
-	private long totalCostRunning, totalCostWeek; // Running can be yearly, or can be perminant. Up to TOC. Weekly will be reset each stocktake
+	/** The total amount the person has spent using the program. */
+	private long totalCostRunning;
+	/** The cost of the current bill for the person */
+	private long totalCostWeek;
+	/** The persons user number or barcode, used to log in */
 	private long barCode; // PMKeys number off ID
+	/** whether or not the user can buy from the program */
 	private boolean canBuy;
+	/** A version number to stop java breaking the serialisation storage */
     private static final long serialVersionUID = 126491946;
 
     /**

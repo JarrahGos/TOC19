@@ -24,16 +24,21 @@ import java.util.LinkedList;
 * Author: Jarrah Gosbell
 * Student Number: z5012558
 * Class: CheckOut
-* Description: This program will allow for the creation, retreval, modification and deletion of checkOuts created from products in the product database.
+* Description: This program will allow for the creation, retrieval, modification and deletion of checkOuts created from products in the product database.
 */
 
 final class CheckOut
 {
 	// create the necessary variables in the order of use
+    /** A list of all products which are currently in the checkout */
 	private ArrayList<Product> products;
+    /** A list corrisponding to products which contains integers, each denoting the number of it's respective product being bought */
 	private LinkedList<Integer> quantities;
+    /** The size of the above two lists */
 	private int logicalSize;
+    /** The sum of the prices of the products stored. Calculated as sum(products[i] = quantities[i]) */
 	private long totalPrice;
+
     private int first;
 
     /**
@@ -152,13 +157,23 @@ final class CheckOut
      * Reduce the stock counts for the purchased products and return the product array to be stored
      * @return The product array, having been reduced in stock. 
      */
-	public final Product[] productBought()
-	{
-		for(int i = logicalSize -1; i > 0; i--) {
-			for (int z = 0; z < quantities.get(i); z++) {
-				products.get(i).decrementNumber();
-			}
-		}
+	public final Product[] productBought() //TODO: remove easter eggs before they are written to the database. The below doesn't do it.
+    {
+        for (int i = logicalSize - 1; i > 0; i--) {
+            for (int z = 0; z < quantities.get(i); z++) {
+                products.get(i).decrementNumber();
+            }
+        }
+        if (products.contains(new Product("That's a paycheck", 0, -1651198189))) {
+            products.remove(products.indexOf(new Product("That's a paycheck", 0, -1651198189)));
+            products.remove(products.indexOf(new Product("The high roller has come to town.", 0, -3546654)));
+        }
+        else if(products.contains(new Product("The high roller has come to town.", 0, -3546654))) {
+            products.remove(products.indexOf(new Product("The high roller has come to town.", 0, -3546654)));
+        }
+        if(products.contains(new Product("Buying yourself are you? You can't do that.", 0, WorkingUser.getLogedInBarcode()))) {
+            products.remove(products.indexOf(new Product("Buying yourself are you? You can't do that.", 0, WorkingUser.getLogedInBarcode())));
+        }
 		return products.toArray(new Product[products.size()]);
 	}
 }
