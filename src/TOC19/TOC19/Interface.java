@@ -34,6 +34,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -157,6 +158,7 @@ public final class Interface extends Application
 				
 		grid.add(checkoutOut, 0,1,7,7);
 
+		bind(itemList, priceList);
         //listen on enter product barcode button
 		enterBarCode.setOnAction((ActionEvent e) -> {
 				if(!workingUser.userLoggedIn()) { // treat the input as a PMKeyS
@@ -237,6 +239,7 @@ public final class Interface extends Application
 						grid.add(userLabel, 3,0);
 						input.clear();
 						flashColour(input, 1500, Color.AQUAMARINE);
+						checkoutOut.setDividerPositions(0.8f);
 					}
 					else {
 						input.clear();
@@ -301,6 +304,7 @@ public final class Interface extends Application
 			itemList.setItems(items);
 			prices.setAll(workingUser.getCheckOutPrices());
 			priceList.setItems(prices);
+			checkoutOut.setDividerPositions(0.8f);
 		});
         grid.add(purchase, 4,8, 2,1); // add the button to the bottum right corner, next to the total price. 
                 
@@ -313,7 +317,8 @@ public final class Interface extends Application
 			itemList.setItems(items);
 			prices.setAll(workingUser.getCheckOutPrices());
 			priceList.setItems(prices);
-			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00. 
+			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
+			checkoutOut.setDividerPositions(0.8f);
 		});
 		grid.add(cancel, 4,0, 2,1); // add the button to the right of the user name. 
 		Platform.setImplicitExit(false);
@@ -840,6 +845,12 @@ public final class Interface extends Application
                 
 	}
 
+	/**
+	 * Flash the given node a given colour for a given time
+	 * @param node The node to be flashed
+	 * @param duration the duration in ms for the node to be flashed
+	 * @param colour The colour (from Color) that you wish to flash.
+	 */
 	public static void flashColour(Node node, int duration, Color colour){
 
 		InnerShadow shadow = new InnerShadow();
@@ -859,7 +870,49 @@ public final class Interface extends Application
 		time.playFromStart();
 	}
 
-    /**
+	/**
+	 * Bind the scrollbars of two listviews
+	 * @param lv1 The first listview to bind
+	 * @param lv2 The second Listview to bind
+	 */
+	public static void bind(ListView lv1, ListView lv2) {
+		ScrollBar bar1 = null;
+		ScrollBar bar2 = null;
+
+		for (Node node : lv1.lookupAll(".scroll-bar")) {
+			if (node instanceof ScrollBar && ((ScrollBar)node).getOrientation().equals(Orientation.VERTICAL)) {
+				bar1 = (ScrollBar)node;
+			}
+		}
+		for (Node node : lv2.lookupAll(".scroll-bar")) {
+			if (node instanceof ScrollBar && ((ScrollBar)node).getOrientation().equals(Orientation.VERTICAL)) {
+				bar2 = (ScrollBar)node;
+			}
+		}
+		if (bar1 == null || bar2 == null) return;
+
+		final ScrollBar fbar1 = bar1;
+		final ScrollBar fbar2 = bar2;
+		if (fbar1 != null) {
+			fbar1.valueProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					fbar2.setValue(newValue.doubleValue());
+				}
+			});
+		}
+		if (fbar2 != null) {
+			fbar2.valueProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					fbar1.setValue(newValue.doubleValue());
+				}
+			});
+		}
+	}
+
+
+	/**
      * The main method of the program
      * @param args No arguments needed, -w int for width, -h int for height, both in pixels.
      */
