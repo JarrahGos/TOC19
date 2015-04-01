@@ -763,7 +763,7 @@ public final class Interface extends Application
 				}
 				else if(selectedOption.equals("Save Databases To USB")) { //TODO: Bring admin stage to front after
 
-					final File[] saveDir = new File[1];
+					final File saveDir = new File;
 
 					DirectoryChooser fc = new DirectoryChooser();
 
@@ -785,7 +785,7 @@ public final class Interface extends Application
 
 						if (returnVal != null) {
 							filePath.setText(returnVal.getPath());
-							saveDir[0] = returnVal;
+							saveDir = returnVal;
 							flashColour(saveDirBtn, 1500, Color.AQUAMARINE);
 						}else{
 							flashColour(saveDirBtn, 1500, Color.RED);
@@ -800,9 +800,8 @@ public final class Interface extends Application
 							File adminPersonFile = new File(Compatibility.getFilePath("adminPersonDatabase.csv"));
 							File adminProductFile = new File(Compatibility.getFilePath("adminProductDatabase.csv"));
 
-							adminPersonFile.renameTo(new File(saveDir[0].getAbsolutePath() + "\\adminPersonDatabase.csv"));
-							adminProductFile.renameTo(new File(saveDir[0].getAbsolutePath() + "\\adminProductDatabase" +
-									                               ".csv"));
+							adminPersonFile.copy(new Path(saveDir.getAbsolutePath() + "\\adminPersonDatabase.csv", adminPersonFile.getPath()));
+							adminProductFile.copy(new Path(saveDir.getAbsolutePath() + "\\adminProductDatabase.csv"), adminProductFile.getPath());
 							flashColour(saveBtn, 3000, Color.AQUAMARINE);
 
 						} catch (IOException e1) {
