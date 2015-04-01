@@ -48,11 +48,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -765,8 +765,7 @@ public final class Interface extends Application
 
 					final File[] saveDir = new File[1];
 
-					JFileChooser fc = new JFileChooser();
-					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					DirectoryChooser fc = new DirectoryChooser();
 
 
 					grid.getChildren().clear();
@@ -782,11 +781,11 @@ public final class Interface extends Application
 					grid.add(saveDirBtn,1,1);
 
 					saveDirBtn.setOnAction((ActionEvent e) -> {
-						int returnVal = fc.showDialog(null, "Select File");
+						File returnVal = fc.showDialog(adminStage);
 
-						if (returnVal == JFileChooser.APPROVE_OPTION) {
-							filePath.setText(fc.getSelectedFile().getAbsolutePath());
-							saveDir[0] = fc.getSelectedFile();
+						if (returnVal != null) {
+							filePath.setText(returnVal.getPath());
+							saveDir[0] = returnVal;
 							flashColour(saveDirBtn, 1500, Color.AQUAMARINE);
 						}else{
 							flashColour(saveDirBtn, 1500, Color.RED);
