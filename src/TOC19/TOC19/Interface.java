@@ -453,7 +453,7 @@ public final class Interface extends Application
 						}
 						else {
 							flashColour(nameEntry, 1500, Color.RED);
-							flashColour(PMKeySEntry, 1500, Color.RED;
+							flashColour(PMKeySEntry, 1500, Color.RED);
 						}
 					});
 					
@@ -769,7 +769,7 @@ public final class Interface extends Application
 				}
 				else if(selectedOption.equals("Save Databases To USB")) { //TODO: Bring admin stage to front after
 
-					final File saveDir = new File;
+					final File saveDir = new File();
 
 					DirectoryChooser fc = new DirectoryChooser();
 
