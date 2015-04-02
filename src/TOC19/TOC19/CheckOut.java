@@ -32,7 +32,7 @@ final class CheckOut
 	// create the necessary variables in the order of use
     /** A list of all products which are currently in the checkout */
 	private ArrayList<Product> products;
-    /** A list corrisponding to products which contains integers, each denoting the number of it's respective product being bought */
+    /** A list corresponding to products which contains integers, each denoting the number of it's respective product being bought */
 	private LinkedList<Integer> quantities;
     /** The size of the above two lists */
 	private int logicalSize;
@@ -133,8 +133,8 @@ final class CheckOut
 	{
 		/**
 		Class CheckOut: Method delProduct
-		Preconditions: productNo has been entered as an integer paremiter
-		PostConditions: the product corrisponding to productNo will have been deleted
+		Preconditions: productNo has been entered as an integer parameter
+		PostConditions: the product corresponding to productNo will have been deleted
 		*/
 		
 		if(productNo < logicalSize) { // check that the product exists
@@ -157,22 +157,12 @@ final class CheckOut
      * Reduce the stock counts for the purchased products and return the product array to be stored
      * @return The product array, having been reduced in stock. 
      */
-	public final Product[] productBought() //TODO: remove easter eggs before they are written to the database. The below doesn't do it.
+	public final Product[] productBought()
     {
         for (int i = logicalSize - 1; i > 0; i--) {
             for (int z = 0; z < quantities.get(i); z++) {
                 products.get(i).decrementNumber();
             }
-        }
-        if (products.contains(new Product("That's a paycheck", 0, -1651198189))) {
-            products.remove(products.indexOf(new Product("That's a paycheck", 0, -1651198189)));
-            products.remove(products.indexOf(new Product("The high roller has come to town.", 0, -3546654)));
-        }
-        else if(products.contains(new Product("The high roller has come to town.", 0, -3546654))) {
-            products.remove(products.indexOf(new Product("The high roller has come to town.", 0, -3546654)));
-        }
-        if(products.contains(new Product("Buying yourself are you? You can't do that.", 0, WorkingUser.getLogedInBarcode()))) {
-            products.remove(products.indexOf(new Product("Buying yourself are you? You can't do that.", 0, WorkingUser.getLogedInBarcode())));
         }
 		return products.toArray(new Product[products.size()]);
 	}

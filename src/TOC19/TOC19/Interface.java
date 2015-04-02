@@ -65,7 +65,7 @@ public final class Interface extends Application
 {
 	/** The class which the user logs into and which handles all interaction with the program. */
 	private final WorkingUser workingUser; // Place for all data to go through
-	/** the number of horisontal pixels, defaulted to 1024 but set by the settings class */
+	/** the number of horizontal pixels, defaulted to 1024 but set by the settings class */
 	private static int horizontalSize = 1024;
 	/** the number of vertical pixels, defaulted to 576 but set by the settings class */
 	private static int verticalSize = 576;
@@ -887,7 +887,7 @@ public final class Interface extends Application
 	 * @param lv1 The first listview to bind
 	 * @param lv2 The second Listview to bind
 	 */
-	public static void bind(ListView lv1, ListView lv2) {
+	public static void bind(ListView lv1, ListView lv2) { //TODO: this does not work.
 		ScrollBar bar1 = null;
 		ScrollBar bar2 = null;
 
