@@ -65,7 +65,7 @@ public final class Interface extends Application
 {
 	/** The class which the user logs into and which handles all interaction with the program. */
 	private final WorkingUser workingUser; // Place for all data to go through
-	/** the number of horisontal pixels, defaulted to 1024 but set by the settings class */
+	/** the number of horizontal pixels, defaulted to 1024 but set by the settings class */
 	private static int horizontalSize = 1024;
 	/** the number of vertical pixels, defaulted to 576 but set by the settings class */
 	private static int verticalSize = 576;
@@ -150,17 +150,17 @@ public final class Interface extends Application
 		checkoutOut.setDividerPositions(0.8f);
 		itemList.setSelectionModel(priceList.getSelectionModel());
 		itemList.getSelectionModel().selectedItemProperty().addListener(
-            (ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
-				priceList.scrollTo(itemList.getSelectionModel().getSelectedIndex());
-		});
+				(ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
+					priceList.scrollTo(itemList.getSelectionModel().getSelectedIndex());
+				});
 		priceList.getSelectionModel().selectedItemProperty().addListener(
-            (ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
-				itemList.scrollTo(priceList.getSelectionModel().getSelectedIndex());
-		});
+				(ObservableValue<? extends String> ov, String old_val, String selectedOption) -> {
+					itemList.scrollTo(priceList.getSelectionModel().getSelectedIndex());
+				});
 				
-		grid.add(checkoutOut, 0,1,7,7);
+		grid.add(checkoutOut, 0, 1, 7, 7);
 
-		bind(itemList, priceList);
+//		bind(itemList, priceList);
         //listen on enter product barcode button
 		enterBarCode.setOnAction((ActionEvent e) -> {
 				if(!workingUser.userLoggedIn()) { // treat the input as a PMKeyS
@@ -177,7 +177,7 @@ public final class Interface extends Application
 							public void run()
 							{
 								try {
-									Thread.sleep(90000); // after this time, log the user out. 
+									Thread.sleep(1); // after this time, log the user out.
 									workingUser.logOut(); // set user number to -1 and delete any checkout made. 
 
 									grid.getChildren().remove(userLabel); // make it look like no user is logged in
@@ -411,25 +411,28 @@ public final class Interface extends Application
 		grid.setPadding(new Insets(15, 15, 15, 15));
 		ListView<String> optionList = new ListView<>();
 		ObservableList<String> items = FXCollections.observableArrayList();
-		items.setAll("Add Person", "Remove Person", "List People", "Lock People Out", "Save Person Database");
+		final String[] PersonSettingsList = {"Add Person", "Remove Person", "List People", "Lock People Out", "Save Person Database"};
+		final String[] ProductSettingsList = {"Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database"};
+		final String[] AdminSettingsList = {"Reset Bills", "Change Password", "Save Databases To USB", "Close The Program"};
+		items.setAll(PersonSettingsList);
 		optionList.setItems(items);
 		
 		grid.add(optionList, 0,0, 1, 7);
 		Button people = new Button("People");
 		people.setOnAction((ActionEvent e) -> {
-			items.setAll("Add Person", "Remove Person", "List People", "Lock People Out", "Save Person Database");
+			items.setAll(PersonSettingsList);
 			optionList.setItems(items);
 			optionList.getSelectionModel().select(0);
 		});
 		Button products = new Button("Products");
 		products.setOnAction((ActionEvent e) -> {
-			items.setAll("Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database");
+			items.setAll(ProductSettingsList);
 			optionList.setItems(items);
 			optionList.getSelectionModel().select(0);
 		});
 		Button admin = new Button("Admin");
 		admin.setOnAction((ActionEvent e) -> {
-			items.setAll("Reset Bills", "Change Password", "Save Databases To USB", "Close The Program");
+			items.setAll(AdminSettingsList);
 			optionList.setItems(items);
 			optionList.getSelectionModel().select(0);
 		});
@@ -887,7 +890,7 @@ public final class Interface extends Application
 	 * @param lv1 The first listview to bind
 	 * @param lv2 The second Listview to bind
 	 */
-	public static void bind(ListView lv1, ListView lv2) {
+	public static void bind(ListView lv1, ListView lv2) { //TODO: this does not work.
 		ScrollBar bar1 = null;
 		ScrollBar bar2 = null;
 

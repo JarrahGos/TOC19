@@ -18,11 +18,9 @@ package TOC19;
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Author: Jarrah Gosbell
-* Student Number: z5012558
-* Class: Product
-* Description: This program will allow for the input and retreval of products in the product database.
+/**
+* @author Jarrah Gosbell
+* This program will allow for the input and retrieval of products in the product database.
 */
 
 public final class Product implements java.io.Serializable
@@ -126,7 +124,7 @@ public final class Product implements java.io.Serializable
      * Get the barcode of the item.
      * @return The barcode of the item.
      */
-	public final long getBarCode() // return the barcode assoiated with the product
+	public final long getBarCode() // return the barcode assisted with the product
 	{
 		 return barCode;
 	}
@@ -136,7 +134,7 @@ public final class Product implements java.io.Serializable
      * This is useful for correct calculations, but not for display.
      * @return The price of the item as a long (multiplied by 100 such that the decimal places are the last two digits).
      */
-	public final long productPrice() // retung the size of the product. 
+	public final long productPrice() // return the size of the product.
 	{
 		return productPrice;
 	}
@@ -148,6 +146,12 @@ public final class Product implements java.io.Serializable
 	{
 		numberOfItems--;
 	}
+
+	/**
+	 * Determine whether a product is equal to this one
+	 * @param check The product to check
+	 * @return The boolean of whether the name, barcode and price are the same.
+	 */
     public boolean equals(Product check) {
 		return check.getName().equals(name) && check.getBarCode() == barCode && check.productPrice() == productPrice;
 	}

@@ -305,7 +305,7 @@ final class PersonDatabase {
 
     /**
      * Reads one person from the database
-     * @param name The name of the preson you wish to read
+     * @param name The name of the person you wish to read
      * @return The person in the database which correlates with the name, or null if the person is not found
      */
          public final Person readDatabasePerson(String name) {

@@ -18,11 +18,9 @@ package TOC19;
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Author: Jarrah Gosbell
-* Student Number: z5012558
-* Class: Person
-* Description: This program will allow for the input and retreval of persons in the person database.
+/**
+* @author Jarrah Gosbell
+* This program will allow for the input and retrieval of persons in the person database.
 */
 
 public final class Person implements java.io.Serializable
@@ -48,7 +46,7 @@ public final class Person implements java.io.Serializable
      * @param week The current bill of the person.
      * @param extCanBuy Whether the person can buy or not.
      */
-	public Person(String extName, long extBarCode, long running, long week, boolean extCanBuy) // construtor which will give the person its values
+	public Person(String extName, long extBarCode, long running, long week, boolean extCanBuy) // constructor which will give the person its values
 	{
 		name = extName;
 		barCode = extBarCode;
@@ -77,14 +75,14 @@ public final class Person implements java.io.Serializable
 
     /**
      * Get the name of the person.
-     * @return The nmae of the person
+     * @return The name of the person
      */
 	public final String getName() // return the name of the person
 	{
 		/**
 		Class Person: Method getData
 		Precondition: setData has been run for invoking person
-		Post condition: the method will return a string contianing the name.
+		Post condition: the method will return a string containing the name.
 		*/
 
 		return name;
@@ -94,7 +92,7 @@ public final class Person implements java.io.Serializable
      * Get the barcode of the person.
      * @return The barcode of the person.
      */
-	public final long getBarCode() // return the barcode assoiated with the person
+	public final long getBarCode() // return the barcode associated with the person
 	{
 		 /**
 		 Class Person: Method getBarCode
@@ -105,7 +103,7 @@ public final class Person implements java.io.Serializable
 	}
 
     /**
-     * Get the total bill of the person since their additon to the program.
+     * Get the total bill of the person since their addition to the program.
      * @return The total bill of the person as a double
      */
 	public final double totalCostRunning()
@@ -123,7 +121,7 @@ public final class Person implements java.io.Serializable
      * Get the current bill cost of the person.
      * @return The current bill cost of the person as a double.
      */
-	public final double totalCostWeek() // retung the size of the person. 
+	public final double totalCostWeek() // return the size of the person.
 	{
 		/**
 		Class Person: Method totalCostRunning

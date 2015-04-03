@@ -182,6 +182,7 @@ final class ProductDatabase
      * @return An integer, 0 meaning correct completion, 1 meaning an exception. Exception will be printed.
      */
 	final int writeOutDatabaseProduct(Product productOut) {
+        if(productOut.productPrice() == 0) return 1;
             try {
                 File check = new File(databaseLocation + productOut.getName());
                 if(check.exists()) check.delete();
@@ -212,6 +213,7 @@ final class ProductDatabase
      */
 	public final void writeOutDatabase(Product[] productsOut) {
 		for (Product productOut : productsOut) {
+            if(productOut.productPrice() == 0) continue;
 			try {
                 File check = new File(databaseLocation + productOut.getName());
                 if(check.exists()) check.delete();
