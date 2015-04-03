@@ -41,6 +41,9 @@ public class Compatibility {
 	  * @return The path, based on the OS being used.
 	  */
 	public static String getFilePath(String file){
+		if(file.startsWith("./") && isWindows()){
+			file = file.replaceFirst("./", "");
+		}
 		return isWindows()? System.getProperty("user.dir") + "\\" + file : file;
 	}
 
