@@ -80,6 +80,10 @@ class WorkingUser {
     public final String[] getUserNames() {
         return personDatabase.getUserNames();
     }
+    
+    public final Person getUser(String name){
+        return personDatabase.readDatabasePerson(name);
+    }
 
     /**
      * Get a list of the names of all products in the database
@@ -304,6 +308,18 @@ class WorkingUser {
      */
     public final void changeDatabaseProduct(String name, String oldName, long price, long barcode, long oldBarcode) {
         productDatabase.changeDatabaseProduct(name, oldName, price, barcode, oldBarcode);
+    }
+
+
+    /**
+     * Alter a product in the database
+     * @param selectedIndex
+     * @param name The new name of the person
+     * @param pmkeys The new PMKeyS of the person
+     * @param oldPmkeys The old PMKeyS of the person
+     */
+    public final void changeDatabasePerson(String selectedIndex, String name, long pmkeys, long oldPmkeys) {
+        personDatabase.changeDatabasePerson(selectedIndex, name, pmkeys, oldPmkeys);
     }
 
     /**

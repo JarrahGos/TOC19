@@ -402,4 +402,13 @@ final class PersonDatabase {
 		set.setCanBuy(canBuy);
 		writeOutDatabasePerson(set);
 	}
+
+	public void changeDatabasePerson(String selectedIndex, String name, long pmkeys, long oldPmkeys) 
+	{
+		Person oldPerson = readDatabasePerson(oldPmkeys);
+		Person newPerson = new Person(name, pmkeys, (long)oldPerson.totalCostRunning()*100, (long)oldPerson.totalCostWeek() *100,oldPerson.canBuy());
+
+		delPerson(selectedIndex);
+		writeOutDatabasePerson(newPerson);
+	}
 }

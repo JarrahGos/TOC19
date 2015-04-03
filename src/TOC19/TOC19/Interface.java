@@ -411,7 +411,7 @@ public final class Interface extends Application
 		grid.setPadding(new Insets(15, 15, 15, 15));
 		ListView<String> optionList = new ListView<>();
 		ObservableList<String> items = FXCollections.observableArrayList();
-		final String[] PersonSettingsList = {"Add Person", "Remove Person", "List People", "Lock People Out", "Save Person Database"};
+		final String[] PersonSettingsList = {"Add Person", "Remove Person", "Change a Person", "List People", "Lock People Out", "Save Person Database"};
 		final String[] ProductSettingsList = {"Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database"};
 		final String[] AdminSettingsList = {"Reset Bills", "Change Password", "Save Databases To USB", "Close The Program"};
 		items.setAll(PersonSettingsList);
@@ -504,6 +504,52 @@ public final class Interface extends Application
 					});
 					
 				}
+				else if(selectedOption.equals("Change a Person")){
+					grid.getChildren().clear();
+					ListView<String> personList = new ListView<>();
+					ObservableList<String> person = FXCollections.observableArrayList();
+					person.setAll(workingUser.getUserNames());
+					personList.setItems(person);
+					grid.add(personList, 0, 0, 1, 4);
+					Text nameLabel = new Text("Name:");
+					grid.add(nameLabel, 1, 0);
+					TextField nameEntry = new TextField();
+					nameEntry.requestFocus();
+					grid.add(nameEntry, 2, 0);
+					Text pmkeysLabel = new Text("PMKeyS:");
+					grid.add(pmkeysLabel, 1,1);
+					TextField pmkeys = new TextField();
+					grid.add(pmkeys, 2, 1);
+					personList.getSelectionModel().selectedItemProperty().addListener(
+							                                                                 (ObservableValue<? extends String> vo, String oldVal, String selectedPerson) -> {
+								                                                                 if(selectedPerson != null) {
+																									 nameEntry.setText(selectedPerson);
+																									 String pmkeysVal = String.valueOf(workingUser.getUser(selectedPerson).getBarCode());
+																									 pmkeys.setText(pmkeysVal);
+																								 }
+							                                                                 });
+					nameEntry.setOnAction((ActionEvent e) -> {
+						pmkeys.requestFocus();
+					});
+
+					pmkeys.setOnAction((ActionEvent e) -> {
+						long pmkeysNew = Long.parseLong(pmkeys.getText());
+						
+						Person oldPerson = workingUser.getUser(personList.getSelectionModel().getSelectedItem());
+						
+						workingUser.changeDatabasePerson(personList.getSelectionModel().getSelectedItem(), nameEntry.getText() , pmkeysNew, oldPerson.getBarCode());
+						nameEntry.clear();
+						pmkeys.clear();
+						nameEntry.requestFocus();
+						flashColour(nameEntry, 1500, Color.AQUAMARINE);
+						flashColour(pmkeys, 1500, Color.AQUAMARINE);
+						//Now need to update the form
+						String selectedIndex = personList.getSelectionModel().getSelectedItem();
+						person.setAll(workingUser.getUserNames());
+						personList.setItems(person);
+						personList.getSelectionModel().select(selectedIndex);
+					});
+				}
 				else if(selectedOption.equals("List People")) {
 					grid.getChildren().clear();
 					ScrollPane users = null;
@@ -512,14 +558,14 @@ public final class Interface extends Application
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					grid.add(users, 0,0);
+					grid.add(users, 0, 0);
 				}
 				else if(selectedOption.equals("Save Person Database")) {
 					grid.getChildren().clear();
 					Button save = new Button("Save Person Database");
 					Text saveLabel = new Text("Save database to adminPersonDatabase.txt?");
 					grid.add(saveLabel, 0,0);
-					grid.add(save, 0,1);
+					grid.add(save, 0, 1);
 					save.setOnAction((ActionEvent e) -> {
 						try {
 							workingUser.adminWriteOutDatabase("Person");
@@ -542,12 +588,11 @@ public final class Interface extends Application
 					canBuy.getItems().addAll("unlocked", "Locked");
 					grid.add(canBuy, 1,0);
 					personList.getSelectionModel().selectedItemProperty().addListener(
-					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
-						if(workingUser.userCanBuyAdmin(personList.getSelectionModel().getSelectedItem())) {
-							canBuy.getSelectionModel().select(0);
-						}
-						else canBuy.getSelectionModel().select(1);
-					});
+							(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
+								if (workingUser.userCanBuyAdmin(personList.getSelectionModel().getSelectedItem())) {
+									canBuy.getSelectionModel().select(0);
+								} else canBuy.getSelectionModel().select(1);
+							});
 					canBuy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number> () {
 						@Override
 						public void changed(ObservableValue ov, Number value, Number newValue) {
@@ -564,9 +609,9 @@ public final class Interface extends Application
 					nameEntry.requestFocus();
 					grid.add(nameEntry, 1, 0);
 					Text BarCodeLabel = new Text("Barcode:");
-					grid.add(BarCodeLabel, 0,1);
+					grid.add(BarCodeLabel, 0, 1);
 					TextField BarCodeEntry = new TextField();
-					grid.add(BarCodeEntry, 1,1);
+					grid.add(BarCodeEntry, 1, 1);
 					Text priceLabel = new Text("Price: $");
 					grid.add(priceLabel, 0,2);
 					TextField priceEntry = new TextField();
@@ -711,7 +756,7 @@ public final class Interface extends Application
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					grid.add(productList, 0,0);
+					grid.add(productList, 0, 0);
 				}
 				else if(selectedOption.equals("Save Product Database")) {
 					grid.getChildren().clear();
@@ -734,8 +779,8 @@ public final class Interface extends Application
 					Button save = new Button("Reset Bills");
 					Text saveLabel = new Text("Are you sure you would like to reset the bills? \nThis cannot be undone.");
 					saveLabel.setTextAlignment(TextAlignment.CENTER);
-					grid.add(saveLabel, 0,0,2,1);
-					grid.add(save, 1,1);
+					grid.add(saveLabel, 0, 0, 2, 1);
+					grid.add(save, 1, 1);
 					save.setOnAction((ActionEvent e) -> {
 							workingUser.resetBills();
                             flashColour(save, 1500, Color.AQUAMARINE);
@@ -755,18 +800,17 @@ public final class Interface extends Application
 					grid.add(oldPW, 1,0);
 					Text error = new Text();
 					oldPW.setOnAction((ActionEvent e) -> {
-						if(!workingUser.passwordsEqual(oldPW.getText())) {
+						if (!workingUser.passwordsEqual(oldPW.getText())) {
 							error.setText("Password incorrect");
 							oldPW.setText("");
 							grid.getChildren().remove(error);
-							grid.add(error, 2,0);
+							grid.add(error, 2, 0);
 							flashColour(oldPW, 1500, Color.RED);
-						}
-						else {
-							grid.add(newLabel, 0,1);
-							grid.add(newPW,1,1);
-							grid.add(againLabel, 0,2);
-							grid.add(newPW2, 1,2);
+						} else {
+							grid.add(newLabel, 0, 1);
+							grid.add(newPW, 1, 1);
+							grid.add(againLabel, 0, 2);
+							grid.add(newPW2, 1, 2);
 							newPW.requestFocus();
 							grid.getChildren().remove(error);
 						}
@@ -785,7 +829,7 @@ public final class Interface extends Application
 						else {
 							error.setText("Passwords do not match");
 							grid.getChildren().remove(error);
-							grid.add(error, 1,3);
+							grid.add(error, 1, 3);
 						}
 					});
 				}
