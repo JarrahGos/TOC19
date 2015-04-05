@@ -18,6 +18,8 @@ package TOC19;
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import java.time.LocalDateTime;
+
 /**
  * @author Michael Brock
  *  This class is for convenience in transporting transaction information throughtout the program.
@@ -32,11 +34,14 @@ public class Transaction {
     private Product[] products;
     /** The quantities of the products bought */
     private Integer[] quantities;
+    /** The date and time of the transaction */
+    private LocalDateTime timestamp;
 
-    public Transaction(Person person, Product[] productArray, Integer[] amounts) {
+    public Transaction(Person person, Product[] productArray, Integer[] amounts, LocalDateTime time) {
         user = person;
         products = productArray;
         quantities = amounts;
+        timestamp = time;
     }
 
     public Product[] getProducts() {
@@ -49,5 +54,9 @@ public class Transaction {
 
     public Integer[] getQuantities() {
         return quantities;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 }

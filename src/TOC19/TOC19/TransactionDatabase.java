@@ -25,6 +25,7 @@ package TOC19;
 
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class TransactionDatabase {
@@ -62,23 +63,20 @@ public class TransactionDatabase {
                 db.getParentFile().mkdirs();
                 db.createNewFile();
             }
-            Date date = new Date();
-            String time = date.toString();
-            
             StringBuilder transactionString = new StringBuilder();
-            transactionString.append(time + ",");
+            transactionString.append(transaction.getTimestamp() + ",");
             
             Product[] products = transaction.getProducts();
             Integer[] quantities = transaction.getQuantities();
             
             
             //Now write the data to the DB
-            FileOutputStream out = new FileOutputStream(databaseLocation + transaction.getUser().getBarCode() + ".csv", true);
+            FileOutputStream out = new FileOutputStream(databaseLocation + transaction.getUser().getBarCode(), true);
             BufferedOutputStream bout = new BufferedOutputStream(out);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(bout, "UTF-8"));
 
             for (int i = 0; i < products.length; i++) {
-                transactionString.append(time + ":" + products[i].getName() + ":" + quantities[i] + ":" + products[i].productPrice() / 100D + ",");
+                transactionString.append(products[i].getName() + ":" + quantities[i] + ":" + products[i].productPrice() + ",");
             }
             
             writer.write(transactionString.toString() + '\n');
@@ -100,7 +98,39 @@ public class TransactionDatabase {
     /**
      * Not yet sure what to return for this, it will enable the reading of the database for display to admin
      */
-    public final void readTransactions() {
+    public final ArrayList<Transaction> readTransactions() {
 
+        //Need a better method than this but works for now
+        PersonDatabase personDatabase = new PersonDatabase();
+        
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        File root = new File(databaseLocation);
+        File[] list = root.listFiles();
+        for(File userDB: list){
+            try {
+                BufferedReader reader = new BufferedReader(new BufferedReader(new FileReader(userDB)));
+                String line = "";
+                while((line = reader.readLine()) != null){
+                    Map<Product, Integer> products = new HashMap<>();
+                   
+                    String[] elements = line.split(",");
+
+                    for (int i = 1; i < elements.length; i++) {
+                        String[] productString = elements[i].split(":");
+                        Product product = new Product(productString[0],Long.parseLong(productString[2]),-1);
+                        Integer quantity = Integer.parseInt(productString[1]);
+                        products.put(product, quantity);
+                    }
+                    //TL:DR Get rid of this ugly mess of a constructor....... Also work in the timestamp management
+                    Transaction transaction = new Transaction(personDatabase.readDatabasePerson(Integer.parseInt(userDB.getName())),products.keySet().toArray(new Product[]{}),products.values().toArray(new Integer[]{}), null);
+                    transactions.add(transaction);
+                }
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return transactions;
     }
 }

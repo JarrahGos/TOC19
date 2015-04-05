@@ -7,6 +7,7 @@ import javafx.scene.control.TextArea;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 /*
 *    TOC19 is a simple program to run TOC payments within a small group.
@@ -216,10 +217,11 @@ class WorkingUser {
         Product[] purchased = checkOuts.productBought(); // clear the quantities and checkout
         productDatabase.writeOutDatabase(purchased);
         personDatabase.writeOutDatabasePerson(user);
-        transactionDatabase.addTransactionToDatabase(new Transaction(user,checkOuts.getRawProducts(),checkOuts.getRawQuantities()));
-        //Transaction Database Call
+        transactionDatabase.addTransactionToDatabase(new Transaction(user,checkOuts.getRawProducts(),checkOuts.getRawQuantities(), LocalDateTime.now()));
         checkOuts = new CheckOut(); // ensure checkout clear
         user = null;
+        
+
     }
 
     /**
