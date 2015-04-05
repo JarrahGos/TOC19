@@ -38,7 +38,9 @@ class WorkingUser {
     private final PersonDatabase personDatabase;
     /** the checkout used to store what a person is purchasing at a given time */
     private CheckOut checkOuts;
-    /** The currently logged in user */
+    /** the database which stores all the completed transactions */
+    private TransactionDatabase transactionDatabase;
+     /** The currently logged in user */
     private static Person user;
 
     /**
@@ -48,6 +50,7 @@ class WorkingUser {
         productDatabase = new ProductDatabase();
         personDatabase = new PersonDatabase();
         checkOuts = new CheckOut();
+        transactionDatabase = new TransactionDatabase();
         user = null;
     }
 
@@ -80,7 +83,12 @@ class WorkingUser {
     public final String[] getUserNames() {
         return personDatabase.getUserNames();
     }
-    
+
+    /**
+     * Get a user for a given Name
+     * @param name name of user to get
+     * @return Person matching name or null if none exists
+     */
     public final Person getUser(String name){
         return personDatabase.readDatabasePerson(name);
     }
@@ -208,6 +216,8 @@ class WorkingUser {
         Product[] purchased = checkOuts.productBought(); // clear the quantities and checkout
         productDatabase.writeOutDatabase(purchased);
         personDatabase.writeOutDatabasePerson(user);
+        transactionDatabase.addTransactionToDatabase(new Transaction(user,checkOuts.getRawProducts(),checkOuts.getRawQuantities()));
+        //Transaction Database Call
         checkOuts = new CheckOut(); // ensure checkout clear
         user = null;
     }

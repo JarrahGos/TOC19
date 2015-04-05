@@ -150,6 +150,11 @@ public final class Person implements java.io.Serializable
 		totalCostWeek = 0;
 	}
 
+	/**
+	 * Reset the running cost for this person
+	 */
+	public final void resetTotalCost() {totalCostRunning = 0;}
+
     /**
      * Set the name of the person.
      * @param extName the new name for the person.

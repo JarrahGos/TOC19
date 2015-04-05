@@ -166,4 +166,21 @@ final class CheckOut
         }
 		return products.toArray(new Product[products.size()]);
 	}
+
+    /**
+     * Get the raw list of products in the checkout
+     * @return products list without any extra formatting
+     */
+    public final Product[] getRawProducts(){
+        return products.toArray(new Product[products.size()]);     
+    }
+
+    /**
+     * Get the raw list of quantities in the checkout
+     * @return quantities list without any extra formatting
+     */
+    public final Integer[] getRawQuantities(){
+        return quantities.toArray(new Integer[quantities.size()]);
+    }
+
 }

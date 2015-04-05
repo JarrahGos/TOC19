@@ -138,4 +138,24 @@ class Settings {
 		output[2] = properties.getProperty("textSize");
 		return output;
 	}
+
+	public final String[] transactionSettings() throws FileNotFoundException
+	{
+		if (inputStream != null) {
+			try {
+				properties.load(inputStream);
+			}
+			catch(IOException e) {
+				System.out.print("property file '" + propFileName + "' not found in the classpath");
+			}
+		}
+		else {
+			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+		}
+
+		String[] output = new String[3];
+		output[0] = properties.getProperty("transactionDatabaseLocation");
+		output[1] = properties.getProperty("transactionLogging");
+		return output;
+	}
 }
