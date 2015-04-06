@@ -133,4 +133,37 @@ public class TransactionDatabase {
 
         return transactions;
     }
+    
+ public final ArrayList<Transaction> readTransactionDatabase(String barcode){
+     //Need a better method than this but works for now
+     PersonDatabase personDatabase = new PersonDatabase();
+
+     ArrayList<Transaction> transactions = new ArrayList<>();
+     File userDB = new File(databaseLocation + barcode);
+         try {
+             BufferedReader reader = new BufferedReader(new BufferedReader(new FileReader(userDB)));
+             String line = "";
+             while((line = reader.readLine()) != null){
+                 Map<Product, Integer> products = new HashMap<>();
+
+                 String[] elements = line.split(",");
+
+                 for (int i = 1; i < elements.length; i++) {
+                     String[] productString = elements[i].split(":");
+                     Product product = new Product(productString[0],Long.parseLong(productString[2]),-1);
+                     Integer quantity = Integer.parseInt(productString[1]);
+                     products.put(product, quantity);
+                 }
+                 //TL:DR Get rid of this ugly mess of a constructor....... Also work in the timestamp management
+                 Transaction transaction = new Transaction(personDatabase.readDatabasePerson(Integer.parseInt(userDB.getName())),products.keySet().toArray(new Product[]{}),products.values().toArray(new Integer[]{}), null);
+                 transactions.add(transaction);
+             }
+
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+
+
+     return transactions;
+ }
 }
