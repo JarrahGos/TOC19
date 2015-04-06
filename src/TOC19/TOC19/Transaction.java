@@ -85,7 +85,9 @@ public class Transaction {
 		StringBuilder output = new StringBuilder();
 
 		for (int i = 0; i < products.length; i++) {
-			output.append(products[i].getData());
+			output.append("Product: " + products[i].getName() + '\n');
+			output.append("    Unit Price: $" + products[i].getDataPrice() + '\n');
+			output.append("    Quantity: " + quantities[i] + '\n');
 		}
 		return output.toString();
 	}
