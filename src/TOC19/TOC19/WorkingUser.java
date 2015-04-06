@@ -472,6 +472,13 @@ class WorkingUser {
         personDatabase.resetBills();
     }
 
+    /**
+     * Reset the Running totals of all users to zero.
+     */
+    public final void resetRunningCosts(){
+        personDatabase.resetRunningTotals();
+    }
+
     public static long getLogedInBarcode()
     {
         return user.getBarCode();

@@ -413,7 +413,7 @@ public final class Interface extends Application
 		ObservableList<String> items = FXCollections.observableArrayList();
 		final String[] PersonSettingsList = {"Add Person", "Remove Person", "Change a Person", "List People","List Transactions", "Lock People Out", "Save Person Database"};
 		final String[] ProductSettingsList = {"Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database"};
-		final String[] AdminSettingsList = {"Reset Bills", "Change Password", "Save Databases To USB", "Close The Program"};
+		final String[] AdminSettingsList = {"Reset Bills","Reset Running Costs", "Change Password", "Save Databases To USB", "Close The Program"};
 		items.setAll(PersonSettingsList);
 		optionList.setItems(items);
 		
@@ -793,7 +793,7 @@ public final class Interface extends Application
 							productList.setItems(product);
 						}
 				});
-					
+
 				}
 				else if( selectedOption.equals("Enter Stock Counts")) {
 					grid.getChildren().clear();
@@ -861,6 +861,20 @@ public final class Interface extends Application
                             flashColour(save, 1500, Color.AQUAMARINE);
 							save.setDisable(true);
 							save.setText("Bills Reset");
+					});
+				}
+				else if(selectedOption == "Reset Running Costs"){
+					grid.getChildren().clear();
+					Button save = new Button("Reset Running Costs");
+					Text saveLabel = new Text("Are you sure you would like to reset the running costs? \nThis cannot be undone.");
+					saveLabel.setTextAlignment(TextAlignment.CENTER);
+					grid.add(saveLabel, 0, 0, 2, 1);
+					grid.add(save, 1, 1);
+					save.setOnAction((ActionEvent e) -> {
+						workingUser.resetBills();
+						flashColour(save, 1500, Color.AQUAMARINE);
+						save.setDisable(true);
+						save.setText("Bills Reset");
 					});
 				}
 				else if(selectedOption.equals("Change Password")) {

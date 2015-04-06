@@ -384,6 +384,25 @@ final class PersonDatabase {
 		}
 	}
 
+	/**
+	 * Reset the current bill of the entire database to zero. Will not effect the running bill.
+	 */
+	public final void resetRunningTotals() {
+		File root = new File (databaseLocation);
+		File[] list = root.listFiles();
+		String[] stringList = new String[list.length];
+		for(int i = 0; i < list.length; i++) {
+			stringList[i] = list[i].getPath();
+		}
+		Person[] database = readDatabase(stringList);
+		for (Person person : database) {
+			if(person != null) {
+				person.resetTotalCost();
+				writeOutDatabasePerson(person);
+			}
+		}
+	}
+
     /**
      * Changes the Admin password to the one specified
      * @param extPassword The new password, prehashed.
