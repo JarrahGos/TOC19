@@ -22,41 +22,71 @@ import java.time.LocalDateTime;
 
 /**
  * @author Michael Brock
- *  This class is for convenience in transporting transaction information throughtout the program.
+ *         This class is for convenience in transporting transaction information throughtout the program.
  */
-
 
 public class Transaction {
 
-    /** The user that made the purchase */
-    private Person user;
-    /**The products bought in the transaction */
-    private Product[] products;
-    /** The quantities of the products bought */
-    private Integer[] quantities;
-    /** The date and time of the transaction */
-    private LocalDateTime timestamp;
+	/**
+	 * The user that made the purchase
+	 */
+	private Person user;
+	/**
+	 * The products bought in the transaction
+	 */
+	private Product[] products;
+	/**
+	 * The quantities of the products bought
+	 */
+	private Integer[] quantities;
+	/**
+	 * The date and time of the transaction
+	 */
+	private LocalDateTime timestamp;
 
-    public Transaction(Person person, Product[] productArray, Integer[] amounts, LocalDateTime time) {
-        user = person;
-        products = productArray;
-        quantities = amounts;
-        timestamp = time;
-    }
+	public Transaction(Person person, Product[] productArray, Integer[] amounts, LocalDateTime time) {
+		user = person;
+		products = productArray;
+		quantities = amounts;
+		timestamp = time;
+	}
 
-    public Product[] getProducts() {
-        return products;
-    }
+	public Product[] getProducts() {
+		return products;
+	}
 
-    public Person getUser() {
-        return user;
-    }
+	public Person getUser() {
+		return user;
+	}
 
-    public Integer[] getQuantities() {
-        return quantities;
-    }
+	public Integer[] getQuantities() {
+		return quantities;
+	}
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
+	public LocalDateTime getTimestamp() {
+		return timestamp;
+	}
+
+	public Double getTotalCost() {
+
+		long total = 0L;
+		for (int i = 0; i < products.length; i++) {
+			total += (products[i].productPrice() * quantities[i]);
+		}
+
+		return total / 100D;
+	}
+
+	public String toString(){
+		return (getTimestamp() + " ---- $" + getTotalCost());
+	}
+
+	public String getDataText() {
+		StringBuilder output = new StringBuilder();
+
+		for (int i = 0; i < products.length; i++) {
+			output.append(products[i].getData());
+		}
+		return output.toString();
+	}
 }

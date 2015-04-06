@@ -78,7 +78,7 @@ public final class Product implements java.io.Serializable
 	public final String getData() // output the product data as a string
 	{
 		StringBuilder output = new StringBuilder();
-		output.append("\n	Product name: ");
+		output.append("\nProduct name: ");
 		output.append(name);
 		output.append("\n	Bar Code: ");
 		output.append(barCode);

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /*
 *    TOC19 is a simple program to run TOC payments within a small group.
@@ -118,7 +119,7 @@ class WorkingUser {
             }
             generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.print(e);
         }
         return generatedPassword;
     }
@@ -470,8 +471,19 @@ class WorkingUser {
     {
         personDatabase.resetBills();
     }
+
     public static long getLogedInBarcode()
     {
         return user.getBarCode();
+    }
+
+    /** Retrieves all transactions for a specified user */
+    public ArrayList<Transaction> readPersonsTransactions(String PMKeyS){
+        return transactionDatabase.readTransactionDatabase(PMKeyS);
+    }
+
+    /** Retrieves all recorded transactions */
+    public ArrayList<Transaction> readTransactions(){
+        return transactionDatabase.readTransactions();
     }
 }
