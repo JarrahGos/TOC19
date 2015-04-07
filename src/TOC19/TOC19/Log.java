@@ -14,6 +14,7 @@ public class Log {
     private static FileWriter fwriter;
     private static BufferedWriter bwriter;
     private static boolean first = true;
+    private static boolean debug = true; // print to the console.
     private Log() {
         try {
             logLocation = settings.logSettings();
@@ -37,42 +38,44 @@ public class Log {
         return sb.toString();
     }
     public static void print(Throwable e) {
-        if(bwriter == null) new Log();
-        String stackTrace = stackTraceToString(e);
-        try {
-            bwriter.write(stackTrace, 0, stackTrace.length());
-            bwriter.newLine();
-            bwriter.flush();
-        }
-        catch (IOException e1) {
-            if(first) {
-                first = false;
-                print(e1);
+        if(!debug) {
+            if (bwriter == null) new Log();
+            String stackTrace = stackTraceToString(e);
+            try {
+                bwriter.write(stackTrace, 0, stackTrace.length());
+                bwriter.newLine();
+                bwriter.flush();
+            } catch (IOException e1) {
+                if (first) {
+                    first = false;
+                    print(e1);
+                } else {
+                    first = true;
+                    e1.printStackTrace();
+                    return;
+                }
             }
-            else {
-                first = true;
-                e1.printStackTrace();
-                return;
-            }
         }
+        else e.printStackTrace();
     }
     public static void print(String s) {
-        if(bwriter == null) new Log();
-        try {
-            bwriter.write(s, 0, s.length());
-            bwriter.newLine();
-            bwriter.flush();
-        }
-        catch (IOException e1) {
-            if(first) {
-                first = false;
-                print(e1);
+        if(!debug) {
+            if (bwriter == null) new Log();
+            try {
+                bwriter.write(s, 0, s.length());
+                bwriter.newLine();
+                bwriter.flush();
+            } catch (IOException e1) {
+                if (first) {
+                    first = false;
+                    print(e1);
+                } else {
+                    first = true;
+                    e1.printStackTrace();
+                    return;
+                }
             }
-            else {
-                first = true;
-                e1.printStackTrace();
-                return;
-            }
         }
+        else System.out.println(s);
     }
 }
