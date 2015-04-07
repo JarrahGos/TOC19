@@ -41,6 +41,7 @@ public class Compatibility {
 	  * @return The path, based on the OS being used.
 	  */
 	public static String getFilePath(String file){
+		if(file == null) return "";
 		if(file.startsWith("./") && isWindows()){
 			file = file.replaceFirst("./", "");
 		}

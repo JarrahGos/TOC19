@@ -42,7 +42,7 @@ final class PersonDatabase {
 			databaseLocation = config.personSettings();
 			admin = readDatabasePerson(7000000);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			Log.print(e);
 		}
 	}
 
@@ -106,7 +106,7 @@ final class PersonDatabase {
             toDelLn.delete();
         }
         catch (NullPointerException e ) {
-            System.out.println("fileNotFound");
+            Log.print("File " + personNo + " not found for deletion");
         }
     }
 
@@ -201,6 +201,7 @@ final class PersonDatabase {
                     FileOutputStream personOut = new FileOutputStream(databaseLocation + persOut.getName());
                     ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(personOut));
                     out.writeObject(persOut);
+					out.flush();
                     out.close();
                     personOut.close();
                 }
@@ -212,7 +213,7 @@ final class PersonDatabase {
 				personOut1.close();
 			}
             catch (Exception e) {
-                e.printStackTrace();
+                Log.print(e);
                 return 1;
             }
             return 0;
@@ -243,18 +244,18 @@ final class PersonDatabase {
 				bufOut.close();
 				outfile.close();
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				Log.print(e1);
 			}
 			return 1;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.print(e);
 		}
 		String out = "Barcode, Name, Total, Bill";
 		try {
 			bufOut.write(out, 0, out.length());
 			bufOut.newLine();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.print(e);
 		}
 		for(Person person : database) {
             if(person != null) {
@@ -264,7 +265,7 @@ final class PersonDatabase {
 					bufOut.write(out, 0, out.length());
 					bufOut.newLine();
 				} catch (IOException e) {
-					e.printStackTrace();
+					Log.print(e);
 				}
 				total += person.totalCostWeek();
             }
@@ -272,10 +273,11 @@ final class PersonDatabase {
 		out = "Total, " + total;
 		try {
 			outfile.write(out, 0, out.length());
+			outfile.flush();
 			bufOut.close();
 			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.print(e);
 		}
 		return 0; // let the program and thus the user know that everything is shiny.
 	}
@@ -295,10 +297,10 @@ final class PersonDatabase {
                 personIn.close();
             }
             catch (IOException e) {
-                System.out.println(e);
+                Log.print(e);
                 return null;
             } catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				Log.print(e);
 			}
 			return importing;
         }
@@ -317,10 +319,10 @@ final class PersonDatabase {
 				 in.close();
 				 personIn.close();
 			 } catch (IOException e) {
-				 System.out.println(e);
+				 Log.print(e);
 				 return null;
 			 } catch (ClassNotFoundException e) {
-				 e.printStackTrace();
+				 Log.print(e);
 			 }
 			 return importing;
 		 }
@@ -343,7 +345,7 @@ final class PersonDatabase {
 				personIn.close();
 			}
 			catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
+				Log.print(e);
 			}
             boolean alreadyExists = false;
 			if(inPers != null) {

@@ -109,7 +109,7 @@ class WorkingUser {
             }
             generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.print(e);
         }
         return generatedPassword;
     }

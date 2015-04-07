@@ -468,7 +468,7 @@ public final class Interface extends Application
 							PMKeyS = Long.parseLong(PMKeySEntry.getText());
 						}
 						catch (NumberFormatException e1) {
-							System.out.println(e1);
+							Log.print(e1);
 						}
 						if(PMKeyS != 7000000) {
 							workingUser.addPersonToDatabase(nameEntry.getText(), PMKeyS);
@@ -568,7 +568,7 @@ public final class Interface extends Application
 					try {
 						users = workingUser.printDatabase("Person");
 					} catch (IOException e) {
-						e.printStackTrace();
+						Log.print(e);
 					}
 					grid.add(users, 0, 0);
 				}
@@ -793,7 +793,7 @@ public final class Interface extends Application
 					try {
 						productList = workingUser.printDatabase("Product");
 					} catch (IOException e) {
-						e.printStackTrace();
+						Log.print(e);
 					}
 					grid.add(productList, 0, 0);
 				}
@@ -808,7 +808,7 @@ public final class Interface extends Application
 							workingUser.adminWriteOutDatabase("Product");
 							flashColour(save, 3000, Color.AQUAMARINE);
 						} catch (IOException e1) {
-							e1.printStackTrace();
+							Log.print(e1);
 							flashColour(save, 3000, Color.RED);
 						}
 					});
@@ -920,7 +920,7 @@ public final class Interface extends Application
 							}
 
 						} catch (IOException e1) {
-							e1.printStackTrace();
+							Log.print(e1);
 							flashColour(saveBtn, 3000, Color.RED);
 						}
 					});

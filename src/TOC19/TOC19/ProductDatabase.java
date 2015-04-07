@@ -41,7 +41,7 @@ final class ProductDatabase
             Settings config = new Settings();
 			databaseLocation = config.productSettings();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			Log.print(e);
 		}
 	}
 
@@ -126,7 +126,7 @@ final class ProductDatabase
             toDelLn.delete();
         }
         catch (NullPointerException e ) {
-            System.out.println("fileNotFound");
+            Log.print("File " + name + " not found when trying to delete");
         }
 	}
 
@@ -201,7 +201,7 @@ final class ProductDatabase
                 personOut.close();
             }
             catch (Exception e) {
-                System.out.println(e);
+                Log.print(e);
                 return 1;
             }
             return 0;
@@ -223,6 +223,7 @@ final class ProductDatabase
                 FileOutputStream personOut = new FileOutputStream(databaseLocation + productOut.getName());
                 ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(personOut));
                 out.writeObject(productOut);
+                out.flush();
                 out.close();
                 personOut.close();
                 FileOutputStream personOut1 = new FileOutputStream(databaseLocation + productOut.getBarCode()); // do it all a second time for the barcode.
@@ -232,7 +233,7 @@ final class ProductDatabase
                 out1.close();
                 personOut.close();
 			} catch (Exception e) {
-				System.out.println(e);
+				Log.print(e);
 			}
 		}
 	}
@@ -253,24 +254,25 @@ final class ProductDatabase
 			outfile = new FileWriter(file); // attempt to open the file that has been created.
             bufOut = new BufferedWriter(outfile);
 		} catch (FileNotFoundException e) { // if the opening fails, close the file and return 1, telling the program that everything went wrong.
+            Log.print(e);
 			if (bufOut != null) {
                 try {
                     bufOut.close();
                     outfile.close();
                 } catch (IOException e1) {
-                    e1.printStackTrace();
+                    Log.print(e1);
                 }
             }
 			return 1;
 		} catch (IOException e) {
-            e.printStackTrace();
+            Log.print(e);
         }
         String out = "Name, Price, Barcode, Stock Count";
         try {
             outfile.write(out, 0, out.length());
             bufOut.newLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.print(e);
         }
         for(Product product : database) {
             if(product != null) {
@@ -280,7 +282,7 @@ final class ProductDatabase
                     outfile.write(out, 0, out.length());
                     bufOut.newLine();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.print(e);
                 }
                 total += product.productPrice() * product.getNumber();
             }
@@ -288,10 +290,11 @@ final class ProductDatabase
         out = "Total stock value, " + total;
         try {
             outfile.write(out, 0, out.length());
+            outfile.flush();
             bufOut.close();
             outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.print(e);
         }
 		return 0; // let the program and thus the user know that everything is shiny.
 	}
@@ -310,10 +313,10 @@ final class ProductDatabase
                 productIn.close();
             }
             catch (IOException e) {
-                System.out.println(e);
+                Log.print(e);
                 return null;
             } catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				Log.print(e);
 			}
 			 return importing;
         }
@@ -333,10 +336,10 @@ final class ProductDatabase
                 productIn.close();
             }
             catch (IOException e) {
-                System.out.println(e);
+                Log.print(e);
                 return null;
             } catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				Log.print(e);
 			}
 			 return importing;
         }
@@ -357,10 +360,10 @@ final class ProductDatabase
                 in.close();
                 productIn.close();
             } catch (IOException e) {
-                System.out.println(e);
+                Log.print(e);
                 return null;
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                Log.print(e);
             }
             boolean alreadyExists = false;
             if(inProd != null) {
@@ -396,10 +399,10 @@ final class ProductDatabase
                 in.close();
                 productIn.close();
             } catch (IOException e) {
-                System.out.println(e);
+                Log.print(e);
                 return null;
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                Log.print(e);
             }
             boolean alreadyExists = false;
             if(inProd != null) {
@@ -453,6 +456,7 @@ final class ProductDatabase
             return readDatabaseProduct(productNo);
         }
         catch (Exception e) {
+            Log.print(e);
             return null;
         }
     }
