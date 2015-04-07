@@ -463,7 +463,13 @@ public final class Interface extends Application
 						PMKeySEntry.requestFocus();
 					});
 					PMKeySEntry.setOnAction((ActionEvent e) -> {
-						long PMKeyS = Long.parseLong(PMKeySEntry.getText());
+						long PMKeyS = 7000000;
+						try {
+							PMKeyS = Long.parseLong(PMKeySEntry.getText());
+						}
+						catch (NumberFormatException e1) {
+							System.out.println(e1);
+						}
 						if(PMKeyS != 7000000) {
 							workingUser.addPersonToDatabase(nameEntry.getText(), PMKeyS);
 							nameEntry.clear();
@@ -473,7 +479,6 @@ public final class Interface extends Application
 							flashColour(PMKeySEntry, 1500, Color.AQUAMARINE);
 						}
 						else {
-							flashColour(nameEntry, 1500, Color.RED);
 							flashColour(PMKeySEntry, 1500, Color.RED);
 						}
 					});
@@ -533,21 +538,28 @@ public final class Interface extends Application
 					});
 
 					pmkeys.setOnAction((ActionEvent e) -> {
-						long pmkeysNew = Long.parseLong(pmkeys.getText());
-						
-						Person oldPerson = workingUser.getUser(personList.getSelectionModel().getSelectedItem());
-						
-						workingUser.changeDatabasePerson(personList.getSelectionModel().getSelectedItem(), nameEntry.getText() , pmkeysNew, oldPerson.getBarCode());
-						nameEntry.clear();
-						pmkeys.clear();
-						nameEntry.requestFocus();
-						flashColour(nameEntry, 1500, Color.AQUAMARINE);
-						flashColour(pmkeys, 1500, Color.AQUAMARINE);
-						//Now need to update the form
-						String selectedIndex = personList.getSelectionModel().getSelectedItem();
-						person.setAll(workingUser.getUserNames());
-						personList.setItems(person);
-						personList.getSelectionModel().select(selectedIndex);
+						long pmkeysNew = -1;
+						try {
+							pmkeysNew = Long.parseLong(pmkeys.getText());
+						}
+						catch (NumberFormatException e1) {
+							flashColour(pmkeys, 1500, Color.RED);
+						}
+						if (pmkeysNew != -1) {
+							Person oldPerson = workingUser.getUser(personList.getSelectionModel().getSelectedItem());
+
+							workingUser.changeDatabasePerson(personList.getSelectionModel().getSelectedItem(), nameEntry.getText(), pmkeysNew, oldPerson.getBarCode());
+							nameEntry.clear();
+							pmkeys.clear();
+							nameEntry.requestFocus();
+							flashColour(nameEntry, 1500, Color.AQUAMARINE);
+							flashColour(pmkeys, 1500, Color.AQUAMARINE);
+							//Now need to update the form
+							String selectedIndex = personList.getSelectionModel().getSelectedItem();
+							person.setAll(workingUser.getUserNames());
+							personList.setItems(person);
+							personList.getSelectionModel().select(selectedIndex);
+						}
 					});
 				}
 				else if(selectedOption.equals("List People")) {
@@ -604,7 +616,7 @@ public final class Interface extends Application
 				else if( selectedOption.equals("Add Products")) {
 					grid.getChildren().clear();
 					Text nameLabel = new Text("Name:");
-					grid.add(nameLabel, 0,0);
+					grid.add(nameLabel, 0, 0);
 					TextField nameEntry = new TextField();
 					nameEntry.requestFocus();
 					grid.add(nameEntry, 1, 0);
@@ -613,9 +625,9 @@ public final class Interface extends Application
 					TextField BarCodeEntry = new TextField();
 					grid.add(BarCodeEntry, 1, 1);
 					Text priceLabel = new Text("Price: $");
-					grid.add(priceLabel, 0,2);
+					grid.add(priceLabel, 0, 2);
 					TextField priceEntry = new TextField();
-					grid.add(priceEntry, 1,2);
+					grid.add(priceEntry, 1, 2);
 					nameEntry.setOnAction((ActionEvent e) -> {
 						BarCodeEntry.requestFocus();
 					});
@@ -623,16 +635,29 @@ public final class Interface extends Application
 						priceEntry.requestFocus();
 					});
 					priceEntry.setOnAction((ActionEvent e) -> {
-						long barCode = Long.parseLong(BarCodeEntry.getText());
-						long price = (long)(Double.parseDouble(priceEntry.getText())*100);
-						workingUser.addProductToDatabase(nameEntry.getText(), barCode, price);
-						nameEntry.clear();
-						BarCodeEntry.clear();
-						priceEntry.clear();
-						nameEntry.requestFocus();
-						flashColour(nameEntry, 1500, Color.AQUAMARINE);
-						flashColour(priceEntry, 1500, Color.AQUAMARINE);
-						flashColour(BarCodeEntry, 1500, Color.AQUAMARINE);
+						long barCode = -1;
+						try {
+							barCode = Long.parseLong(BarCodeEntry.getText());
+						} catch (NumberFormatException e1) {
+							flashColour(BarCodeEntry, 1500, Color.RED);
+						}
+						long price = -1;
+						try {
+							price = (long) (Double.parseDouble(priceEntry.getText()) * 100);
+						}
+						catch (NumberFormatException e1) {
+							flashColour(priceEntry, 1500, Color.RED);
+						}
+						if(barCode != -1 && price != -1) {
+							workingUser.addProductToDatabase(nameEntry.getText(), barCode, price);
+							nameEntry.clear();
+							BarCodeEntry.clear();
+							priceEntry.clear();
+							nameEntry.requestFocus();
+							flashColour(nameEntry, 1500, Color.AQUAMARINE);
+							flashColour(priceEntry, 1500, Color.AQUAMARINE);
+							flashColour(BarCodeEntry, 1500, Color.AQUAMARINE);
+						}
 					});
 					
 				}
@@ -693,31 +718,45 @@ public final class Interface extends Application
 						priceEntry.requestFocus();
 					});
 					priceEntry.setOnAction((ActionEvent e) -> {
-						long barCode = Long.parseLong(barCodeEntry.getText());
-						long price = (long)(Double.parseDouble(priceEntry.getText())*100);
-						workingUser.changeDatabaseProduct(nameEntry.getText(), workingUser.getProductName(productList.getSelectionModel().getSelectedItem()), price,
-								                                 barCode, workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
-						nameEntry.clear();
-						barCodeEntry.clear();
-						priceEntry.clear();
-						nameEntry.requestFocus();
-						flashColour(nameEntry, 1500, Color.AQUAMARINE);
-						flashColour(barCodeEntry, 1500, Color.AQUAMARINE);
-						flashColour(priceEntry, 1500, Color.AQUAMARINE);
+						long barCode = -1;
+						try {
+							barCode = Long.parseLong(barCodeEntry.getText());
+						}
+						catch (NumberFormatException e1) {
+							flashColour(barCodeEntry, 1500, Color.RED);
+						}
+						long price = -1;
+						try {
+							price = (long) (Double.parseDouble(priceEntry.getText()) * 100);
+						}
+						catch (NumberFormatException e1) {
+							flashColour(priceEntry, 1500, Color.RED);
+						}
+						if(barCode != -1 && price != -1) {
+							workingUser.changeDatabaseProduct(nameEntry.getText(), workingUser.getProductName(productList.getSelectionModel().getSelectedItem()), price,
+									barCode, workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
+							nameEntry.clear();
+							barCodeEntry.clear();
+							priceEntry.clear();
+							nameEntry.requestFocus();
+							flashColour(nameEntry, 1500, Color.AQUAMARINE);
+							flashColour(barCodeEntry, 1500, Color.AQUAMARINE);
+							flashColour(priceEntry, 1500, Color.AQUAMARINE);
 
 
-						//Now need to update the form
-						String selectedProduct = productList.getSelectionModel().getSelectedItem();
+							//Now need to update the form
+							String selectedProduct = productList.getSelectionModel().getSelectedItem();
 
-						nameEntry.setText(selectedProduct);
-						String BC = String.valueOf(workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
-						barCodeEntry.setText(BC);
-						String price2 = Double.toString(workingUser.getProductPrice(productList.getSelectionModel()
-								                                                            .getSelectedItem())/100);
-						priceEntry.setText(price2);
-						product.setAll(workingUser.getProductNames());
-						productList.setItems(product);
-					});
+							nameEntry.setText(selectedProduct);
+							String BC = String.valueOf(workingUser.getProductBarCode(productList.getSelectionModel().getSelectedItem()));
+							barCodeEntry.setText(BC);
+							String price2 = Double.toString(workingUser.getProductPrice(productList.getSelectionModel()
+									.getSelectedItem()) / 100);
+							priceEntry.setText(price2);
+							product.setAll(workingUser.getProductNames());
+							productList.setItems(product);
+						}
+				});
 					
 				}
 				else if( selectedOption.equals("Enter Stock Counts")) {
