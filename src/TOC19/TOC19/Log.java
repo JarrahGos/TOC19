@@ -22,7 +22,7 @@ public class Log {
             e.printStackTrace();
         }
         try {
-            fwriter = new FileWriter(logLocation + "LOG");
+            fwriter = new FileWriter(logLocation + "LOG", true);
             bwriter = new BufferedWriter(fwriter);
         }
         catch (IOException e) {
