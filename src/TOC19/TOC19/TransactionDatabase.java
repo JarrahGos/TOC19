@@ -82,11 +82,9 @@ public class TransactionDatabase {
             writer.write(transactionString.toString() + '\n');
             
             //Flush and close everything we created, mimicked a slower fs and needed to flush and close all otherwise could run into issues
-            writer.flush();
+
             writer.close();
-            bout.flush();
             bout.close();
-            out.flush();
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
