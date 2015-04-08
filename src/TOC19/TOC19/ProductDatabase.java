@@ -223,7 +223,6 @@ final class ProductDatabase
                 FileOutputStream personOut = new FileOutputStream(databaseLocation + productOut.getName());
                 ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(personOut));
                 out.writeObject(productOut);
-                out.flush();
                 out.close();
                 personOut.close();
                 FileOutputStream personOut1 = new FileOutputStream(databaseLocation + productOut.getBarCode()); // do it all a second time for the barcode.
@@ -290,7 +289,6 @@ final class ProductDatabase
         out = "Total stock value, " + total;
         try {
             outfile.write(out, 0, out.length());
-            outfile.flush();
             bufOut.close();
             outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
         } catch (IOException e) {

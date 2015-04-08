@@ -201,8 +201,7 @@ final class PersonDatabase {
                     FileOutputStream personOut = new FileOutputStream(databaseLocation + persOut.getName());
                     ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(personOut));
                     out.writeObject(persOut);
-					out.flush();
-                    out.close();
+		            out.close();
                     personOut.close();
                 }
                 // it may be quicker to do this with the java.properties setup that I have made. The code for that will sit unused in settings.java.
@@ -273,7 +272,6 @@ final class PersonDatabase {
 		out = "Total, " + total;
 		try {
 			outfile.write(out, 0, out.length());
-			outfile.flush();
 			bufOut.close();
 			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
 		} catch (IOException e) {
