@@ -171,8 +171,8 @@ final class CheckOut
      * Get the raw list of products in the checkout
      * @return products list without any extra formatting
      */
-    public final Product[] getRawProducts(){
-        return products.toArray(new Product[products.size()]);     
+    public final ArrayList<Product> getRawProducts(){
+        return products;
     }
 
     /**

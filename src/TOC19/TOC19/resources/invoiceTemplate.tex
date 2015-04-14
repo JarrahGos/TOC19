@@ -1,0 +1,27 @@
+\documentclass[a4paper]{letter}
+\usepackage{invoice}
+\address{OFFCDT Joe Bloggs \\
+         16 DIV TOC Treasurer \\
+		 16 DIV, D SQN\\
+		 ADFA\\
+         joe.bloggs@student.adfa.edu.au}
+
+\begin{document}
+\begin{letter}{$CustomerName \\
+               16 DIV, D SQN \\
+               ADFA}
+\opening{Invoice Date $Date}
+Please make a payment into the TOC bank account with the total for your outstanding bills.
+
+\begin{invoice}{Dollars}{0}
+\ProjectTitle{16 Division TOC}
+
+	#foreach( $line in $transactions )
+			\Fee{$line.name} {$line.quantity} {$line.product.productPrice}
+	#end
+
+\end{invoice}
+
+\closing{Thank you for your cooperation}
+\end{letter}
+\end{document}

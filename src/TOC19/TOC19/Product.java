@@ -156,4 +156,13 @@ public final class Product implements java.io.Serializable
 		return check.getName().equals(name) && check.getBarCode() == barCode && check.productPrice() == productPrice;
 	}
 
+	/**
+	 * Determine whether a product is roughly equal to this one
+	 * @param check The product to check
+	 * @return The boolean of whether the name || barcode are the same.
+	 */
+	public boolean weakEquals(Product check){
+		return check.getName().equals(name) || check.getBarCode() == barCode;
+	}
+
 }

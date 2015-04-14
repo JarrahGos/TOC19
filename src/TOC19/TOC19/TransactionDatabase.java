@@ -66,7 +66,7 @@ public class TransactionDatabase {
             StringBuilder transactionString = new StringBuilder();
             transactionString.append(transaction.getTimestamp() + ",");
             
-            Product[] products = transaction.getProducts();
+            ArrayList<Product> products = transaction.getProducts();
             Integer[] quantities = transaction.getQuantities();
             
             
@@ -75,14 +75,15 @@ public class TransactionDatabase {
             BufferedOutputStream bout = new BufferedOutputStream(out);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(bout, "UTF-8"));
 
-            for (int i = 0; i < products.length; i++) {
-                transactionString.append(products[i].getName() + ":" + quantities[i] + ":" + products[i].productPrice() + ",");
+            writer.append(transaction.getTimestamp().toString() + ":");
+
+            for (int i = 0; i < products.size(); i++) {
+                transactionString.append(products.get(i).getName() + ":" + quantities[i] + ":" + products.get(i).productPrice() + ",");
             }
             
             writer.write(transactionString.toString() + '\n');
             
-            //Flush and close everything we created, mimicked a slower fs and needed to flush and close all otherwise could run into issues
-
+            //close everything we created, mimicked a slower fs and needed to flush and close all sequentially otherwise could run into issues
             writer.close();
             bout.close();
             out.close();
@@ -110,8 +111,8 @@ public class TransactionDatabase {
                 String line = "";
                 while((line = reader.readLine()) != null){
                     Map<Product, Integer> products = new HashMap<>();
-                   
                     String[] elements = line.split(",");
+                    String dateTimeString = elements[0];
 
                     for (int i = 1; i < elements.length; i++) {
                         String[] productString = elements[i].split(":");
@@ -119,8 +120,11 @@ public class TransactionDatabase {
                         Integer quantity = Integer.parseInt(productString[1]);
                         products.put(product, quantity);
                     }
-                    //TL:DR Get rid of this ugly mess of a constructor....... Also work in the timestamp management
-                    Transaction transaction = new Transaction(personDatabase.readDatabasePerson(Integer.parseInt(userDB.getName())),products.keySet().toArray(new Product[]{}),products.values().toArray(new Integer[]{}), null);
+                    Person user = personDatabase.readDatabasePerson(Integer.parseInt(userDB.getName()));
+                    ArrayList<Product> productsInTrans = (ArrayList<Product>) products.keySet();
+                    Integer[] quantities = products.values().toArray(new Integer[]{});
+                    LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+                    Transaction transaction = new Transaction(user, productsInTrans , quantities, dateTime);
                     transactions.add(transaction);
                 }
                 
@@ -143,8 +147,8 @@ public class TransactionDatabase {
              String line = "";
              while((line = reader.readLine()) != null){
                  Map<Product, Integer> products = new HashMap<>();
-
                  String[] elements = line.split(",");
+                 String dateTimeString = elements[0];
 
                  for (int i = 1; i < elements.length; i++) {
                      String[] productString = elements[i].split(":");
@@ -152,8 +156,11 @@ public class TransactionDatabase {
                      Integer quantity = Integer.parseInt(productString[1]);
                      products.put(product, quantity);
                  }
-                 //TL:DR Get rid of this ugly mess of a constructor....... Also work in the timestamp management
-                 Transaction transaction = new Transaction(personDatabase.readDatabasePerson(Integer.parseInt(userDB.getName())),products.keySet().toArray(new Product[]{}),products.values().toArray(new Integer[]{}), null);
+                 Person user = personDatabase.readDatabasePerson(Integer.parseInt(userDB.getName()));
+                 ArrayList<Product> productsInTrans = products.keySet().toArray(new Product[products.keySet().size()]);
+                 Integer[] quantities = products.values().toArray(new Integer[]{});
+                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+                 Transaction transaction = new Transaction(user, productsInTrans , quantities, dateTime);
                  transactions.add(transaction);
              }
 

@@ -19,6 +19,7 @@ package TOC19;
 */
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * @author Michael Brock
@@ -34,7 +35,7 @@ public class Transaction {
 	/**
 	 * The products bought in the transaction
 	 */
-	private Product[] products;
+	private ArrayList<Product> products;
 	/**
 	 * The quantities of the products bought
 	 */
@@ -44,14 +45,14 @@ public class Transaction {
 	 */
 	private LocalDateTime timestamp;
 
-	public Transaction(Person person, Product[] productArray, Integer[] amounts, LocalDateTime time) {
+	public Transaction(Person person, ArrayList<Product> productArray, Integer[] amounts, LocalDateTime time) {
 		user = person;
 		products = productArray;
 		quantities = amounts;
 		timestamp = time;
 	}
 
-	public Product[] getProducts() {
+	public ArrayList<Product> getProducts() {
 		return products;
 	}
 
@@ -70,8 +71,8 @@ public class Transaction {
 	public Double getTotalCost() {
 
 		long total = 0L;
-		for (int i = 0; i < products.length; i++) {
-			total += (products[i].productPrice() * quantities[i]);
+		for (int i = 0; i < products.size(); i++) {
+			total += (products.get(i).productPrice() * quantities[i]);
 		}
 
 		return total / 100D;
@@ -84,9 +85,9 @@ public class Transaction {
 	public String getDataText() {
 		StringBuilder output = new StringBuilder();
 
-		for (int i = 0; i < products.length; i++) {
-			output.append("Product: " + products[i].getName() + '\n');
-			output.append("    Unit Price: $" + products[i].getDataPrice() + '\n');
+		for (int i = 0; i < products.size(); i++) {
+			output.append("Product: " + products.get(i).getName() + '\n');
+			output.append("    Unit Price: $" + products.get(i).getDataPrice() + '\n');
 			output.append("    Quantity: " + quantities[i] + '\n');
 		}
 		return output.toString();
