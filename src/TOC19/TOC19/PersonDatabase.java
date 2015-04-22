@@ -430,4 +430,15 @@ final class PersonDatabase {
 		delPerson(selectedIndex);
 		writeOutDatabasePerson(newPerson);
 	}
+
+	public Person[] getAllUsers(){
+		File root = new File (databaseLocation);
+		File[] list = root.listFiles();
+		String[] stringList = new String[list.length];
+		for(int i = 0; i < list.length; i++) {
+			stringList[i] = list[i].getPath();
+		}
+		Person[] database = readDatabase(stringList);
+		return database;
+	}
 }

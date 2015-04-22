@@ -54,12 +54,15 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import java.beans.EventHandler;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class Interface extends Application
 {
@@ -413,7 +416,7 @@ public final class Interface extends Application
 		ObservableList<String> items = FXCollections.observableArrayList();
 		final String[] PersonSettingsList = {"Add Person", "Remove Person", "Change a Person", "List People","List Transactions", "Lock People Out", "Save Person Database"};
 		final String[] ProductSettingsList = {"Add Products", "Remove Products", "Change a Product","Enter Stock Counts", "List Products", "Save Product Database"};
-		final String[] AdminSettingsList = {"Reset Bills","Reset Running Costs", "Change Password", "Save Databases To USB", "Close The Program"};
+		final String[] AdminSettingsList = {"Reset Databases","Generate Invoices","Change Password", "Save Databases To USB", "Close The Program"};
 		items.setAll(PersonSettingsList);
 		optionList.setItems(items);
 		
@@ -849,34 +852,123 @@ public final class Interface extends Application
 						}
 					});
 				}
-				else if(selectedOption.equals("Reset Bills")) {
+				else if(selectedOption.equals("Reset Databases")) {
 					grid.getChildren().clear();
-					Button save = new Button("Reset Bills");
-					Text saveLabel = new Text("Are you sure you would like to reset the bills? \nThis cannot be undone.");
-					saveLabel.setTextAlignment(TextAlignment.CENTER);
-					grid.add(saveLabel, 0, 0, 2, 1);
-					grid.add(save, 1, 1);
-					save.setOnAction((ActionEvent e) -> {
-							workingUser.resetBills();
-                            flashColour(save, 1500, Color.AQUAMARINE);
-							save.setDisable(true);
-							save.setText("Bills Reset");
+					TextArea warning = new TextArea("Please take care when deleting databases, this action is " +
+							                                "permanent. Once deleted you cannot retrieve the data. " +
+							                                "\n The Running cost is the total the user has ever spent" +
+							                                "\n The Bill is the users owed amount for this cycle" +
+															"\n The Transaction Lists contain the transactions for " +
+							                                "each user in this cycle");
+					warning.setWrapText(true);
+					warning.setEditable(false);
+					grid.add(warning,0,0,1,3);
+
+					CheckBox resetBills = new CheckBox("Reset Bills");
+					grid.add(resetBills, 0, 3);
+
+					CheckBox resetRunning = new CheckBox("Reset Running Costs");
+					grid.add(resetRunning, 0, 4);
+
+					CheckBox resetTransactions = new CheckBox("Reset Transactions");
+					grid.add(resetTransactions,0,5);
+
+					Button delete = new Button("Erase Selected Database(s)");
+					grid.add(delete, 0, 6);
+
+					delete.setOnAction((ActionEvent e) -> {
+						Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+						alert.setTitle("Database Deletion");
+						alert.setHeaderText("Please confirm you want to delete the following databases");
+						String content = "";
+						if(resetBills.isSelected()){
+							content += "-Monthly Bill Database\n";
+						}
+						if(resetRunning.isSelected()){
+							content += "-Running Cost Database\n";
+						}
+						if(resetTransactions.isSelected()){
+							content += "-Transaction Database\n";
+						}
+
+						alert.setContentText(content);
+
+						Optional<ButtonType> result = alert.showAndWait();
+
+						if(result.get() == ButtonType.OK){
+							if(resetBills.isSelected()){
+								workingUser.resetBills();
+								flashColour(resetBills,1500,Color.AQUAMARINE);
+							}
+							if(resetRunning.isSelected()){
+								workingUser.resetRunningCosts();
+								flashColour(resetRunning, 1500, Color.AQUAMARINE);
+							}
+							if(resetTransactions.isSelected()){
+								workingUser.resetTransactionDatabase();
+								flashColour(resetTransactions, 1500, Color.AQUAMARINE);
+							}
+						}else{
+							flashColour(delete,1500,Color.RED);
+						}
+						resetBills.setSelected(false);
+						resetRunning.setSelected(false);
+						resetTransactions.setSelected(false);
 					});
 				}
-				else if(selectedOption == "Reset Running Costs"){
-					grid.getChildren().clear();
-					Button save = new Button("Reset Running Costs");
-					Text saveLabel = new Text("Are you sure you would like to reset the running costs? \nThis cannot be undone.");
-					saveLabel.setTextAlignment(TextAlignment.CENTER);
-					grid.add(saveLabel, 0, 0, 2, 1);
-					grid.add(save, 1, 1);
-					save.setOnAction((ActionEvent e) -> {
-						workingUser.resetBills();
-						flashColour(save, 1500, Color.AQUAMARINE);
-						save.setDisable(true);
-						save.setText("Bills Reset");
+				else if(selectedOption== "Generate Invoices") {
+		            grid.getChildren().clear();
+					TextArea information = new TextArea("This will generate invoices for all users and output them to" +
+							                                    " the selected directory. It will also reset the " +
+							                                    "bills for this cycle.");
+
+					Text outputType = new Text(true ? "*.pdf" : "*.tex (LaTeX was not detected on our system");
+
+					DirectoryChooser fc = new DirectoryChooser();
+
+					Text fileLabel = new Text("Save Directory");
+					TextField filePath = new TextField("");
+					filePath.setEditable(true);
+					Button saveDirBtn = new Button("Choose Save Directory");
+					Button saveBtn = new Button("Save Databases to Selected Directories");
+
+					grid.add(information, 0,0,2,1);
+					grid.add(outputType,0,1);
+					grid.add(saveBtn,1,7);
+					grid.add(fileLabel,0,2);
+					grid.add(filePath,0,3);
+					grid.add(saveDirBtn,1,3);
+
+					saveDirBtn.setOnAction((ActionEvent e) -> {
+						File returnVal = fc.showDialog(adminStage);
+
+						if (returnVal != null) {
+							filePath.setText(returnVal.getPath());
+							flashColour(saveDirBtn, 1500, Color.AQUAMARINE);
+						}else{
+							flashColour(saveDirBtn, 1500, Color.RED);
+						}
 					});
-				}
+
+					saveBtn.setOnAction((ActionEvent e) -> {
+						//Generate invoices for all users
+						if(filePath.getText() == null || filePath.getText() == ""){
+							flashColour(saveBtn,1500,Color.RED);
+							return;
+						}
+
+						/*Once again need a better method than this. Perhaps look at methods of having a
+						PersonDatabase accessible from anywhere? */
+						PersonDatabase personDatabase = new PersonDatabase();
+						Person[] users = personDatabase.getAllUsers();
+
+						for(Person user : users){
+							ArrayList<Transaction> transactions = workingUser.readPersonsTransactions(String.valueOf(user.getBarCode()));
+							InvoiceHelper.generateInvoiceForUser(user,transactions,filePath.getText());
+						}
+
+					});
+	            }
 				else if(selectedOption.equals("Change Password")) {
 					grid.getChildren().clear();
 					Text oldLabel = new Text("Enter old password");
@@ -937,7 +1029,7 @@ public final class Interface extends Application
 					grid.add(saveBtn,1,5);
 					grid.add(fileLabel,0,0);
 					grid.add(filePath,0,1);
-					grid.add(saveDirBtn,1,1);
+					grid.add(saveDirBtn, 1, 1);
 
 					saveDirBtn.setOnAction((ActionEvent e) -> {
 						File returnVal = fc.showDialog(adminStage);
@@ -979,7 +1071,7 @@ public final class Interface extends Application
                 else if(selectedOption.equals("Close The Program")) {
                     grid.getChildren().clear();
                     Button save = new Button("Close The Program");
-                    grid.add(save, 1,1);
+                    grid.add(save, 1, 1);
                     save.setOnAction((ActionEvent e) -> {
 	                    flashColour(save,1500, Color.AQUAMARINE);
                             System.exit(0);

@@ -92,4 +92,8 @@ public class Transaction {
 		}
 		return output.toString();
 	}
+
+	public String[] toInvoiceString() {
+		return new String[] {getDataText(), getTotalCost().toString()};
+	}
 }

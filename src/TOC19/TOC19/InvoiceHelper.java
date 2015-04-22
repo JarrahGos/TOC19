@@ -13,10 +13,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
 *    TOC19 is a simple program to run TOC payments within a small group.
@@ -46,13 +43,34 @@ public class InvoiceHelper {
 
 	/**
 	 * Creates a LaTeX file in the specified directory which is an invoice for the specified person.
-	 * filename axample: "Michael Brock-8610097.tex"
+	 * filename example: "Michael Brock-8610097.tex"
 	 * @param user
-	 * @param itemLines
+	 * @param transactions
 	 * @param outputDir
 	 * @return
 	 */
-	public static final int generateInvoiceForUser(Person user, ArrayList<ItemLine> itemLines, String outputDir) {
+	public static final int generateInvoiceForUser(Person user, ArrayList<Transaction> transactions, String outputDir) {
+
+		// Auto sorting ftw
+		TreeMap<Long, String[]> transactionMap = new TreeMap<>();
+		for(Transaction trans : transactions){
+			transactionMap.put(trans.getTimestamp().toEpochSecond(ZoneOffset.UTC),trans.toInvoiceString());
+		}
+
+		ArrayList transactionLines = new ArrayList<>();
+		Set entries = transactionMap.entrySet();
+		Iterator it = entries.iterator();
+
+		while (it.hasNext()){
+			Map.Entry<Long,String[]> read = (Map.Entry) it.next();
+
+			Map map = new HashMap<>();
+			map.put("name", read.getValue()[0]);
+			map.put("price", read.getValue()[1]);
+			transactionLines.add(map);
+		}
+
+
 		VelocityEngine ve = new VelocityEngine();
 		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
 		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
@@ -61,7 +79,7 @@ public class InvoiceHelper {
 		VelocityContext context = new VelocityContext();
 		context.put("CustomerName", user.getName());
 		context.put("Date", LocalDate.now());
-		context.put("transactions", itemLines);
+		context.put("transactions", transactionLines);
 
 		Template template = null;
 
@@ -88,9 +106,10 @@ public class InvoiceHelper {
 		template.merge(context, writer);
 
 		try{
-			File texFile = new File(outputDir + user.getName() + "-" + user.getBarCode() + ".tex");
+			File texFile = new File(outputDir + "/" + user.getName() + "-" + user.getBarCode() + ".tex");
 			if(texFile.exists()){
-				texFile.renameTo(new File(texFile.getAbsolutePath() + user.getName() + "-" + user.getBarCode() + "_old.tex"));
+				texFile.renameTo(new File(texFile.getAbsolutePath() + "/" + user.getName() + "-" + user.getBarCode() +
+						                          "_old.tex"));
 			}
 
 			BufferedWriter writeFile = new BufferedWriter(new FileWriter(texFile));
@@ -105,53 +124,4 @@ public class InvoiceHelper {
 		return 0;
 	}
 
-	public static final ArrayList<ItemLine> getItemLinesFromTransactions(ArrayList<Transaction> transactions){
-
-		//First group all transactions by time as they
-		HashMap<Long, List<Transaction>> map = new HashMap<Long, List<Transaction>>();
-		for(Transaction trans : transactions){
-			long key = trans.getTimestamp().toEpochSecond(ZoneOffset.UTC);
-			if(map.containsKey(key)){
-				map.get(key).add(trans);
-			}else {
-				List<Transaction> list = new ArrayList<Transaction>();
-				list.add(trans);
-				map.put(key,list);
-			}
-		}
-
-		for (Transaction transaction : transactions){
-			HashMap<Product, Integer> productMap = new HashMap<>();
-			for (int i = 0; i < transaction.getProducts().size(); i++) {
-				Product product = transaction.getProducts().get(i);
-			}
-		}
-
-		ArrayList<ItemLine> lines = new ArrayList<>();
-
-
-
-		return lines;
-	}
-}
-
-/**
- * Used to have a more accessible method of getting data into Velocity
- */
-class ItemLine{
-	/** Quantiy of items purchased at that time */
-	private Integer quantity;
-	/** Product purchased */
-	private Product product;
-	/** Date and Time of purchase */
-	private LocalDateTime dateTime;
-	/** How the purchase will appear on the invoice */
-	private String name;
-
-	public ItemLine(Integer quantity, Product product, LocalDateTime dateTime) {
-		this.quantity = quantity;
-		this.product = product;
-		this.dateTime = dateTime;
-		name = dateTime.toString() + " - " + this.product.getName();
-	}
 }

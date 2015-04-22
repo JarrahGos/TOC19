@@ -493,4 +493,8 @@ class WorkingUser {
     public ArrayList<Transaction> readTransactions(){
         return transactionDatabase.readTransactions();
     }
+
+    public final void resetTransactionDatabase(){
+        transactionDatabase.resetTransactionDatabase();
+    }
 }

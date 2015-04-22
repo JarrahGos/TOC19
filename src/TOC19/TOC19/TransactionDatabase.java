@@ -38,7 +38,7 @@ public class TransactionDatabase {
         try {
             Settings config = new Settings();
             String[] settings = config.transactionSettings();
-            databaseLocation = settings[0];
+            databaseLocation = Compatibility.getFilePath(settings[0]);
             enabled = settings[1].equals("true");
 
         } catch (FileNotFoundException e) {
@@ -63,19 +63,17 @@ public class TransactionDatabase {
                 db.getParentFile().mkdirs();
                 db.createNewFile();
             }
-            StringBuilder transactionString = new StringBuilder();
-            transactionString.append(transaction.getTimestamp() + ",");
-            
-            ArrayList<Product> products = transaction.getProducts();
-            Integer[] quantities = transaction.getQuantities();
-            
-            
+
             //Now write the data to the DB
             FileOutputStream out = new FileOutputStream(databaseLocation + transaction.getUser().getBarCode(), true);
             BufferedOutputStream bout = new BufferedOutputStream(out);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(bout, "UTF-8"));
 
-            writer.append(transaction.getTimestamp().toString() + ":");
+            StringBuilder transactionString = new StringBuilder();
+            transactionString.append(transaction.getTimestamp() + ",");
+
+            ArrayList<Product> products = transaction.getProducts();
+            Integer[] quantities = transaction.getQuantities();
 
             for (int i = 0; i < products.size(); i++) {
                 transactionString.append(products.get(i).getName() + ":" + quantities[i] + ":" + products.get(i).productPrice() + ",");
@@ -157,7 +155,7 @@ public class TransactionDatabase {
                      products.put(product, quantity);
                  }
                  Person user = personDatabase.readDatabasePerson(Integer.parseInt(userDB.getName()));
-                 ArrayList<Product> productsInTrans = products.keySet().toArray(new Product[products.keySet().size()]);
+                 ArrayList<Product> productsInTrans = new ArrayList<>(products.keySet());
                  Integer[] quantities = products.values().toArray(new Integer[]{});
                  LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
                  Transaction transaction = new Transaction(user, productsInTrans , quantities, dateTime);
@@ -171,4 +169,13 @@ public class TransactionDatabase {
 
      return transactions;
  }
+
+    public void resetTransactionDatabase() {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        File root = new File(databaseLocation);
+        File[] list = root.listFiles();
+        for(File userDB: list) {
+            userDB.delete();
+        }
+    }
 }

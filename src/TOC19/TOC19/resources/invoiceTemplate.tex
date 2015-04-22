@@ -17,7 +17,7 @@ Please make a payment into the TOC bank account with the total for your outstand
 \ProjectTitle{16 Division TOC}
 
 	#foreach( $line in $transactions )
-			\Fee{$line.name} {$line.quantity} {$line.product.productPrice}
+			\EBC{$line.name} {$line.cost}
 	#end
 
 \end{invoice}
