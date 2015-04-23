@@ -19,8 +19,8 @@ package TOC19;
 */
 
 /**
+ * This program will allow for the input and retrieval of persons in the person database.
 * @author Jarrah Gosbell
-* This program will allow for the input and retrieval of persons in the person database.
 */
 
 public final class Person implements java.io.Serializable

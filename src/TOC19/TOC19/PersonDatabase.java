@@ -330,7 +330,7 @@ final class PersonDatabase {
      * @param databaseList A string array of paths to files which are to be put into the array
      * @return An array of all people found from the given string
      */
-	final Person[] readDatabase(String[] databaseList){
+	public final Person[] readDatabase(String[] databaseList){
 		Person[] importing = new Person[databaseList.length];
         int i = 0;
 		for(String person : databaseList) {

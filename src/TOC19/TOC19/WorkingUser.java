@@ -497,4 +497,12 @@ class WorkingUser {
     public final void resetTransactionDatabase(){
         transactionDatabase.resetTransactionDatabase();
     }
+
+    /**
+     * Get the current users current bill.
+     * @return The current bill of the current user as a double.
+     */
+    public final double getUserBill() {
+        return user.totalCostWeek();
+    }
 }
