@@ -43,6 +43,7 @@ import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -54,9 +55,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import java.io.*;
 import java.beans.EventHandler;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -99,6 +99,10 @@ public final class Interface extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
+		//Add some graphical exception handling xD
+		Thread.setDefaultUncaughtExceptionHandler((t, e) -> Platform.runLater(() -> showErrorDialog(e)));
+		Thread.currentThread().setUncaughtExceptionHandler((t, e1) -> showErrorDialog(e1));
+
 		// create the layout
 		primaryStage.setTitle("TOC19"); // set the window title. 
 		GridPane grid = new GridPane(); // create the layout manager
@@ -485,7 +489,7 @@ public final class Interface extends Application
 							flashColour(PMKeySEntry, 1500, Color.RED);
 						}
 					});
-
+					
 				}
 				else if(selectedOption.equals("Remove Person")) {
 					grid.getChildren().clear();
@@ -510,7 +514,7 @@ public final class Interface extends Application
 						}
 						persons.setAll(workingUser.getUserNames());
 					});
-
+					
 				}
 				else if(selectedOption.equals("Change a Person")){
 					grid.getChildren().clear();
@@ -698,7 +702,7 @@ public final class Interface extends Application
 							flashColour(BarCodeEntry, 1500, Color.AQUAMARINE);
 						}
 					});
-
+					
 				}
 				else if(selectedOption.equals("Remove Products")) {
 					grid.getChildren().clear();
@@ -796,7 +800,7 @@ public final class Interface extends Application
 							productList.setItems(product);
 						}
 				});
-
+					
 				}
 				else if( selectedOption.equals("Enter Stock Counts")) {
 					grid.getChildren().clear();
@@ -809,13 +813,13 @@ public final class Interface extends Application
 					grid.add(numberLabel, 1,0);
 					TextField numberEntry = new TextField();
 					grid.add(numberEntry, 2,0);
-
+					
 					productList.getSelectionModel().selectedItemProperty().addListener(
 					(ObservableValue<? extends String> vo, String oldVal, String selectedProduct) -> {
 						String numberOfProduct = Integer.toString(workingUser.getProductNumber(productList.getSelectionModel().getSelectedItem()));
 						numberEntry.setText(numberOfProduct);
 						numberEntry.requestFocus();
-
+						
 					});
 					numberEntry.setOnAction((ActionEvent e) -> {
 						workingUser.setNumberOfProducts(productList.getSelectionModel().getSelectedItem(), Integer.parseInt(numberEntry.getText()));
@@ -823,8 +827,8 @@ public final class Interface extends Application
 						numberEntry.requestFocus();
 						flashColour(numberEntry, 1500, Color.AQUAMARINE);
 					});
-
-
+						
+					
 				}
 				else if(selectedOption.equals("List Products")) {
 					grid.getChildren().clear();
@@ -1168,5 +1172,40 @@ public final class Interface extends Application
 			}
 		}
 		Application.launch(args);
+	}
+
+	protected static void showErrorDialog(Throwable e) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Exception Management");
+		alert.setHeaderText("I caught me a stacktrace xD \nPlease show this to one of the system admins");
+		alert.setContentText(e.getLocalizedMessage());
+
+
+		// Create expandable Exception.
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		String exceptionText = sw.toString();
+
+		Label label = new Label("The exception stacktrace was:");
+
+		TextArea textArea = new TextArea(exceptionText);
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		// Set expandable Exception into the dialog pane.
+		alert.getDialogPane().setExpandableContent(expContent);
+
+		alert.showAndWait();
 	}
 }
