@@ -43,6 +43,7 @@ import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -54,8 +55,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -96,6 +96,10 @@ public final class Interface extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
+		//Add some graphical exception handling xD
+		Thread.setDefaultUncaughtExceptionHandler((t, e) -> Platform.runLater(() -> showErrorDialog(e)));
+		Thread.currentThread().setUncaughtExceptionHandler((t, e1) -> showErrorDialog(e1));
+
 		// create the layout
 		primaryStage.setTitle("TOC19"); // set the window title. 
 		GridPane grid = new GridPane(); // create the layout manager
@@ -1025,5 +1029,40 @@ public final class Interface extends Application
 			}
 		}
 		Application.launch(args);
+	}
+
+	protected static void showErrorDialog(Throwable e) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Exception Management");
+		alert.setHeaderText("I caught me a stacktrace xD \nPlease show this to one of the system admins");
+		alert.setContentText(e.getLocalizedMessage());
+
+
+		// Create expandable Exception.
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		String exceptionText = sw.toString();
+
+		Label label = new Label("The exception stacktrace was:");
+
+		TextArea textArea = new TextArea(exceptionText);
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		// Set expandable Exception into the dialog pane.
+		alert.getDialogPane().setExpandableContent(expContent);
+
+		alert.showAndWait();
 	}
 }

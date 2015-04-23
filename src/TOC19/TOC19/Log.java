@@ -57,6 +57,7 @@ public class Log {
 	 * @param e The throwable which will be traced and printed to the log
 	 */
     public static void print(Throwable e) {
+        Interface.showErrorDialog(e);
         if(!debug) {
             if (bwriter == null) new Log();
             String stackTrace = stackTraceToString(e);
