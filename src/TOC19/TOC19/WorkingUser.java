@@ -462,4 +462,12 @@ class WorkingUser {
     {
         return user.getBarCode();
     }
+
+    /**
+     * Get the current users current bill.
+     * @return The current bill of the current user as a double.
+     */
+    public final double getUserBill() {
+        return user.totalCostWeek();
+    }
 }
