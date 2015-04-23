@@ -963,6 +963,7 @@ public final class Interface extends Application
 						Person[] users = personDatabase.getAllUsers();
 
 						for(Person user : users){
+							if(user.getBarCode() == 7000000) continue;
 							ArrayList<Transaction> transactions = workingUser.readPersonsTransactions(String.valueOf(user.getBarCode()));
 							InvoiceHelper.generateInvoiceForUser(user,transactions,filePath.getText());
 						}

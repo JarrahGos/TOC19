@@ -66,7 +66,7 @@ public class InvoiceHelper {
 
 			Map map = new HashMap<>();
 			map.put("name", read.getValue()[0]);
-			map.put("price", read.getValue()[1]);
+			map.put("cost", read.getValue()[1]);
 			transactionLines.add(map);
 		}
 
