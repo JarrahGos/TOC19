@@ -408,6 +408,7 @@ public final class Interface extends Application
      */
 	private void enterAdminMode(Stage lastStage)
 	{
+		workingUser.logOut();
 		lastStage.hide();
 		Stage adminStage = new Stage();
 		adminStage.setTitle("TOC19");
