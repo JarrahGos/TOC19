@@ -138,7 +138,11 @@ class Settings {
 		output[2] = properties.getProperty("textSize");
 		return output;
 	}
-
+	/**
+	 * Get the settings for the error log. Specifically the location of it's storage
+	 * @return A string with the location of the log. This is checked for compatibility against the running OS
+	 * @throws FileNotFoundException If the settings file is not in the location it should be.
+	 */
 	public final String logSettings() throws FileNotFoundException {
 		if (inputStream != null) {
 			try {

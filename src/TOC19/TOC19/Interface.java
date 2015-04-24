@@ -194,7 +194,7 @@ public final class Interface extends Application
 						thread.start();
 						thread.interrupt();
 						flashColour(input, 1500, Color.AQUAMARINE);
-						userLabel.setText(workingUser.userName(userError)); // find out the name of those who dare log on.
+						userLabel.setText(workingUser.userName(userError) + "—$" + workingUser.getUserBill()); // find the name of those who dare log on.
 						inputLabel.setText("Enter Barcode"); // change the label to suit the next action. 
 						grid.getChildren().remove(userLabel); // remove any error labels which may have appeared. 
 						grid.add(userLabel, 3,0); // add the new user label
@@ -235,7 +235,7 @@ public final class Interface extends Application
 					int userError = PMKeySEntered(input.getText());
 
 					if(workingUser.userLoggedIn()) {
-						userLabel.setText(workingUser.userName(userError));
+						userLabel.setText(workingUser.userName(userError) + "—$" + workingUser.getUserBill());
 						inputLabel.setText("Enter Barcode");
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 3,0);
