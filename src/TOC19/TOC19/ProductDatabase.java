@@ -454,7 +454,7 @@ final class ProductDatabase
             return readDatabaseProduct(productNo);
         }
         catch (Exception e) {
-            Log.print(e);
+            Log.print("Product with barcode " + productNo + "could not be found.");
             return null;
         }
     }
