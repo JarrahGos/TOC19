@@ -1,27 +1,43 @@
-\documentclass[a4paper]{letter}
-\usepackage{invoice}
-\address{OFFCDT Joe Bloggs \\
-         16 DIV TOC Treasurer \\
-		 16 DIV, D SQN\\
-		 ADFA\\
-         joe.bloggs@student.adfa.edu.au}
-
+\documentclass[10pt,a4paper]{letter}
+\title{16 Division TOC}
 \begin{document}
-\begin{letter}{$CustomerName \\
-               16 DIV, D SQN \\
-               ADFA}
-\opening{Invoice Date $Date}
-Please make a payment into the TOC bank account with the total for your outstanding bills.
-
-\begin{invoice}{Dollars}{0}
-\ProjectTitle{16 Division TOC}
-
-	#foreach( $line in $transactions )
-			\EBC{$line.name} {$line.cost}
-	#end
-
-\end{invoice}
-
-\closing{Thank you for your cooperation}
-\end{letter}
+	\begin{flushright}
+		 Michael Brock \\	
+		 16 DIV TOC Treasurer \\
+		 16 DIV, D SQN \\
+		 ADFA\\
+		 michael.brock@email.com
+	\end{flushright}
+	\vspace{1cm}
+	
+	Name: $name\\
+	PMKeyS: $pmkeys\\
+	Invoice ($startDate - $endDate) \\
+	
+	\vspace{1cm}
+	
+	
+	\begin{center}
+		
+		\begin{tabular}{| l | l | c | c | r || r |}
+			#foreach($trans in $transactions)
+				\hline $trans.date & & & & & $trans.total \\
+				#foreach($product in $trans.products)
+					\hline . & $product.item & $product.quantity & $product.price & $product.total & . \\
+				#end
+			#end
+			\hline
+			\hline . & . & . & . & Total & $total \\
+			\hline
+		\end{tabular}
+	\end{center}
+	
+	\vspace{1cm}
+	Please make a payment of the total amount into the TOC Account within 7 days\\
+	\\
+	TOC	Account Details\\
+	BSB: \$bsbNo\\
+	ACC: \$accNo\\
+	
+	
 \end{document}

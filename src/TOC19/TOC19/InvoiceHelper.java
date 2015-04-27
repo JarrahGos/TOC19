@@ -13,6 +13,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /*
@@ -45,41 +46,57 @@ public class InvoiceHelper {
 	 * Creates a LaTeX file in the specified directory which is an invoice for the specified person.
 	 * filename example: "Michael Brock-8610097.tex"
 	 * @param user
-	 * @param transactions
+	 * @param transactionsIn
 	 * @param outputDir
 	 * @return
 	 */
-	public static final int generateInvoiceForUser(Person user, ArrayList<Transaction> transactions, String outputDir) {
+	public static final int generateInvoiceForUser(Person user, ArrayList<Transaction> transactionsIn, String outputDir) {
 
 		// Auto sorting ftw
-		TreeMap<Long, String[]> transactionMap = new TreeMap<>();
-		for(Transaction trans : transactions){
-			transactionMap.put(trans.getTimestamp().toEpochSecond(ZoneOffset.UTC),trans.toInvoiceString());
+		TreeMap<Long, Transaction> transactionMap = new TreeMap<>();
+		for(Transaction trans : transactionsIn){
+			transactionMap.put(trans.getTimestamp().toEpochSecond(ZoneOffset.UTC),trans);
 		}
 
-		ArrayList transactionLines = new ArrayList<>();
 		Set entries = transactionMap.entrySet();
 		Iterator it = entries.iterator();
+		double total = 0D;
 
+		ArrayList transactions = new ArrayList();
 		while (it.hasNext()){
-			Map.Entry<Long,String[]> read = (Map.Entry) it.next();
-
-			Map map = new HashMap<>();
-			map.put("name", read.getValue()[0]);
-			map.put("cost", read.getValue()[1]);
-			transactionLines.add(map);
+			Map transaction = new HashMap<>();
+			//So much unchecked casting however I only just created the array so..... It should be fine.
+			Transaction trans = (Transaction)((Map.Entry) it.next()).getValue();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+			transaction.put("date", trans.getTimestamp().format(formatter));
+			transaction.put("total", trans.getTotalCost());
+			ArrayList products = new ArrayList();
+			for (int i = 0; i < trans.getProducts().size(); i++){
+				Map product = new HashMap<>();
+				product.put("item", trans.getProducts().get(i).getName());
+				product.put("quantity", trans.getQuantities()[i]);
+				product.put("price", "\\$" + trans.getProducts().get(i).getDataPrice());
+				product.put("total", trans.getProducts().get(i).getDataPrice() * trans.getQuantities()[i]);
+				total += trans.getProducts().get(i).getDataPrice() * trans.getQuantities()[i];
+				products.add(product);
+			}
+			transaction.put("products", products);
+			transactions.add(transaction);
 		}
 
+		VelocityContext context = new VelocityContext();
+		context.put("name", user.getName());
+		context.put("pmkeys", user.getBarCode());
+		context.put("startDate", "startingDate");
+		context.put("endDate", "endingDate");
+		context.put("transactions", transactions);
+		context.put("total", total);
 
 		VelocityEngine ve = new VelocityEngine();
 		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
 		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 		ve.init();
 
-		VelocityContext context = new VelocityContext();
-		context.put("CustomerName", user.getName());
-		context.put("Date", LocalDate.now());
-		context.put("transactions", transactionLines);
 
 		Template template = null;
 
