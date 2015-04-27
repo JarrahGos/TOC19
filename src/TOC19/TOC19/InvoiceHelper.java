@@ -124,4 +124,21 @@ public class InvoiceHelper {
 		return 0;
 	}
 
+	public static boolean canCreatePDF(){
+		String command = "pdflatex";
+		StringBuilder out = new StringBuilder();
+		try {
+			Process child = Runtime.getRuntime().exec(command);
+			InputStream in = child.getInputStream();
+			 int ret;
+			while ((ret = in.read()) != -1){
+				out.append((char)ret);
+			}
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return out.toString().contains("Copyright");
+	}
+
 }
