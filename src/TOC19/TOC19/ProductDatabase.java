@@ -268,7 +268,7 @@ final class ProductDatabase
         }
         String out = "Name, Price, Barcode, Stock Count";
         try {
-            outfile.write(out, 0, out.length());
+            bufOut.write(out, 0, out.length());
             bufOut.newLine();
         } catch (IOException e) {
             Log.print(e);
@@ -278,7 +278,7 @@ final class ProductDatabase
                 out = product.getName() + "," + product.productPrice() + ","
                         + product.getBarCode() + "," + product.getNumber();
                 try {
-                    outfile.write(out, 0, out.length());
+                    bufOut.write(out, 0, out.length());
                     bufOut.newLine();
                 } catch (IOException e) {
                     Log.print(e);
@@ -288,7 +288,7 @@ final class ProductDatabase
 		}
         out = "Total stock value, " + total;
         try {
-            outfile.write(out, 0, out.length());
+            bufOut.write(out, 0, out.length());
             bufOut.close();
             outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
         } catch (IOException e) {
@@ -454,7 +454,7 @@ final class ProductDatabase
             return readDatabaseProduct(productNo);
         }
         catch (Exception e) {
-            Log.print(e);
+            Log.print("Product with barcode " + productNo + "could not be found.");
             return null;
         }
     }

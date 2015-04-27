@@ -282,6 +282,15 @@ public final class Interface extends Application
                 // create and listen on admin button
 		Button adminMode = new Button("Enter Admin Mode"); // button which will bring up the admin mode. 
 		adminMode.setOnAction((ActionEvent e) -> {
+			workingUser.logOut(); // set user number to -1 and delete any checkout made.
+			grid.getChildren().remove(userLabel); // make it look like no user is logged in
+			inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate.
+			items.setAll(workingUser.getCheckOutNames());
+			itemList.setItems(items);
+			prices.setAll(workingUser.getCheckOutPrices());
+			priceList.setItems(prices);
+			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
+			checkoutOut.setDividerPositions(0.8f);
 			enterPassword(); // method which will work the admin mode features. 
 		});
 		grid.add(adminMode, 0,8); // add the button to the bottum left of the screen. 

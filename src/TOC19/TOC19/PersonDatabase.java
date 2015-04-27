@@ -257,7 +257,7 @@ final class PersonDatabase {
 			Log.print(e);
 		}
 		for(Person person : database) {
-            if(person != null) {
+            if(person != null && person.getBarCode() != 7000000) {
 				out = person.getBarCode() + "," + person.getName() + ","
 						+ person.totalCostRunning() + "," + person.totalCostWeek();
 				try {
@@ -271,7 +271,7 @@ final class PersonDatabase {
 		}
 		out = "Total, " + total;
 		try {
-			outfile.write(out, 0, out.length());
+			bufOut.write(out, 0, out.length());
 			bufOut.close();
 			outfile.close(); // close the file to ensure that it actually writes out to the file on the hard drive
 		} catch (IOException e) {
