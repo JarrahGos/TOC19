@@ -212,12 +212,14 @@ public final class Interface extends Application
 						grid.add(userLabel, 3,0); // add the new user label
 						// the above two are done as we do not know whether a user label exists there. Adding two things to the same place causes an exception.
 						input.clear(); // clear the PMKeyS from the input ready for product bar codes.
+						input.requestFocus();
 					} else {
 						input.clear(); // there was an error with the PMKeyS, get ready for another.
 						userLabel.setText(workingUser.userName(userError)); // tell the user there was a problem. Maybe this could be done better.
 						grid.getChildren().remove(userLabel); // Remove a userlabel, as above.
 						grid.add(userLabel, 3,0); // add it again, as above.
 						flashColour(input, 1500, Color.RED);
+						input.requestFocus();
 					}
 				}
 				else {
@@ -231,12 +233,14 @@ public final class Interface extends Application
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
 						flashColour(input, 500, Color.AQUAMARINE);
+						input.requestFocus();
 					}
 					else{
                         productError.setText("Could not read that product");
 						input.clear();
 						flashColour(input, 500, Color.RED);
-                    }
+						input.requestFocus();
+					}
 				}
 		});
 		input.setOnKeyPressed((KeyEvent ke) -> { // the following allows the user to hit enter rather than OK. Works exactly the same as hitting OK. 
@@ -252,6 +256,7 @@ public final class Interface extends Application
 						input.clear();
 						flashColour(input, 1500, Color.AQUAMARINE);
 						checkoutOut.setDividerPositions(0.8f);
+						input.requestFocus();
 					}
 					else {
 						input.clear();
@@ -260,6 +265,7 @@ public final class Interface extends Application
 						grid.add(userLabel, 3,0);
 						input.clear();
 						flashColour(input, 1500, Color.RED);
+						input.requestFocus();
 					}
 				}
 				else {
@@ -272,10 +278,12 @@ public final class Interface extends Application
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
 						flashColour(input, 500, Color.AQUAMARINE);
+						input.requestFocus();
 					}
 					else{
 						input.clear();
 						flashColour(input, 500, Color.RED);
+						input.requestFocus();
 					}
 				}
 			}
@@ -310,8 +318,11 @@ public final class Interface extends Application
                 total.setText(String.valueOf("$" + workingUser.getPrice()));
                 itemList.scrollTo(index);
 				flashColour(removeProduct, 1500, Color.AQUAMARINE);
+	            input.requestFocus();
+            } else {
+	            flashColour(removeProduct, 1500, Color.RED);
+	            input.requestFocus();
             }
-			else flashColour(removeProduct, 1500, Color.RED);
         });
         grid.add(removeProduct, 2,8); // add the button to the bottum left of the screen.
 
@@ -330,10 +341,12 @@ public final class Interface extends Application
 				priceList.setItems(prices);
 				checkoutOut.setDividerPositions(0.8f);
 				flashColour(purchase, 1500, Color.AQUAMARINE);
+				input.requestFocus();
 			}
 			else {
 				flashColour(purchase, 1500, Color.RED);
 				flashColour(input, 1500, Color.RED);
+				input.requestFocus();
 			}
         });
 		grid.add(purchase, 4, 8, 2, 1); // add the button to the bottum right corner, next to the total price.
@@ -349,6 +362,7 @@ public final class Interface extends Application
 			priceList.setItems(prices);
 			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
 			checkoutOut.setDividerPositions(0.8f);
+			input.requestFocus();
 		});
 		grid.add(cancel, 4, 0, 2, 1); // add the button to the right of the user name.
 		Platform.setImplicitExit(false);
