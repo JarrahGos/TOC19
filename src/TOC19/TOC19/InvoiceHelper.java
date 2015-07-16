@@ -10,8 +10,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.nio.file.Files;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -50,7 +49,9 @@ public class InvoiceHelper {
 	 * @param outputDir
 	 * @return
 	 */
-	public static final int generateInvoiceForUser(Person user, ArrayList<Transaction> transactionsIn, String outputDir) {
+	public static final int generateInvoiceForUser(Person user, ArrayList<Transaction> transactionsIn, String
+			outputDir, boolean shouldCreatePdf) {
+
 
 		// Auto sorting ftw
 		TreeMap<Long, Transaction> transactionMap = new TreeMap<>();
@@ -123,15 +124,29 @@ public class InvoiceHelper {
 		template.merge(context, writer);
 
 		try{
-			File texFile = new File(outputDir + "/" + user.getName() + "-" + user.getBarCode() + ".tex");
+			File texFile = new File("invoice/" + user.getName() + "-" + user.getBarCode() + ".tex");
 			if(texFile.exists()){
-				texFile.renameTo(new File(texFile.getAbsolutePath() + "/" + user.getName() + "-" + user.getBarCode() +
-						                          "_old.tex"));
+				texFile.renameTo(new File("invoice/" + user.getName() + "-" + user.getBarCode() + "_old.tex"));
 			}
 
 			BufferedWriter writeFile = new BufferedWriter(new FileWriter(texFile));
 			writeFile.write(writer.toString());
 			writeFile.close();
+
+			if (shouldCreatePdf) {
+				File pdfFile = createPdfFromLatex(texFile);
+				System.out.println("pdfFile = " + pdfFile);
+				Files.move(new File("invoice/" + pdfFile.getName()).toPath(), new File(outputDir + "\\" + pdfFile.getName()).toPath());
+			} else {
+				Files.copy(texFile.toPath(), new File(outputDir + "\\" + texFile.getName()
+				).toPath());
+			}
+
+			// now clean up after ourselves
+			File[] remains = new File("invoice").listFiles();
+			for (File rawFile : remains) {
+				rawFile.delete();
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -141,14 +156,40 @@ public class InvoiceHelper {
 		return 0;
 	}
 
+	public static File createPdfFromLatex(File latexFile) {
+		File output = null;
+		String command = "pdflatex " + "\"" + latexFile.getPath() + "\"";
+		try {
+
+			ProcessBuilder processBuilder = new ProcessBuilder("pdflatex", "\"" + latexFile.getName() + "\"");
+			processBuilder.directory(new File("invoice"));
+			System.out.println(processBuilder.directory());
+			Process process = processBuilder.start();
+
+			StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), "ERROR");
+			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), "OUTPUT");
+
+			errorGobbler.start();
+			outputGobbler.start();
+
+			int exitVal = process.waitFor();
+
+			output = new File(latexFile.getName().replace(".tex", ".pdf"));
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		return output;
+	}
+
 	public static boolean canCreatePDF(){
-		String command = "pdflatex";
+		String command = "pdflatex -v";
 		StringBuilder out = new StringBuilder();
 		try {
 			Process child = Runtime.getRuntime().exec(command);
 			InputStream in = child.getInputStream();
 			 int ret;
 			while ((ret = in.read()) != -1){
+				//System.out.print((char) ret);
 				out.append((char)ret);
 			}
 			in.close();
@@ -158,4 +199,26 @@ public class InvoiceHelper {
 		return out.toString().contains("Copyright");
 	}
 
+}
+
+class StreamGobbler extends Thread {
+
+	InputStream is;
+	String type;
+
+	StreamGobbler(InputStream is, String type) {
+		this.is = is;
+		this.type = type;
+	}
+
+	public void run() {
+		try {
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			while ((line = br.readLine()) != null) { System.out.println(type + ">" + line); }
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 }

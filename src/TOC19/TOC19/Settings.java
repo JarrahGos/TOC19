@@ -179,4 +179,20 @@ class Settings {
 		output[1] = properties.getProperty("transactionLogging");
 		return output;
 	}
+
+	public final String tocName() throws FileNotFoundException {
+		if (inputStream != null) {
+			try {
+				properties.load(inputStream);
+			} catch (IOException e) {
+				System.out.print("property file '" + propFileName + "' not found in the classpath");
+			}
+		} else {
+			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+		}
+
+		String output = new String();
+		output = properties.getProperty("tocName");
+		return output;
+	}
 }
