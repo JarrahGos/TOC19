@@ -232,12 +232,14 @@ public final class Interface extends Application
 						priceList.setItems(prices);
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
+						input.requestFocus();
 						flashColour(input, 500, Color.AQUAMARINE);
 						input.requestFocus();
 					}
 					else{
                         productError.setText("Could not read that product");
 						input.clear();
+						input.RequestFocus();
 						flashColour(input, 500, Color.RED);
 						input.requestFocus();
 					}
@@ -255,6 +257,7 @@ public final class Interface extends Application
 						grid.add(userLabel, 3,0);
 						input.clear();
 						flashColour(input, 1500, Color.AQUAMARINE);
+						input.requestFocus();
 						checkoutOut.setDividerPositions(0.8f);
 						input.requestFocus();
 					}
@@ -264,6 +267,7 @@ public final class Interface extends Application
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 3,0);
 						input.clear();
+						input.RequestFocus();
 						flashColour(input, 1500, Color.RED);
 						input.requestFocus();
 					}
@@ -277,11 +281,13 @@ public final class Interface extends Application
 						priceList.setItems(prices);
 						total.setText(String.valueOf("$" + workingUser.getPrice()));
 						input.clear();
+						input.requestFocus();
 						flashColour(input, 500, Color.AQUAMARINE);
 						input.requestFocus();
 					}
 					else{
 						input.clear();
+						input.requestFocus();
 						flashColour(input, 500, Color.RED);
 						input.requestFocus();
 					}
@@ -302,6 +308,7 @@ public final class Interface extends Application
 			priceList.setItems(prices);
 			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
 			checkoutOut.setDividerPositions(0.8f);
+			input.requestFocus();
 			enterPassword(); // method which will work the admin mode features. 
 		});
 		grid.add(adminMode, 0, 8); // add the button to the bottum left of the screen.
@@ -317,6 +324,7 @@ public final class Interface extends Application
                 itemList.setItems(items); //TODO: add select top.
                 total.setText(String.valueOf("$" + workingUser.getPrice()));
                 itemList.scrollTo(index);
+				input.requestFocus();
 				flashColour(removeProduct, 1500, Color.AQUAMARINE);
 	            input.requestFocus();
             } else {
@@ -340,6 +348,7 @@ public final class Interface extends Application
 				prices.setAll(workingUser.getCheckOutPrices());
 				priceList.setItems(prices);
 				checkoutOut.setDividerPositions(0.8f);
+				input.requestFocus();
 				flashColour(purchase, 1500, Color.AQUAMARINE);
 				input.requestFocus();
 			}
@@ -360,6 +369,7 @@ public final class Interface extends Application
 			itemList.setItems(items);
 			prices.setAll(workingUser.getCheckOutPrices());
 			priceList.setItems(prices);
+			input.requestFocus();
 			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
 			checkoutOut.setDividerPositions(0.8f);
 			input.requestFocus();
@@ -368,6 +378,7 @@ public final class Interface extends Application
 		Platform.setImplicitExit(false);
 		primaryStage.setOnCloseRequest((WindowEvent event) -> {
 			event.consume();
+			input.requestFocus();
 		});
 		Scene primaryScene = new Scene(grid, horizontalSize, verticalSize); // create the scene at the given size
 		primaryStage.setScene(primaryScene);
