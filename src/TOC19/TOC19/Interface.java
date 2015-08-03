@@ -182,28 +182,22 @@ public final class Interface extends Application
 
 
 					if(workingUser.userLoggedIn()) {
-						Thread thread = new Thread(new Runnable()
-						{
+						Thread thread = new Thread(() -> {
+                            try {
+                                Thread.sleep(1000); // after this time, log the user out.
+                                workingUser.logOut(); // set user number to -1 and delete any checkout made.
 
-							@Override
-							public void run()
-							{
-								try {
-									Thread.sleep(1); // after this time, log the user out.
-									workingUser.logOut(); // set user number to -1 and delete any checkout made.
-
-									grid.getChildren().remove(userLabel); // make it look like no user is logged in
-									inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate.
-									total.setText(String.valueOf("$" + workingUser.getPrice())); // set the total price to 0.00.
-								}
-								catch (InterruptedException e) {
-									// do nothing here.
-								}
-							}
-						});
+                                grid.getChildren().remove(userLabel); // make it look like no user is logged in
+                                inputLabel.setText("Enter your PMKeyS"); // set the input label to something appropriate.
+                                total.setText(String.valueOf("$" + workingUser.getPrice())); // set the total price to 0.00.
+                            }
+                            catch (InterruptedException ex) {
+                                // do nothing here.
+                            }
+                        });
 						thread.setDaemon(true);
 						thread.setPriority(Thread.MIN_PRIORITY);
-						thread.start();
+						Platform.runLater(thread);
 						thread.interrupt();
 						flashColour(input, 1500, Color.AQUAMARINE);
 						userLabel.setText(workingUser.userName(userError) + "—$" + workingUser.getUserBill()); // find the name of those who dare log on.
@@ -239,7 +233,7 @@ public final class Interface extends Application
 					else{
                         productError.setText("Could not read that product");
 						input.clear();
-						input.RequestFocus();
+						input.requestFocus();
 						flashColour(input, 500, Color.RED);
 						input.requestFocus();
 					}
@@ -267,7 +261,7 @@ public final class Interface extends Application
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 3,0);
 						input.clear();
-						input.RequestFocus();
+						input.requestFocus();
 						flashColour(input, 1500, Color.RED);
 						input.requestFocus();
 					}

@@ -41,6 +41,8 @@ import java.util.*;
 
 public class InvoiceHelper {
 
+	static Settings config = new Settings();
+
 	/**
 	 * Creates a LaTeX file in the specified directory which is an invoice for the specified person.
 	 * filename example: "Michael Brock-8610097.tex"
@@ -50,7 +52,7 @@ public class InvoiceHelper {
 	 * @return
 	 */
 	public static final int generateInvoiceForUser(Person user, ArrayList<Transaction> transactionsIn, String
-			outputDir, boolean shouldCreatePdf) {
+			outputDir, boolean shouldCreatePdf) throws FileNotFoundException {
 
 
 		// Auto sorting ftw
@@ -85,13 +87,40 @@ public class InvoiceHelper {
 			transactions.add(transaction);
 		}
 
+		String header = "";
+		try {
+			BufferedReader headerIn = new BufferedReader(new FileReader(new File("billData/header.info")));
+			String line ="";
+
+			while ((line = headerIn.readLine()) != null){
+				header += line + "\\\\";
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		String footer = "";
+		try {
+			BufferedReader footerIn = new BufferedReader(new FileReader(new File("billData/footer.info")));
+			String line ="";
+
+			while ((line = footerIn.readLine()) != null){
+				footer += line + "\\\\";
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		VelocityContext context = new VelocityContext();
+		context.put("title", config.tocName());
 		context.put("name", user.getName());
 		context.put("pmkeys", user.getBarCode());
 		context.put("startDate", "startingDate");
 		context.put("endDate", "endingDate");
 		context.put("transactions", transactions);
 		context.put("total", total);
+		context.put("header", header);
+		context.put("footer", footer);
 
 		VelocityEngine ve = new VelocityEngine();
 		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");

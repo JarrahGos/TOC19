@@ -191,7 +191,7 @@ class Settings {
 			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
 		}
 
-		String output = new String();
+		String output = "TOC";
 		output = properties.getProperty("tocName");
 		return output;
 	}
