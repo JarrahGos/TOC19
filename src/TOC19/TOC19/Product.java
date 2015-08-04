@@ -165,4 +165,8 @@ public final class Product implements java.io.Serializable
 		return check.getName().equals(name) || check.getBarCode() == barCode;
 	}
 
+	@Override
+	public String toString(){
+		return name + "-" + barCode + "-" + getDataPrice();
+	}
 }

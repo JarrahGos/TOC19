@@ -276,7 +276,7 @@ class WorkingUser {
             return true;
         }
         else if(user.getBarCode() == tempBarCode) {
-            adding = new Product("Buying yourself are you? You can't do that.", 0, tempBarCode);
+            adding = new Product("Buying yourself are you? You can't do that.", 0, tempBarCode < 0 ? tempBarCode : tempBarCode * -1);
             checkOuts.addProduct(adding);
             return true;
         }

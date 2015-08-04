@@ -47,7 +47,13 @@ public class Transaction {
 
 	public Transaction(Person person, ArrayList<Product> productArray, Integer[] amounts, LocalDateTime time) {
 		user = person;
-		products = productArray;
+		products = new ArrayList<>();
+		for (Product product : productArray){
+			if (product.getBarCode() > 0){
+				System.out.println(product);
+				products.add(product);
+			}
+		}
 		quantities = amounts;
 		timestamp = time;
 	}
@@ -96,4 +102,5 @@ public class Transaction {
 	public String[] toInvoiceString() {
 		return new String[] {getDataText(), getTotalCost().toString()};
 	}
+
 }
