@@ -28,79 +28,79 @@ import java.util.ArrayList;
 
 public class Transaction {
 
-	/**
-	 * The user that made the purchase
-	 */
-	private Person user;
-	/**
-	 * The products bought in the transaction
-	 */
-	private ArrayList<Product> products;
-	/**
-	 * The quantities of the products bought
-	 */
-	private Integer[] quantities;
-	/**
-	 * The date and time of the transaction
-	 */
-	private LocalDateTime timestamp;
+    /**
+     * The user that made the purchase
+     */
+    private Person user;
+    /**
+     * The products bought in the transaction
+     */
+    private ArrayList<Product> products;
+    /**
+     * The quantities of the products bought
+     */
+    private Integer[] quantities;
+    /**
+     * The date and time of the transaction
+     */
+    private LocalDateTime timestamp;
 
-	public Transaction(Person person, ArrayList<Product> productArray, Integer[] amounts, LocalDateTime time) {
-		user = person;
-		products = new ArrayList<>();
-		for (Product product : productArray){
-			if (product.getBarCode() > 0){
-				System.out.println(product);
-				products.add(product);
-			}
-		}
-		quantities = amounts;
-		timestamp = time;
-	}
+    public Transaction(Person person, ArrayList<Product> productArray, Integer[] amounts, LocalDateTime time) {
+        user = person;
+        products = new ArrayList<>();
+        for (Product product : productArray) {
+            if (product.getBarCode() > 0) {
+//				System.out.println(product);
+                products.add(product);
+            }
+        }
+        quantities = amounts;
+        timestamp = time;
+    }
 
-	public ArrayList<Product> getProducts() {
-		return products;
-	}
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
 
-	public Person getUser() {
-		return user;
-	}
+    public Person getUser() {
+        return user;
+    }
 
-	public Integer[] getQuantities() {
-		return quantities;
-	}
+    public Integer[] getQuantities() {
+        return quantities;
+    }
 
-	public LocalDateTime getTimestamp() {
-		return timestamp;
-	}
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
 
-	public Double getTotalCost() {
+    public Double getTotalCost() {
 
-		long total = 0L;
-		for (int i = 0; i < products.size(); i++) {
-			total += (products.get(i).productPrice() * quantities[i]);
-		}
+        long total = 0L;
+        for (int i = 0; i < products.size(); i++) {
+            total += (products.get(i).productPrice() * quantities[i]);
+        }
 
-		return total / 100D;
-	}
+        return total / 100D;
+    }
 
-	public String toString(){
-		return (getTimestamp() + " ---- $" + getTotalCost());
-	}
+    public String toString() {
+        return (getTimestamp() + " ---- $" + getTotalCost());
+    }
 
-	public String getDataText() {
-		StringBuilder output = new StringBuilder();
+    public String getDataText() {
+        StringBuilder output = new StringBuilder();
 
-		for (int i = 0; i < products.size(); i++) {
-			output.append("Product: " + products.get(i).getName() + "\n");
-			output.append("    Unit Price: $" + products.get(i).getDataPrice() + "\n");
-			output.append("    Quantity: " + quantities[i] + "\n");
-		}
-		return output.toString();
-	}
+        for (int i = 0; i < products.size(); i++) {
+            output.append("Product: " + products.get(i).getName() + "\n");
+            output.append("    Unit Price: $" + products.get(i).getDataPrice() + "\n");
+            output.append("    Quantity: " + quantities[i] + "\n");
+        }
+        return output.toString();
+    }
 
-	public String[] toInvoiceString() {
-		return new String[] {getDataText(), getTotalCost().toString()};
-	}
+    public String[] toInvoiceString() {
+        return new String[]{getDataText(), getTotalCost().toString()};
+    }
 
 }

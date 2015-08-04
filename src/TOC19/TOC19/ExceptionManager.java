@@ -40,7 +40,7 @@ public class ExceptionManager {
         e.printStackTrace(pw);
         String exceptionText = sw.toString();
 
-        if(isBlacklisted(exceptionText)) return;
+        if (isBlacklisted(exceptionText)) return;
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Exception Management");

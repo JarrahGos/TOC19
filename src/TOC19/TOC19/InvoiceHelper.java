@@ -35,219 +35,222 @@ import java.util.*;
 
 /**
  * @author Michael Brock
- * This class enables static creation of invoice tex files for a specified user and list of transactions.
- * It also gives means to check if LaTeX is installed and if so compile the LaTeX document to a PDF.
+ *         This class enables static creation of invoice tex files for a specified user and list of transactions.
+ *         It also gives means to check if LaTeX is installed and if so compile the LaTeX document to a PDF.
  */
 
 public class InvoiceHelper {
 
-	static Settings config = new Settings();
+    static Settings config = new Settings();
 
-	/**
-	 * Creates a LaTeX file in the specified directory which is an invoice for the specified person.
-	 * filename example: "Michael Brock-8610097.tex"
-	 * @param user
-	 * @param transactionsIn
-	 * @param outputDir
-	 * @return
-	 */
-	public static final int generateInvoiceForUser(Person user, ArrayList<Transaction> transactionsIn, String
-			outputDir, boolean shouldCreatePdf) throws FileNotFoundException {
-
-
-		// Auto sorting ftw
-		TreeMap<Long, Transaction> transactionMap = new TreeMap<>();
-		for(Transaction trans : transactionsIn){
-			transactionMap.put(trans.getTimestamp().toEpochSecond(ZoneOffset.UTC),trans);
-		}
-
-		Set entries = transactionMap.entrySet();
-		Iterator it = entries.iterator();
-		double total = 0D;
-
-		ArrayList transactions = new ArrayList();
-		while (it.hasNext()){
-			Map transaction = new HashMap<>();
-			//So much unchecked casting however I only just created the array so..... It should be fine.
-			Transaction trans = (Transaction)((Map.Entry) it.next()).getValue();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-			transaction.put("date", trans.getTimestamp().format(formatter));
-			transaction.put("total", trans.getTotalCost());
-			ArrayList products = new ArrayList();
-			for (int i = 0; i < trans.getProducts().size(); i++){
-				Map product = new HashMap<>();
-				product.put("item", trans.getProducts().get(i).getName());
-				product.put("quantity", trans.getQuantities()[i]);
-				product.put("price", "\\$" + trans.getProducts().get(i).getDataPrice());
-				product.put("total", trans.getProducts().get(i).getDataPrice() * trans.getQuantities()[i]);
-				total += trans.getProducts().get(i).getDataPrice() * trans.getQuantities()[i];
-				products.add(product);
-			}
-			transaction.put("products", products);
-			transactions.add(transaction);
-		}
-
-		String header = "";
-		try {
-			BufferedReader headerIn = new BufferedReader(new FileReader(new File("billData/header.info")));
-			String line ="";
-
-			while ((line = headerIn.readLine()) != null){
-				header += line + "\\\\";
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		String footer = "";
-		try {
-			BufferedReader footerIn = new BufferedReader(new FileReader(new File("billData/footer.info")));
-			String line ="";
-
-			while ((line = footerIn.readLine()) != null){
-				footer += line + "\\\\";
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		VelocityContext context = new VelocityContext();
-		context.put("title", config.tocName());
-		context.put("name", user.getName());
-		context.put("pmkeys", user.getBarCode());
-		context.put("startDate", "startingDate");
-		context.put("endDate", "endingDate");
-		context.put("transactions", transactions);
-		context.put("total", total);
-		context.put("header", header);
-		context.put("footer", footer);
-
-		VelocityEngine ve = new VelocityEngine();
-		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-		ve.init();
+    /**
+     * Creates a LaTeX file in the specified directory which is an invoice for the specified person.
+     * filename example: "Michael Brock-8610097.tex"
+     *
+     * @param user
+     * @param transactionsIn
+     * @param outputDir
+     * @return
+     */
+    public static final int generateInvoiceForUser(Person user, ArrayList<Transaction> transactionsIn, String
+            outputDir, boolean shouldCreatePdf) throws FileNotFoundException {
 
 
-		Template template = null;
+        // Auto sorting ftw
+        TreeMap<Long, Transaction> transactionMap = new TreeMap<>();
+        for (Transaction trans : transactionsIn) {
+            transactionMap.put(trans.getTimestamp().toEpochSecond(ZoneOffset.UTC), trans);
+        }
 
-		try {
-			template = ve.getTemplate("TOC19/resources/invoiceTemplate.tex");
-		} catch (ResourceNotFoundException rnfe) {
-			Log.print("Following error is caused by: " + user.getName());
-			Log.print(rnfe);
-			return 1;
-		} catch (ParseErrorException pee) {
-			Log.print("Following error is caused by: " + user.getName());
-			Log.print(pee);
-			return 1;
-		} catch (MethodInvocationException mie) {
-			Log.print("Following error is caused by: " + user.getName());
-			Log.print(mie);
-			return 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        Set entries = transactionMap.entrySet();
+        Iterator it = entries.iterator();
+        double total = 0D;
 
-		StringWriter writer = new StringWriter();
+        ArrayList transactions = new ArrayList();
+        while (it.hasNext()) {
+            Map transaction = new HashMap<>();
+            //So much unchecked casting however I only just created the array so..... It should be fine.
+            Transaction trans = (Transaction) ((Map.Entry) it.next()).getValue();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            transaction.put("date", trans.getTimestamp().format(formatter));
+            transaction.put("total", trans.getTotalCost());
+            ArrayList products = new ArrayList();
+            for (int i = 0; i < trans.getProducts().size(); i++) {
+                Map product = new HashMap<>();
+                product.put("item", trans.getProducts().get(i).getName());
+                product.put("quantity", trans.getQuantities()[i]);
+                product.put("price", "\\$" + trans.getProducts().get(i).getDataPrice());
+                product.put("total", trans.getProducts().get(i).getDataPrice() * trans.getQuantities()[i]);
+                total += trans.getProducts().get(i).getDataPrice() * trans.getQuantities()[i];
+                products.add(product);
+            }
+            transaction.put("products", products);
+            transactions.add(transaction);
+        }
 
-		template.merge(context, writer);
+        String header = "";
+        try {
+            BufferedReader headerIn = new BufferedReader(new FileReader(new File("billData/header.info")));
+            String line = "";
 
-		try{
-			File texFile = new File("invoice/" + user.getName() + "-" + user.getBarCode() + ".tex");
-			if(texFile.exists()){
-				texFile.renameTo(new File("invoice/" + user.getName() + "-" + user.getBarCode() + "_old.tex"));
-			}
+            while ((line = headerIn.readLine()) != null) {
+                header += line + "\\\\";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-			BufferedWriter writeFile = new BufferedWriter(new FileWriter(texFile));
-			writeFile.write(writer.toString());
-			writeFile.close();
+        String footer = "";
+        try {
+            BufferedReader footerIn = new BufferedReader(new FileReader(new File("billData/footer.info")));
+            String line = "";
 
-			if (shouldCreatePdf) {
-				File pdfFile = createPdfFromLatex(texFile);
-				System.out.println("pdfFile = " + pdfFile);
-				Files.move(new File("invoice/" + pdfFile.getName()).toPath(), new File(outputDir + "\\" + pdfFile.getName()).toPath());
-			} else {
-				Files.copy(texFile.toPath(), new File(outputDir + "\\" + texFile.getName()
-				).toPath());
-			}
+            while ((line = footerIn.readLine()) != null) {
+                footer += line + "\\\\";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-			// now clean up after ourselves
-			File[] remains = new File("invoice").listFiles();
-			for (File rawFile : remains) {
-				rawFile.delete();
-			}
+        VelocityContext context = new VelocityContext();
+        context.put("title", config.tocName());
+        context.put("name", user.getName());
+        context.put("pmkeys", user.getBarCode());
+        context.put("startDate", "startingDate");
+        context.put("endDate", "endingDate");
+        context.put("transactions", transactions);
+        context.put("total", total);
+        context.put("header", header);
+        context.put("footer", footer);
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			return 2;
-		}
+        VelocityEngine ve = new VelocityEngine();
+        ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+        ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+        ve.init();
 
-		return 0;
-	}
 
-	public static File createPdfFromLatex(File latexFile) {
-		File output = null;
-		String command = "pdflatex " + "\"" + latexFile.getPath() + "\"";
-		try {
+        Template template = null;
 
-			ProcessBuilder processBuilder = new ProcessBuilder("pdflatex", "\"" + latexFile.getName() + "\"");
-			processBuilder.directory(new File("invoice"));
-			System.out.println(processBuilder.directory());
-			Process process = processBuilder.start();
+        try {
+            template = ve.getTemplate("TOC19/resources/invoiceTemplate.tex");
+        } catch (ResourceNotFoundException rnfe) {
+            Log.print("Following error is caused by: " + user.getName());
+            Log.print(rnfe);
+            return 1;
+        } catch (ParseErrorException pee) {
+            Log.print("Following error is caused by: " + user.getName());
+            Log.print(pee);
+            return 1;
+        } catch (MethodInvocationException mie) {
+            Log.print("Following error is caused by: " + user.getName());
+            Log.print(mie);
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-			StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), "ERROR");
-			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), "OUTPUT");
+        StringWriter writer = new StringWriter();
 
-			errorGobbler.start();
-			outputGobbler.start();
+        template.merge(context, writer);
 
-			int exitVal = process.waitFor();
+        try {
+            File texFile = new File("invoice/" + user.getName() + "-" + user.getBarCode() + ".tex");
+            if (texFile.exists()) {
+                texFile.renameTo(new File("invoice/" + user.getName() + "-" + user.getBarCode() + "_old.tex"));
+            }
 
-			output = new File(latexFile.getName().replace(".tex", ".pdf"));
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		}
-		return output;
-	}
+            BufferedWriter writeFile = new BufferedWriter(new FileWriter(texFile));
+            writeFile.write(writer.toString());
+            writeFile.close();
 
-	public static boolean canCreatePDF(){
-		String command = "pdflatex -v";
-		StringBuilder out = new StringBuilder();
-		try {
-			Process child = Runtime.getRuntime().exec(command);
-			InputStream in = child.getInputStream();
-			 int ret;
-			while ((ret = in.read()) != -1){
-				//System.out.print((char) ret);
-				out.append((char)ret);
-			}
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return out.toString().contains("Copyright");
-	}
+            if (shouldCreatePdf) {
+                File pdfFile = createPdfFromLatex(texFile);
+                System.out.println("pdfFile = " + pdfFile);
+                Files.move(new File("invoice/" + pdfFile.getName()).toPath(), new File(outputDir + "\\" + pdfFile.getName()).toPath());
+            } else {
+                Files.copy(texFile.toPath(), new File(outputDir + "\\" + texFile.getName()
+                ).toPath());
+            }
+
+            // now clean up after ourselves
+            File[] remains = new File("invoice").listFiles();
+            for (File rawFile : remains) {
+                rawFile.delete();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 2;
+        }
+
+        return 0;
+    }
+
+    public static File createPdfFromLatex(File latexFile) {
+        File output = null;
+        String command = "pdflatex " + "\"" + latexFile.getPath() + "\"";
+        try {
+
+            ProcessBuilder processBuilder = new ProcessBuilder("pdflatex", "\"" + latexFile.getName() + "\"");
+            processBuilder.directory(new File("invoice"));
+            System.out.println(processBuilder.directory());
+            Process process = processBuilder.start();
+
+            StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), "ERROR");
+            StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), "OUTPUT");
+
+            errorGobbler.start();
+            outputGobbler.start();
+
+            int exitVal = process.waitFor();
+
+            output = new File(latexFile.getName().replace(".tex", ".pdf"));
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
+
+    public static boolean canCreatePDF() {
+        String command = "pdflatex -v";
+        StringBuilder out = new StringBuilder();
+        try {
+            Process child = Runtime.getRuntime().exec(command);
+            InputStream in = child.getInputStream();
+            int ret;
+            while ((ret = in.read()) != -1) {
+                //System.out.print((char) ret);
+                out.append((char) ret);
+            }
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toString().contains("Copyright");
+    }
 
 }
 
 class StreamGobbler extends Thread {
 
-	InputStream is;
-	String type;
+    InputStream is;
+    String type;
 
-	StreamGobbler(InputStream is, String type) {
-		this.is = is;
-		this.type = type;
-	}
+    StreamGobbler(InputStream is, String type) {
+        this.is = is;
+        this.type = type;
+    }
 
-	public void run() {
-		try {
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			String line = null;
-			while ((line = br.readLine()) != null) { System.out.println(type + ">" + line); }
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-	}
+    public void run() {
+        try {
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                System.out.println(type + ">" + line);
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
 }

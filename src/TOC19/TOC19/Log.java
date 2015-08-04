@@ -10,21 +10,34 @@ import java.io.IOException;
  */
 
 public class Log {
-	/** The settings object which will give the Log Location */
+    /**
+     * The settings object which will give the Log Location
+     */
     private static Settings settings = new Settings();
-	/** The location to store the log in */
+    /**
+     * The location to store the log in
+     */
     private static String logLocation = "./";
-	/** The file writer which will append to the log */
+    /**
+     * The file writer which will append to the log
+     */
     private static FileWriter fwriter;
-	/** The buffered writer which will write to the log */
+    /**
+     * The buffered writer which will write to the log
+     */
     private static BufferedWriter bwriter;
-	/** whether an exception occured the first time. Stops recursive loops */
+    /**
+     * whether an exception occured the first time. Stops recursive loops
+     */
     private static boolean first = true;
-	/** Whether to print to the database or to the console. True for console */
+    /**
+     * Whether to print to the database or to the console. True for console
+     */
     private static boolean debug = false; // print to the console.
-	/** 
-	 * Set up the logLocation and writers ready to write the log
-	 */
+
+    /**
+     * Set up the logLocation and writers ready to write the log
+     */
     private Log() {
         try {
             logLocation = settings.logSettings();
@@ -34,16 +47,17 @@ public class Log {
         try {
             fwriter = new FileWriter(logLocation + "LOG", true);
             bwriter = new BufferedWriter(fwriter);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             print(e);
         }
     }
-	/**
-	 * Turn a throwable into a string stack trace
-	 * @param e The throwable to be traced and turned into a string
-	 * @return a string containing the stack trace of e
-	 */
+
+    /**
+     * Turn a throwable into a string stack trace
+     *
+     * @param e The throwable to be traced and turned into a string
+     * @return a string containing the stack trace of e
+     */
     private static String stackTraceToString(Throwable e) {
         StringBuilder sb = new StringBuilder();
         for (StackTraceElement element : e.getStackTrace()) {
@@ -52,13 +66,15 @@ public class Log {
         }
         return sb.toString();
     }
-	/**
-	 * Print the stacktrace of a throwable to the log
-	 * @param e The throwable which will be traced and printed to the log
-	 */
+
+    /**
+     * Print the stacktrace of a throwable to the log
+     *
+     * @param e The throwable which will be traced and printed to the log
+     */
     public static void print(Throwable e) {
         ExceptionManager.getInstance().showErrorDialog(e);
-        if(!debug) {
+        if (!debug) {
             if (bwriter == null) new Log();
             String stackTrace = stackTraceToString(e);
             try {
@@ -75,15 +91,16 @@ public class Log {
                     return;
                 }
             }
-        }
-        else e.printStackTrace();
+        } else e.printStackTrace();
     }
-	/**
-	 * Print a predefined string to the Log
-	 * @param s The string to print to the log. 
-	 */
+
+    /**
+     * Print a predefined string to the Log
+     *
+     * @param s The string to print to the log.
+     */
     public static void print(String s) {
-        if(!debug) {
+        if (!debug) {
             if (bwriter == null) new Log();
             try {
                 bwriter.write(s, 0, s.length());
@@ -99,7 +116,6 @@ public class Log {
                     return;
                 }
             }
-        }
-        else System.out.println(s);
+        } else System.out.println(s);
     }
 }

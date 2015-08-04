@@ -38,161 +38,160 @@ import java.util.Properties;
  */
 
 class Settings {
-	/**
-	 * The properties object which is used to interact with the properties file
-	 */
-	private final Properties properties = new Properties();
-	/**
-	 * the path to the properties file which contains the settings
-	 */
-	private final String propFileName = Compatibility.getFilePath("TOC19.properties");
-	/**
-	 * an input stream which is used to access the properties file
-	 */
-	private InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(propFileName);
+    /**
+     * The properties object which is used to interact with the properties file
+     */
+    private final Properties properties = new Properties();
+    /**
+     * the path to the properties file which contains the settings
+     */
+    private final String propFileName = Compatibility.getFilePath("TOC19.properties");
+    /**
+     * an input stream which is used to access the properties file
+     */
+    private InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(propFileName);
 
-	/**
-	 * Create an instance of the settings class from which to read settings from.
-	 */
-	public Settings() {
-		if (inputStream != null) return;
+    /**
+     * Create an instance of the settings class from which to read settings from.
+     */
+    public Settings() {
+        if (inputStream != null) return;
 
-		try {
-			if (inputStream == null) {
-				inputStream = new FileInputStream(String.valueOf(Paths.get(propFileName)));
-			}
-			if (inputStream == null) {
-				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-			}
-		} catch (FileNotFoundException e) {
-			Log.print(e);
-		}
-	}
+        try {
+            if (inputStream == null) {
+                inputStream = new FileInputStream(String.valueOf(Paths.get(propFileName)));
+            }
+            if (inputStream == null) {
+                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+            }
+        } catch (FileNotFoundException e) {
+            Log.print(e);
+        }
+    }
 
-	/**
-	 * Get the settings for the person database, specifically the location to store the database
-	 *
-	 * @return The location in which the database is stored. This is checked for compatibility against the running OS
-	 * @throws FileNotFoundException if the settings file is not in the location it should be.
-	 */
-	public final String personSettings() throws FileNotFoundException {
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			} catch (IOException e) {
-				Log.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		} else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
+    /**
+     * Get the settings for the person database, specifically the location to store the database
+     *
+     * @return The location in which the database is stored. This is checked for compatibility against the running OS
+     * @throws FileNotFoundException if the settings file is not in the location it should be.
+     */
+    public final String personSettings() throws FileNotFoundException {
+        if (inputStream != null) {
+            try {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                Log.print("property file '" + propFileName + "' not found in the classpath");
+            }
+        } else {
+            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+        }
 
-		String output;
-		output = properties.getProperty("personDatabaseLocation");
-		output = Compatibility.getFilePath(output);
-		return output;
-	}
+        String output;
+        output = properties.getProperty("personDatabaseLocation");
+        output = Compatibility.getFilePath(output);
+        return output;
+    }
 
-	/**
-	 * Get the settings for the product datasbase, specifically the location to store the database in.
-	 *
-	 * @return The location in which the database is stored. This is checked for compatibility against the running OS
-	 * @throws FileNotFoundException If the settings file is not in the location it should be.
-	 */
-	public final String productSettings() throws FileNotFoundException {
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			} catch (IOException e) {
-				Log.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		} else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
+    /**
+     * Get the settings for the product datasbase, specifically the location to store the database in.
+     *
+     * @return The location in which the database is stored. This is checked for compatibility against the running OS
+     * @throws FileNotFoundException If the settings file is not in the location it should be.
+     */
+    public final String productSettings() throws FileNotFoundException {
+        if (inputStream != null) {
+            try {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                Log.print("property file '" + propFileName + "' not found in the classpath");
+            }
+        } else {
+            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+        }
 
-		String output;
-		output = properties.getProperty("productDatabaseLocation");
-		output = Compatibility.getFilePath(output);
-		return output;
-	}
+        String output;
+        output = properties.getProperty("productDatabaseLocation");
+        output = Compatibility.getFilePath(output);
+        return output;
+    }
 
-	/**
-	 * Get the settings for the interface. Specifically the horizontal size, vertical size, (both in pixels) and the text size
-	 *
-	 * @return A string array with the horizontal size, vertical size and textsize.
-	 * @throws FileNotFoundException If the settings file is not in the location it should be.
-	 */
-	public final String[] interfaceSettings() throws FileNotFoundException {
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			} catch (IOException e) {
-				Log.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		} else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
+    /**
+     * Get the settings for the interface. Specifically the horizontal size, vertical size, (both in pixels) and the text size
+     *
+     * @return A string array with the horizontal size, vertical size and textsize.
+     * @throws FileNotFoundException If the settings file is not in the location it should be.
+     */
+    public final String[] interfaceSettings() throws FileNotFoundException {
+        if (inputStream != null) {
+            try {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                Log.print("property file '" + propFileName + "' not found in the classpath");
+            }
+        } else {
+            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+        }
 
-		String[] output = new String[3];
-		output[0] = properties.getProperty("horizontalSize");
-		output[1] = properties.getProperty("verticalSize");
-		output[2] = properties.getProperty("textSize");
-		return output;
-	}
-	/**
-	 * Get the settings for the error log. Specifically the location of it's storage
-	 * @return A string with the location of the log. This is checked for compatibility against the running OS
-	 * @throws FileNotFoundException If the settings file is not in the location it should be.
-	 */
-	public final String logSettings() throws FileNotFoundException {
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			} catch (IOException e) {
-				Log.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		} else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
+        String[] output = new String[3];
+        output[0] = properties.getProperty("horizontalSize");
+        output[1] = properties.getProperty("verticalSize");
+        output[2] = properties.getProperty("textSize");
+        return output;
+    }
 
-		String output;
-		output = properties.getProperty("logFileLocation");
-		output = Compatibility.getFilePath(output);
-		return output;
-	}
+    /**
+     * Get the settings for the error log. Specifically the location of it's storage
+     *
+     * @return A string with the location of the log. This is checked for compatibility against the running OS
+     * @throws FileNotFoundException If the settings file is not in the location it should be.
+     */
+    public final String logSettings() throws FileNotFoundException {
+        if (inputStream != null) {
+            try {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                Log.print("property file '" + propFileName + "' not found in the classpath");
+            }
+        } else {
+            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+        }
 
-	public final String[] transactionSettings() throws FileNotFoundException
-	{
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			}
-			catch(IOException e) {
-				System.out.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		}
-		else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
+        String output;
+        output = properties.getProperty("logFileLocation");
+        output = Compatibility.getFilePath(output);
+        return output;
+    }
 
-		String[] output = new String[3];
-		output[0] = properties.getProperty("transactionDatabaseLocation");
-		output[1] = properties.getProperty("transactionLogging");
-		return output;
-	}
+    public final String[] transactionSettings() throws FileNotFoundException {
+        if (inputStream != null) {
+            try {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                System.out.print("property file '" + propFileName + "' not found in the classpath");
+            }
+        } else {
+            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+        }
 
-	public final String tocName() throws FileNotFoundException {
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			} catch (IOException e) {
-				System.out.print("property file '" + propFileName + "' not found in the classpath");
-			}
-		} else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
+        String[] output = new String[3];
+        output[0] = properties.getProperty("transactionDatabaseLocation");
+        output[1] = properties.getProperty("transactionLogging");
+        return output;
+    }
 
-		String output = "TOC";
-		output = properties.getProperty("tocName");
-		return output;
-	}
+    public final String tocName() throws FileNotFoundException {
+        if (inputStream != null) {
+            try {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                System.out.print("property file '" + propFileName + "' not found in the classpath");
+            }
+        } else {
+            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+        }
+
+        String output = "TOC";
+        output = properties.getProperty("tocName");
+        return output;
+    }
 }
