@@ -11,6 +11,7 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -111,13 +112,14 @@ public class InvoiceHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Date now = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("dd MMM yyyy HH:mm");
 
         VelocityContext context = new VelocityContext();
         context.put("title", config.tocName());
         context.put("name", user.getName());
         context.put("pmkeys", user.getBarCode());
-        context.put("startDate", "startingDate");
-        context.put("endDate", "endingDate");
+        context.put("endDate", date.format(now));
         context.put("transactions", transactions);
         context.put("total", total);
         context.put("header", header);
