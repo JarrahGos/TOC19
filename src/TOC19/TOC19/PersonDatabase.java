@@ -1,5 +1,4 @@
 package TOC19;
-
 /*
 *    TOC19 is a simple program to run TOC payments within a small group. 
 *    Copyright (C) 2014  Jarrah Gosbell
@@ -28,7 +27,7 @@ import java.util.Arrays;
 final class PersonDatabase {
 
 	/** Stores the admin user for the TOC program. Used for getting the password. */
-	private static TOC19.Person admin;
+	private static Person admin;
 	/** Stores the path of the database as a string, based on the OS being run. */
 	private String databaseLocation;
 
@@ -119,7 +118,7 @@ final class PersonDatabase {
      */
 	public final String getPersonName(long personNo) {
 		if(personNo == -2) {
-			return admin.getName(); // returns password{
+			return admin.getName(); // returns password {
 		}
 		Person getting = readDatabasePerson(personNo);
 		if (getting != null) { // check that the desired person exists

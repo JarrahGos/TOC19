@@ -21,7 +21,7 @@ public class Log {
 	/** whether an exception occured the first time. Stops recursive loops */
     private static boolean first = true;
 	/** Whether to print to the database or to the console. True for console */
-    private static boolean debug = false; // print to the console.
+    private static boolean debug = true; // print to the console.
 	/** 
 	 * Set up the logLocation and writers ready to write the log
 	 */

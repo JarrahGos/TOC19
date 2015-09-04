@@ -342,9 +342,7 @@ public final class Interface extends Application
 		});
 		grid.add(cancel, 4,0, 2,1); // add the button to the right of the user name. 
 		Platform.setImplicitExit(false);
-		primaryStage.setOnCloseRequest((WindowEvent event) -> {
-			event.consume();
-		});
+		primaryStage.setOnCloseRequest(WindowEvent::consume);
 		Scene primaryScene = new Scene(grid, horizontalSize, verticalSize); // create the scene at the given size
 		primaryStage.setScene(primaryScene);
 		
@@ -446,9 +444,7 @@ public final class Interface extends Application
 			optionList.getSelectionModel().select(0);
 		});
 		Button logout = new Button("Logout");
-		logout.setOnAction((ActionEvent e) -> {
-			adminStage.close();
-		});
+		logout.setOnAction((ActionEvent e) -> adminStage.close());
 		ToolBar buttonBar = new ToolBar(people, products, admin, logout);
 		rightPane.getChildren().addAll(buttonBar, grid);
 		split.getItems().addAll(optionList, rightPane);
@@ -468,9 +464,7 @@ public final class Interface extends Application
 					grid.add(PMKeySLabel, 0,1);
 					TextField PMKeySEntry = new TextField();
 					grid.add(PMKeySEntry, 1,1);
-					nameEntry.setOnAction((ActionEvent e) -> {
-						PMKeySEntry.requestFocus();
-					});
+					nameEntry.setOnAction((ActionEvent e) -> PMKeySEntry.requestFocus());
 					PMKeySEntry.setOnAction((ActionEvent e) -> {
 						long PMKeyS = 7000000;
 						try {
@@ -507,10 +501,7 @@ public final class Interface extends Application
 						try {
 							workingUser.removePerson(index);
 							flashColour(remove, 1500, Color.AQUAMARINE);
-						} catch (IOException e1) {
-							e1.printStackTrace();
-							flashColour(remove, 1500, Color.RED);
-						} catch (InterruptedException e1) {
+						} catch (IOException | InterruptedException e1) {
 							e1.printStackTrace();
 							flashColour(remove, 1500, Color.RED);
 						}
@@ -542,9 +533,7 @@ public final class Interface extends Application
 																									 pmkeys.setText(pmkeysVal);
 																								 }
 							                                                                 });
-					nameEntry.setOnAction((ActionEvent e) -> {
-						pmkeys.requestFocus();
-					});
+					nameEntry.setOnAction((ActionEvent e) -> pmkeys.requestFocus());
 
 					pmkeys.setOnAction((ActionEvent e) -> {
 						long pmkeysNew = -1;
@@ -637,12 +626,8 @@ public final class Interface extends Application
 					grid.add(priceLabel, 0, 2);
 					TextField priceEntry = new TextField();
 					grid.add(priceEntry, 1, 2);
-					nameEntry.setOnAction((ActionEvent e) -> {
-						BarCodeEntry.requestFocus();
-					});
-					BarCodeEntry.setOnAction((ActionEvent e) -> {
-						priceEntry.requestFocus();
-					});
+					nameEntry.setOnAction((ActionEvent e) -> BarCodeEntry.requestFocus());
+					BarCodeEntry.setOnAction((ActionEvent e) -> priceEntry.requestFocus());
 					priceEntry.setOnAction((ActionEvent e) -> {
 						long barCode = -1;
 						try {
@@ -720,12 +705,8 @@ public final class Interface extends Application
 						String price = Double.toString(workingUser.getProductPrice(productList.getSelectionModel().getSelectedItem())/100);
 						priceEntry.setText(price);
 					});
-					nameEntry.setOnAction((ActionEvent e) -> {
-						barCodeEntry.requestFocus();
-					});
-					barCodeEntry.setOnAction((ActionEvent e) -> {
-						priceEntry.requestFocus();
-					});
+					nameEntry.setOnAction((ActionEvent e) -> barCodeEntry.requestFocus());
+					barCodeEntry.setOnAction((ActionEvent e) -> priceEntry.requestFocus());
 					priceEntry.setOnAction((ActionEvent e) -> {
 						long barCode = -1;
 						try {
@@ -863,9 +844,7 @@ public final class Interface extends Application
 							grid.getChildren().remove(error);
 						}
 					});
-					newPW.setOnAction((ActionEvent e) -> {
-						newPW2.requestFocus();
-					});
+					newPW.setOnAction((ActionEvent e) -> newPW2.requestFocus());
 					newPW2.setOnAction((ActionEvent e) -> {
 						if(newPW.getText() != null && !newPW.getText().equals("") && newPW.getText().equals(newPW2.getText())) {
 							workingUser.setAdminPassword(workingUser.getSecurePassword(newPW.getText()));
@@ -916,7 +895,7 @@ public final class Interface extends Application
 
 							File adminPersonFile = new File(Compatibility.getFilePath("adminPersonDatabase.csv"));
 							File adminProductFile = new File(Compatibility.getFilePath("adminProductDatabase.csv"));
-							if(filePath.getText() != "" || filePath.getText() != null) {
+							if(filePath.getText().isEmpty() || filePath.getText() != null) {
 								File destPers = new File(filePath.getText() + "/adminPersonDatabase.csv");
 								File destProd = new File(filePath.getText() + "/adminProductDatabase.csv");
 								Files.copy(adminPersonFile.toPath(), destPers.toPath(), StandardCopyOption.REPLACE_EXISTING);
