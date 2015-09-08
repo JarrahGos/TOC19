@@ -230,6 +230,7 @@ public final class Interface extends Application
 						flashColour(input, 500, Color.RED);
                     }
 				}
+			input.requestFocus();
 		});
 		input.setOnKeyPressed((KeyEvent ke) -> { // the following allows the user to hit enter rather than OK. Works exactly the same as hitting OK. 
 			if (ke.getCode().equals(KeyCode.ENTER)) {
@@ -275,6 +276,7 @@ public final class Interface extends Application
 					}
 				}
 			}
+			input.requestFocus();
 		});
 
                 
@@ -291,13 +293,15 @@ public final class Interface extends Application
 			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
 			checkoutOut.setDividerPositions(0.8f);
 			input.requestFocus();
-			enterPassword(); // method which will work the admin mode features. 
+			enterPassword(); // method which will work the admin mode features.
+			input.requestFocus();
 		});
 		grid.add(adminMode, 0,8); // add the button to the bottum left of the screen. 
 
         Button removeProduct = new Button("Remove"); // button which will bring up the admin mode.
         removeProduct.setOnAction((ActionEvent e) -> {
             int index = itemList.getSelectionModel().getSelectedIndex();
+
             if(index >= 0) {
                 workingUser.deleteProduct(index);
                 prices.setAll(workingUser.getCheckOutPrices());
@@ -306,10 +310,11 @@ public final class Interface extends Application
                 itemList.setItems(items); //TODO: add select top.
                 total.setText(String.valueOf("$" + workingUser.getPrice()));
                 itemList.scrollTo(index);
-				input.requestFocus();
+
 				flashColour(removeProduct, 1500, Color.AQUAMARINE);
             }
 			else flashColour(removeProduct, 1500, Color.RED);
+			input.requestFocus();
         });
         grid.add(removeProduct, 2,8); // add the button to the bottum left of the screen.
 
@@ -334,6 +339,7 @@ public final class Interface extends Application
 				flashColour(purchase, 1500, Color.RED);
 				flashColour(input, 1500, Color.RED);
 			}
+			input.requestFocus();
 		});
         grid.add(purchase, 4,8, 2,1); // add the button to the bottum right corner, next to the total price. 
                 
@@ -349,8 +355,9 @@ public final class Interface extends Application
 			input.requestFocus();
 			total.setText(String.valueOf(workingUser.getPrice())); // set the total price to 0.00.
 			checkoutOut.setDividerPositions(0.8f);
+			input.requestFocus();
 		});
-		grid.add(cancel, 4,0, 2,1); // add the button to the right of the user name. 
+		grid.add(cancel, 4,0, 2,1); // add the button to the right of the user name.
 		Platform.setImplicitExit(false);
 		primaryStage.setOnCloseRequest(WindowEvent::consume);
 		Scene primaryScene = new Scene(grid, horizontalSize, verticalSize); // create the scene at the given size
