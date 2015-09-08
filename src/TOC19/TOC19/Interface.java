@@ -226,7 +226,7 @@ public final class Interface extends Application
 					else{
                         productError.setText("Could not read that product");
 						input.clear();
-						input.RequestFocus();
+						input.requestFocus();
 						flashColour(input, 500, Color.RED);
                     }
 				}
@@ -252,7 +252,7 @@ public final class Interface extends Application
 						grid.getChildren().remove(userLabel);
 						grid.add(userLabel, 3,0);
 						input.clear();
-						input.RequestFocus();
+						input.requestFocus();
 						flashColour(input, 1500, Color.RED);
 					}
 				}
