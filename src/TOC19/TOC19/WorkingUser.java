@@ -33,13 +33,13 @@ import java.security.NoSuchAlgorithmException;
 class WorkingUser {
 
     /** The database which stores all products used by the system. */
-    private final ProductDatabase productDatabase;
+    private static ProductDatabase productDatabase = new ProductDatabase();
     /** The database which stores all people who can use the system */
-    private final PersonDatabase personDatabase;
+    private static PersonDatabase personDatabase = new PersonDatabase();
     /** the checkout used to store what a person is purchasing at a given time */
-    private CheckOut checkOuts;
+    private static CheckOut checkOuts = new CheckOut();
     /** The currently logged in user */
-    private static Person user;
+    private static Person user = null;
 
     /**
      * Create the working user instance with both databases and a checkout.
@@ -56,7 +56,7 @@ class WorkingUser {
      * @param input The PMKeyS that you wish to search for as a string
      * @return 0 if the user found, 1 if the user dose not exist, 2 if the user cannot buy.
      */
-    public final int getPMKeyS(String input) {
+    public static int getPMKeyS(String input) {
         if ((input != null && !input.equals("")) && (!input.matches("[0-9]+"))) {
             input = input.substring(1);
         }
@@ -77,11 +77,11 @@ class WorkingUser {
      * Get a list of the names of all users in the database
      * @return A string array of the usernames
      */
-    public final String[] getUserNames() {
+    public static String[] getUserNames() {
         return personDatabase.getUserNames();
     }
-    
-    public final Person getUser(String name){
+
+    public static Person getUser(String name) {
         return personDatabase.readDatabasePerson(name);
     }
 
@@ -89,7 +89,7 @@ class WorkingUser {
      * Get a list of the names of all products in the database
      * @return A string array of the product names
      */
-    public final String[] getProductNames() {
+    public static String[] getProductNames() {
         return productDatabase.getProductNames();
     }
 
@@ -98,7 +98,7 @@ class WorkingUser {
      * @param passwordToHash The clear text password
      * @return The hash of the given password.
      */
-    public final String getSecurePassword(String passwordToHash) {
+    public static String getSecurePassword(String passwordToHash) {
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -119,7 +119,7 @@ class WorkingUser {
      * @param PW A cleartext password to test
      * @return The boolean test for whether the passwords are equal.
      */
-    public final boolean passwordsEqual(String PW) {
+    public static boolean passwordsEqual(String PW) {
         String testing = getSecurePassword(PW);
         return (testing.equals(personDatabase.getPersonName(-2)));
     }
@@ -128,32 +128,12 @@ class WorkingUser {
      * Takes the given (prehashed) password and set it as the admin password
      * @param PW The prehashed password to be set
      */
-    public final void setAdminPassword(String PW) {
+    public static void setAdminPassword(String PW) {
         personDatabase.setAdminPassword(PW);
     }
 
-    public final boolean isInteger(String s) {
-        if (s == null) return false;
-        try {
-            Integer.parseInt(s); // try to parse the string, catching a failure
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        // only got here if we didn't return false
-        return true;
-    }
 
-    public final boolean isDouble(String s) {
-        if (s == null) return false;
-        try {
-            Double.parseDouble(s);  // try to parse the string, catching a failure
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-    final boolean isLong(String s) {
+    static boolean isLong(String s) {
         if (s == null) return false;
         try {
             Long.parseLong(s); // try to parse the string, catching a failure.
@@ -169,7 +149,7 @@ class WorkingUser {
      * @return A scroll pane showing the database chosen in the parameter or the person database by default.
      * @throws IOException
      */
-    public ScrollPane printDatabase(String type) throws IOException {
+    public static ScrollPane printDatabase(String type) throws IOException {
         TextArea textArea;
         switch (type) {
             case ("Product"):
@@ -194,7 +174,7 @@ class WorkingUser {
     /**
      * Log the user out from this class
      */
-    public final void logOut() {
+    public static void logOut() {
         user = null;
         checkOuts = new CheckOut();
     }
@@ -203,7 +183,7 @@ class WorkingUser {
      * Have the connected user buy the products in the checkout, adding the total cost to the users bill,
      * taking the number bought from the products in the database and clearing both the user and the checkout
      */
-    public final void buyProducts() {
+    public static void buyProducts() {
         user.addPrice(checkOuts.getPrice());
         Product[] purchased = checkOuts.productBought(); // clear the quantities and checkout
         productDatabase.writeOutDatabase(purchased);
@@ -216,7 +196,7 @@ class WorkingUser {
      * Get the names of all products in the checkout
      * @return A string array of the names of all products in the checkout
      */
-    public final String[] getCheckOutNames() {
+    public static String[] getCheckOutNames() {
         return checkOuts.getCheckOutNames();
     }
 
@@ -224,7 +204,7 @@ class WorkingUser {
      * Get the prices of all products in teh checkout
      * @return A string array of the prices of all products in the checkout.
      */
-    public final String[] getCheckOutPrices() {
+    public static String[] getCheckOutPrices() {
         return checkOuts.getCheckOutPrices();
     }
 
@@ -233,7 +213,7 @@ class WorkingUser {
      * @param userError 0 if the user was correctly found, 1 if the user was not found and 2 if the user has been locked out.
      * @return The appropriate error message or the users name
      */
-    public final String userName(int userError) {
+    public static String userName(int userError) {
         switch (userError) {
             case 0:
                 if(user != null) return user.getName();
@@ -250,7 +230,7 @@ class WorkingUser {
      * @param input The barcode for the product as a string
      * @return True if the product was added, false if it failed
      */
-    public final boolean addToCart(String input) {
+    public static boolean addToCart(String input) {
         long tempBarCode = -1;
         if (input != null && !input.equals("") && isLong(input)) {
             tempBarCode = Long.parseLong(input); // disallows the user from entering nothing or clicking cancel.
@@ -274,7 +254,7 @@ class WorkingUser {
      * Gets the price of the whole checkout
      * @return The price of the whole checkout as a double
      */
-    public final double getPrice() {
+    public static double getPrice() {
         long price = checkOuts.getPrice();
         return ((double) price) / 100;
     }
@@ -284,7 +264,7 @@ class WorkingUser {
      * @param name The name of the person you wish to add
      * @param PMKeyS The PMKeyS of the person you wish to add
      */
-    public final void addPersonToDatabase(String name, long PMKeyS) {
+    public static void addPersonToDatabase(String name, long PMKeyS) {
         personDatabase.setDatabasePerson(name, 0, 0, PMKeyS, true);
     }
 
@@ -294,7 +274,7 @@ class WorkingUser {
      * @param barCode The barcode for the product you wish to add.
      * @param price The price of the product you wish to add.
      */
-    public final void addProductToDatabase(String name, long barCode, long price) {
+    public static void addProductToDatabase(String name, long barCode, long price) {
         productDatabase.setDatabaseProduct(name, price, barCode);
     }
 
@@ -306,7 +286,7 @@ class WorkingUser {
      * @param barcode The new barcode of the product
      * @param oldBarcode The old barcode of the product
      */
-    public final void changeDatabaseProduct(String name, String oldName, long price, long barcode, long oldBarcode) {
+    public static void changeDatabaseProduct(String name, String oldName, long price, long barcode, long oldBarcode) {
         productDatabase.changeDatabaseProduct(name, oldName, price, barcode, oldBarcode);
     }
 
@@ -318,7 +298,7 @@ class WorkingUser {
      * @param pmkeys The new PMKeyS of the person
      * @param oldPmkeys The old PMKeyS of the person
      */
-    public final void changeDatabasePerson(String selectedIndex, String name, long pmkeys, long oldPmkeys) {
+    public static void changeDatabasePerson(String selectedIndex, String name, long pmkeys, long oldPmkeys) {
         personDatabase.changeDatabasePerson(selectedIndex, name, pmkeys, oldPmkeys);
     }
 
@@ -327,7 +307,7 @@ class WorkingUser {
      * @param type "Person" for the person database or "Produt" for the product database
      * @throws IOException
      */
-    public final void adminWriteOutDatabase(String type) throws IOException {
+    public static void adminWriteOutDatabase(String type) throws IOException {
         switch (type) {
             case ("Person"):
                 personDatabase.adminWriteOutDatabase("adminPersonDatabase.csv");
@@ -346,7 +326,7 @@ class WorkingUser {
      * @throws IOException
      * @throws InterruptedException
      */
-    public final void removePerson(String index) throws IOException, InterruptedException {
+    public static void removePerson(String index) throws IOException, InterruptedException {
         personDatabase.delPerson(index);
     }
 
@@ -356,7 +336,7 @@ class WorkingUser {
      * @throws IOException
      * @throws InterruptedException
      */
-    public final void removeProduct(String index) throws IOException, InterruptedException {
+    public static void removeProduct(String index) throws IOException, InterruptedException {
         productDatabase.delProduct(index);
     }
 
@@ -364,12 +344,12 @@ class WorkingUser {
      * Delete a product from the checkout given it's index in the checkout array
      * @param index The index of the item to delete in the checkout array
      */
-    public final void deleteProduct(int index)
+    public static void deleteProduct(int index)
     {
         checkOuts.delProduct(index);
     }
 
-    public final long getProductBarCode(int index) {
+    public static long getProductBarCode(int index) {
         return productDatabase.getBarCode(index);
     }
 
@@ -378,7 +358,7 @@ class WorkingUser {
      * @param name The name of the product to get the barcode of
      * @return The barcode of the product with the name specified.
      */
-    public final long getProductBarCode(String name) {
+    public static long getProductBarCode(String name) {
         Product getting = productDatabase.readDatabaseProduct(name);
         return getting.getBarCode();
     }
@@ -388,7 +368,7 @@ class WorkingUser {
      * @param index The barcode of the product as a string
      * @return The name of the product with the given barcode
      */
-    public final String getProductName(String index) {
+    public static String getProductName(String index) {
         Product getting = productDatabase.readDatabaseProduct(index);
         return getting.getName();
     }
@@ -398,7 +378,7 @@ class WorkingUser {
      * @param index the name or barcode of the desired product
      * @return The price of the specified product
      */
-    public final double getProductPrice(String index) {
+    public static double getProductPrice(String index) {
         return productDatabase.getProductPrice(index);
     }
 
@@ -407,7 +387,7 @@ class WorkingUser {
      * @param name The name of the product you wish to check stock count.
      * @return The number of the specified product in stock
      */
-    public final int getProductNumber(String name) {
+    public static int getProductNumber(String name) {
         return productDatabase.getNumber(name);
     }
 
@@ -416,11 +396,11 @@ class WorkingUser {
      * @param name The name of the product you wish to set the stock count for
      * @param numberOfProducts The new stock count.
      */
-    public final void setNumberOfProducts(String name, int numberOfProducts) {
+    public static void setNumberOfProducts(String name, int numberOfProducts) {
         productDatabase.setNumber(name, numberOfProducts);
     }
 
-    public final boolean userCanBuy() {
+    public static boolean userCanBuy() {
         return user.canBuy(); //not sure whether this will do the requested job.
     }
 
@@ -429,7 +409,7 @@ class WorkingUser {
      * @param name The name of the product you wish to check for.
      * @return The boolean of whether the user can buy or not.
      */
-    public final boolean userCanBuyAdmin(String name) {
+    public static boolean userCanBuyAdmin(String name) {
         Person usr = personDatabase.readDatabasePerson(name);
         return usr.canBuy();
     }
@@ -439,7 +419,7 @@ class WorkingUser {
      * @param userName The name of the user to change
      * @param canBuy Whether you wish the user to be able to buy or not.
      */
-    public final void setUserCanBuy(String userName, boolean canBuy) {
+    public static void setUserCanBuy(String userName, boolean canBuy) {
         personDatabase.setPersonCanBuy(userName, canBuy);
     }
 
@@ -447,27 +427,23 @@ class WorkingUser {
      * Determine whether there is a user logged in
      * @return The boolean value of whether the user is logged in.
      */
-    public final boolean userLoggedIn() {
+    public static boolean userLoggedIn() {
         return user != null;
     }
 
     /**
      * Reset the bills of all users to zero for this billing period.
      */
-    public final void resetBills()
+    public static void resetBills()
     {
         personDatabase.resetBills();
-    }
-    public static long getLogedInBarcode()
-    {
-        return user.getBarCode();
     }
 
     /**
      * Get the current users current bill.
      * @return The current bill of the current user as a double.
      */
-    public final double getUserBill() {
+    public static double getUserBill() {
         return user.totalCostWeek();
     }
 }
